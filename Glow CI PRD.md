@@ -16,10 +16,10 @@ Teachers face high cognitive load daily. MOE has extensive domain-scoped learnin
 
 ### Evidence of Problem
 
-- Teachers report high time cost in locating and extracting relevant guidance from MOE materials
-- Search and browse experiences across MOE Intranet and SharePoint are ineffective for just-in-time retrieval
-- Guidance materials are predominantly long-form text documents not designed for quick consumption at point of need
-- Teachers often default to peer advice or intuition over official materials because the effort to find and parse them exceeds the perceived benefit
+- 58.7% of users cannot find what they need on OPAL (n=90) [link](http://go.gov.sg/2026-0203-km)
+- Search trends on OPAL across all keywords have dropped sharply since launch [link](https://gvt-external.slack.com/archives/C08CAM58T9U/p1740982877978059?thread_ts=1740712798.642099&cid=C08CAM58T9U)
+- Teachers filter for relevance when engaging in PL [link](https://drive.google.com/drive/u/0/folders/1QxQsVP1sqjYvxLIPRSCSZLTJ1xDkLk27)
+- Teachers want a path of least resistance to discovery [link](https://drive.google.com/drive/u/0/folders/1QxQsVP1sqjYvxLIPRSCSZLTJ1xDkLk27)
 
 ### Hypothesis of Root Causes
 

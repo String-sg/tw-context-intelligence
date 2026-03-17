@@ -72,6 +72,14 @@ Teachers face high cognitive load daily. MOE has extensive domain-scoped learnin
 - **Domain owners:** SDCD (Student Development), GB (Student Wellness)
 - **Addressable market:** All 33,000 General Education Officers (EOs) in MOE (post-pilot)
 
+### Addressable Market
+
+| Phase | Audience | Reach |
+|-------|----------|-------|
+| Phase 1 (Pilot) | All SDT team | Up to 3,300 |
+| Phase 2 (Expansion) | + 15 pilot schools | Up to 5,000 |
+| Phase 3 (GA — Sep/Oct 2026) | All teachers incl. independent schools | Up to 33,000 |
+
 ### Out of Scope (this phase)
 
 - Domains beyond Student Intervention and Student Wellbeing

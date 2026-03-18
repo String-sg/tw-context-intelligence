@@ -60,6 +60,7 @@ Teachers face high cognitive load daily. MOE has extensive domain-scoped learnin
 | Hallucination incidents | AI-generated content that is fabricated or not grounded in source materials | 0 |
 | Source citation coverage | % of AI responses that include citations back to source documents | 100% |
 | Response latency | Time for recommendation card or chat response to render | < 5s (p95) |
+| Data classification breach | Sensitive High student data surfaced to a teacher without Sensitive High access | 0 |
 
 ---
 
@@ -79,6 +80,17 @@ Teachers face high cognitive load daily. MOE has extensive domain-scoped learnin
 | Phase 1 (Pilot) | All SDT team | Up to 3,300 |
 | Phase 2 (Expansion) | + 15 pilot schools | Up to 5,000 |
 | Phase 3 (GA — Sep/Oct 2026) | All teachers incl. independent schools | Up to 33,000 |
+
+### Data Classification Constraints
+
+SDT student data has two classification tiers. Teacher roles determine which tier they can access:
+
+| Classification | Data included | Teacher access |
+|---|---|---|
+| Sensitive High | Counselling details, offence details | Role-restricted (e.g., counsellors, HODs) |
+| Sensitive Normal | Number of offences | Broader teacher access |
+
+> Glow CI must only use student data the accessing teacher is authorised to view. Context assembly and card surfacing must be scoped to the teacher's data access level as determined by the SDT API.
 
 ### Out of Scope (this phase)
 
@@ -117,6 +129,8 @@ Glow CI consists of four interconnected parts:
 - Document refresh cadence: how often source materials are re-ingested
 - API contract with TW for serving recommendation cards and chat responses
 - Retrieval quality testing: ensure relevant chunks are retrieved for given contexts
+- **SDT API data classification** — the SDT API handles role-based filtering and returns only the student data the accessing teacher is authorised to view; Glow CI must read and respect the data classification level returned (Sensitive High vs Sensitive Normal) and must not elevate access beyond what the API provides
+- **Open question** — confirm with SDT PM which API fields/metadata indicate the teacher's data access tier, so it can be correctly parsed in context assembly
 
 **User stories:**
 

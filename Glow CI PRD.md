@@ -123,10 +123,8 @@ Glow CI consists of four interconnected parts:
 | # | As a... | I want to... | So that... |
 |---|---------|-------------|-----------|
 | 1.1 | Engineer | test the AIBots API on UAT for RAG + LLM capabilities | we validate that the AI infrastructure supports our retrieval and synthesis requirements before building on it |
-| 1.2 | Engineer | pull user and teacher data from SDT | we can associate guidance recommendations with the right teacher context |
-| 1.3 | Engineer | pull student data from HR/EduPass | we can use student profile signals to trigger contextually relevant guidance retrieval |
-| 1.4 | Engineer | ingest and index MOE guidance documents into a vector store | the RAG service can retrieve relevant content for any given teacher context |
-| 1.5 | Engineer | ensure every AI response includes citations to source documents | teachers can verify guidance and we maintain zero hallucination tolerance |
+| 1.2 | Engineer | pull student data from SDT | we can associate guidance recommendations with the right teacher context |
+| 1.3 | Engineer | pull teacher data from HR/EduPass | we can use student profile signals to trigger contextually relevant guidance retrieval |
 
 ---
 
@@ -266,9 +264,8 @@ Chat-first approach — the AI Chat interface is the primary value driver and sh
 |----------|------|-----------|
 | **P0** | Part 1: RAG + LLM Service | Foundation — everything depends on the retrieval and AI backend |
 | **P0** | Part 3: AI Chat Interface | Primary user-facing surface; delivers the core value of synthesised guidance |
-| **P1** | Part 4: Native Resource Viewer | Completes the citation loop — teachers can verify source materials without leaving TW |
-| **P2** | Part 2: Recommendation Cards | Contextual discovery layer; adds proactive surfacing once chat is validated |
-
+| **P1** | Part 2: Recommendation Cards | Contextual discovery layer; adds proactive surfacing once chat is validated |
+| **P2** | Part 4: Native Resource Viewer | Completes the citation loop — teachers can verify source materials without leaving TW |
 ### Timeline
 
 | Phase | Dates | Milestone | What ships |
@@ -276,7 +273,7 @@ Chat-first approach — the AI Chat interface is the primary value driver and sh
 | **Phase 1 — Foundation** | Apr – May 2026 | RAG pipeline operational | Part 1: Document ingestion, vector store, RAG orchestration, LLM integration. End-to-end pipeline tested with pilot domain materials |
 | **Phase 2 — Chat MVP** | May – Jul 2026 | Internal dogfood ready | Part 3: AI Chat interface integrated in TW. Teachers can ask questions and receive cited, grounded responses. Part 4: View-only resource viewer for source citations |
 | **Phase 3 — Pilot launch** | Aug 2026 | **Pilot launch (31 Aug)** | Parts 1 + 3 + 4 live with select pilot teachers. Baseline metrics collection begins |
-| **Phase 4 — Cards + iteration** | Sep – Oct 2026 | GA readiness | Part 2: Recommendation cards surfaced on student page. Iteration based on pilot feedback. GA launch (Oct 2026) |
+| **Phase 4 — Cards + iteration** | Sep 2026 | GA readiness | Part 2: Recommendation cards surfaced on student page. Iteration based on pilot feedback. GA launch (Oct 2026) |
 
 ### Key dependencies
 

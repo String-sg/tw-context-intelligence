@@ -1,6 +1,21 @@
 # Glow Contextual Intelligence (Glow CI) — Product Requirements Document
 
-**Status:** Draft v0.1 | **Last updated:** 2026-03-17 | **Author:** Jasmine Tay, PM
+**Status:** Draft v0.7 | **Last updated:** 2026-03-18 | **Author:** Jasmine Tay, PM
+
+<details>
+<summary>Changelog</summary>
+
+| Version | Date | Author | Summary |
+|---------|------|--------|---------|
+| v0.7 | 2026-03-18 | Jasmine Tay | Added changelog + Analytics & Tracking section |
+| v0.6 | 2026-03-18 | Jasmine Tay | Added SDT data classification constraints and guardrail metric |
+| v0.5 | 2026-03-18 | Jasmine Tay | Manual edits — updated Part 1 user stories, reordered priority table |
+| v0.4 | 2026-03-18 | Jasmine Tay | Renamed "Backend engineer" → "Engineer" across all user stories |
+| v0.3 | 2026-03-18 | Jasmine Tay | Updated Part 1 user stories: AIBots UAT, SDT + HR/EduPass data pull |
+| v0.2 | 2026-03-18 | Jasmine Tay | Added OPAL evidence, addressable market, priority & timeline, native resource viewer (Part 4) |
+| v0.1 | 2026-03-17 | Jasmine Tay | Initial draft |
+
+</details>
 
 ---
 
@@ -61,6 +76,37 @@ Teachers face high cognitive load daily. MOE has extensive domain-scoped learnin
 | Source citation coverage | % of AI responses that include citations back to source documents | 100% |
 | Response latency | Time for recommendation card or chat response to render | < 5s (p95) |
 | Data classification breach | Sensitive High student data surfaced to a teacher without Sensitive High access | 0 |
+
+---
+
+## Analytics & Tracking
+
+**Platform:** Glow CI uses a dedicated GA4 property (separate from TW). Standard GA4 analytics are supplemented with custom events for product-specific metrics.
+
+### Standard GA4 (no custom instrumentation needed)
+- Sessions, users, DAU/WAU
+- Traffic sources, device/browser breakdown
+- Page-level engagement time
+
+### Custom events required
+
+| Event | Trigger | Maps to metric |
+|-------|---------|----------------|
+| `ci_card_impression` | CI cards rendered on student page | CI card engagement (denominator) |
+| `ci_card_click` | Teacher clicks/expands a card | CI card engagement |
+| `ci_card_cta_click` | Teacher taps "Open chat" CTA on a card | CI recommendations CTR |
+| `ci_usefulness_rating` | Teacher submits thumbs up/down on a card or chat response | Usefulness rating |
+| `ci_chat_session_start` | AI Chat opens (from card or standalone) | AI chat sessions per teacher |
+| `ci_chat_message_sent` | Teacher sends a follow-up message in chat | Chat depth signal |
+| `ci_citation_click` | Teacher taps a source citation link | Citation engagement |
+| `ci_resource_viewer_open` | Document opens in native resource viewer | Resource viewer adoption |
+
+### Server-side logging (outside GA — guardrail metrics)
+These cannot be tracked in GA and require server/API-level logging:
+- **Response latency** — logged at API level (request → render time)
+- **Source citation coverage** — tracked at LLM response generation level
+- **Hallucination incidents** — flagged via teacher feedback + manual review process
+- **Data classification breach** — logged at SDT API integration layer
 
 ---
 

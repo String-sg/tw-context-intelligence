@@ -79,37 +79,6 @@ Teachers face high cognitive load daily. MOE has extensive domain-scoped learnin
 
 ---
 
-## Analytics & Tracking
-
-**Platform:** Glow CI uses a dedicated GA4 property (separate from TW). Standard GA4 analytics are supplemented with custom events for product-specific metrics.
-
-### Standard GA4 (no custom instrumentation needed)
-- Sessions, users, DAU/WAU
-- Traffic sources, device/browser breakdown
-- Page-level engagement time
-
-### Custom events required
-
-| Event | Trigger | Maps to metric |
-|-------|---------|----------------|
-| `ci_card_impression` | CI cards rendered on student page | CI card engagement (denominator) |
-| `ci_card_click` | Teacher clicks/expands a card | CI card engagement |
-| `ci_card_cta_click` | Teacher taps "Open chat" CTA on a card | CI recommendations CTR |
-| `ci_usefulness_rating` | Teacher submits thumbs up/down on a card or chat response | Usefulness rating |
-| `ci_chat_session_start` | AI Chat opens (from card or standalone) | AI chat sessions per teacher |
-| `ci_chat_message_sent` | Teacher sends a follow-up message in chat | Chat depth signal |
-| `ci_citation_click` | Teacher taps a source citation link | Citation engagement |
-| `ci_resource_viewer_open` | Document opens in native resource viewer | Resource viewer adoption |
-
-### Server-side logging (outside GA — guardrail metrics)
-These cannot be tracked in GA and require server/API-level logging:
-- **Response latency** — logged at API level (request → render time)
-- **Source citation coverage** — tracked at LLM response generation level
-- **Hallucination incidents** — flagged via teacher feedback + manual review process
-- **Data classification breach** — logged at SDT API integration layer
-
----
-
 ## In Scope
 
 ### SDT Pilot within TW
@@ -149,7 +118,7 @@ SDT student data has two classification tiers. Teacher roles determine which tie
 
 ## Product Requirements
 
-Glow CI consists of four interconnected parts:
+Glow CI consists of five interconnected parts:
 
 ---
 
@@ -309,6 +278,37 @@ Glow CI consists of four interconnected parts:
 | 4.4 | Engineer | sync document storage with the RAG ingestion pipeline | materials are stored once and serve both native viewing and AI retrieval |
 
 **Future phases (out of scope now):** Standalone browse/search, bookmarking, version tracking
+
+---
+
+### Part 5: Analytics & Tracking
+
+**What it is:** The instrumentation layer that enables measurement of product metrics and guardrail metrics. Glow CI uses a dedicated GA4 property (separate from TW), supplemented with custom events and server-side logging.
+
+**Standard GA4 (no custom instrumentation needed):**
+- Sessions, users, DAU/WAU
+- Traffic sources, device/browser breakdown
+- Page-level engagement time
+
+**Custom events required:**
+
+| Event | Trigger | Maps to metric |
+|-------|---------|----------------|
+| `ci_card_impression` | CI cards rendered on student page | CI card engagement (denominator) |
+| `ci_card_click` | Teacher clicks/expands a card | CI card engagement |
+| `ci_card_cta_click` | Teacher taps "Open chat" CTA on a card | CI recommendations CTR |
+| `ci_usefulness_rating` | Teacher submits thumbs up/down on a card or chat response | Usefulness rating |
+| `ci_chat_session_start` | AI Chat opens (from card or standalone) | AI chat sessions per teacher |
+| `ci_chat_message_sent` | Teacher sends a follow-up message in chat | Chat depth signal |
+| `ci_citation_click` | Teacher taps a source citation link | Citation engagement |
+| `ci_resource_viewer_open` | Document opens in native resource viewer | Resource viewer adoption |
+
+**Server-side logging (outside GA — guardrail metrics):**
+These cannot be tracked in GA and require server/API-level logging:
+- **Response latency** — logged at API level (request → render time)
+- **Source citation coverage** — tracked at LLM response generation level
+- **Hallucination incidents** — flagged via teacher feedback + manual review process
+- **Data classification breach** — logged at SDT API integration layer
 
 ---
 

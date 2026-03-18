@@ -122,11 +122,11 @@ Glow CI consists of four interconnected parts:
 
 | # | As a... | I want to... | So that... |
 |---|---------|-------------|-----------|
-| 1.1 | Backend engineer | test the AIBots API on UAT for RAG + LLM capabilities | we validate that the AI infrastructure supports our retrieval and synthesis requirements before building on it |
-| 1.2 | Backend engineer | pull user and teacher data from SDT | we can associate guidance recommendations with the right teacher context |
-| 1.3 | Backend engineer | pull student data from HR/EduPass | we can use student profile signals to trigger contextually relevant guidance retrieval |
-| 1.4 | Backend engineer | ingest and index MOE guidance documents into a vector store | the RAG service can retrieve relevant content for any given teacher context |
-| 1.5 | Backend engineer | ensure every AI response includes citations to source documents | teachers can verify guidance and we maintain zero hallucination tolerance |
+| 1.1 | Engineer | test the AIBots API on UAT for RAG + LLM capabilities | we validate that the AI infrastructure supports our retrieval and synthesis requirements before building on it |
+| 1.2 | Engineer | pull user and teacher data from SDT | we can associate guidance recommendations with the right teacher context |
+| 1.3 | Engineer | pull student data from HR/EduPass | we can use student profile signals to trigger contextually relevant guidance retrieval |
+| 1.4 | Engineer | ingest and index MOE guidance documents into a vector store | the RAG service can retrieve relevant content for any given teacher context |
+| 1.5 | Engineer | ensure every AI response includes citations to source documents | teachers can verify guidance and we maintain zero hallucination tolerance |
 
 ---
 
@@ -248,7 +248,7 @@ Glow CI consists of four interconnected parts:
 | 4.1 | Teacher | open a document natively within TW when I tap a source citation | I can read the full guidance without being redirected to an external site |
 | 4.2 | Teacher | land on the relevant section of the document when opening from a citation | I don't have to scroll through the entire document to find what was referenced |
 | 4.3 | Designer | design a native document viewer that integrates into TW's existing UX | the experience feels like a core part of the platform, not a bolt-on |
-| 4.4 | Backend engineer | sync document storage with the RAG ingestion pipeline | materials are stored once and serve both native viewing and AI retrieval |
+| 4.4 | Engineer | sync document storage with the RAG ingestion pipeline | materials are stored once and serve both native viewing and AI retrieval |
 
 **Future phases (out of scope now):** Standalone browse/search, bookmarking, version tracking
 

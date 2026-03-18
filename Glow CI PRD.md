@@ -122,10 +122,11 @@ Glow CI consists of four interconnected parts:
 
 | # | As a... | I want to... | So that... |
 |---|---------|-------------|-----------|
-| 1.1 | Backend engineer | ingest and index MOE guidance documents into a vector store | the RAG service can retrieve relevant content for any given teacher context |
-| 1.2 | Backend engineer | design a context assembly layer that retrieves relevant document chunks and constructs a grounded prompt | AI responses are always based on official materials, not fabricated |
-| 1.3 | Backend engineer | integrate with GovTech AI infrastructure for LLM inference | we use compliant, managed AI services |
-| 1.4 | Backend engineer | ensure every AI response includes citations to source documents | teachers can verify guidance and we maintain zero hallucination tolerance |
+| 1.1 | Backend engineer | test the AIBots API on UAT for RAG + LLM capabilities | we validate that the AI infrastructure supports our retrieval and synthesis requirements before building on it |
+| 1.2 | Backend engineer | pull user and teacher data from SDT | we can associate guidance recommendations with the right teacher context |
+| 1.3 | Backend engineer | pull student data from HR/EduPass | we can use student profile signals to trigger contextually relevant guidance retrieval |
+| 1.4 | Backend engineer | ingest and index MOE guidance documents into a vector store | the RAG service can retrieve relevant content for any given teacher context |
+| 1.5 | Backend engineer | ensure every AI response includes citations to source documents | teachers can verify guidance and we maintain zero hallucination tolerance |
 
 ---
 

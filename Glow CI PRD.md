@@ -325,6 +325,7 @@ Chat-first approach — the AI Chat interface is the primary value driver and sh
 | **P0** | Part 1: RAG + LLM Service | Foundation — everything depends on the retrieval and AI backend |
 | **P0** | Part 3: AI Chat Interface | Primary user-facing surface; delivers the core value of synthesised guidance |
 | **P1** | Part 2: Recommendation Cards | Contextual discovery layer; adds proactive surfacing once chat is validated |
+| **P1** | Part 5: Analytics & Tracking | Required for pilot baseline measurement — must be live before 31 Aug |
 | **P2** | Part 4: Native Resource Viewer | Completes the citation loop — teachers can verify source materials without leaving TW |
 ### Timeline
 
@@ -332,7 +333,7 @@ Chat-first approach — the AI Chat interface is the primary value driver and sh
 |-------|-------|-----------|-----------|
 | **Phase 1 — Foundation** | Apr – May 2026 | RAG pipeline operational | Part 1: Document ingestion, vector store, RAG orchestration, LLM integration. End-to-end pipeline tested with pilot domain materials |
 | **Phase 2 — Chat MVP** | May – Jul 2026 | Internal dogfood ready | Part 3: AI Chat interface integrated in TW. Teachers can ask questions and receive cited, grounded responses. Part 4: View-only resource viewer for source citations |
-| **Phase 3 — Pilot launch** | Aug 2026 | **Pilot launch (31 Aug)** | Parts 1 + 3 + 4 live with select pilot teachers. Baseline metrics collection begins |
+| **Phase 3 — Pilot launch** | Aug 2026 | **Pilot launch (31 Aug)** | Parts 1 + 3 + 4 + 5 live with select pilot teachers. GA4 custom events instrumented. Baseline metrics collection begins |
 | **Phase 4 — Cards + iteration** | Sep 2026 | GA readiness | Part 2: Recommendation cards surfaced on student page. Iteration based on pilot feedback. GA launch (Oct 2026) |
 
 ### Key dependencies

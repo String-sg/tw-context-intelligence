@@ -1,12 +1,13 @@
 # Glow Contextual Intelligence (Glow CI) — Product Requirements Document
 
-**Status:** Draft v0.7 | **Last updated:** 2026-03-18 | **Author:** Jasmine Tay, PM
+**Status:** Draft v1.0 | **Last updated:** 2026-03-25 | **Author:** Jasmine Tay, PM
 
 <details>
 <summary>Changelog</summary>
 
 | Version | Date | Author | Summary |
 |---------|------|--------|---------|
+| v1.0 | 2026-03-25 | Jasmine Tay | Updated tech stack to Google Cloud (Vertex AI + Google Drive); added GDrive TRA as compliance prerequisite; flagged Drive viewer as open question for Part 4 |
 | v0.7 | 2026-03-18 | Jasmine Tay | Added changelog + Analytics & Tracking section |
 | v0.6 | 2026-03-18 | Jasmine Tay | Added SDT data classification constraints and guardrail metric |
 | v0.5 | 2026-03-18 | Jasmine Tay | Manual edits — updated Part 1 user stories, reordered priority table |
@@ -49,7 +50,7 @@ Teachers face high cognitive load daily. MOE has extensive domain-scoped learnin
 - **TW ready in April 2026** — Teacher's Workspace is launching as the primary working tool for teachers, providing the ideal integration surface to contextually surface guidance
 - **Available content from SDT** — Student development and wellbeing domains have structured materials ready to be ingested as the knowledge base
 - **AI appetite on the ground is growing** — Teachers and school leaders are increasingly receptive to AI-assisted workflows; this is the right window to establish a trustworthy first experience
-- **GovTech AI infrastructure available** — AIBots API and Platform AI Services provide managed, compliant AI infrastructure that accelerates time to delivery
+- **Google Cloud selected as AI infrastructure** — Vertex AI and Google Drive provide a scalable, sustainable foundation for RAG and knowledge management that can be extended across MOE products beyond CI
 
 ---
 
@@ -107,6 +108,8 @@ SDT student data has two classification tiers. Teacher roles determine which tie
 
 > Glow CI must only use student data the accessing teacher is authorised to view. Context assembly and card surfacing must be scoped to the teacher's data access level as determined by the SDT API.
 
+> **Google Drive data classification gap:** The current MOE Google Drive environment is classified Sensitive Low. Glow CI requires a dedicated GDrive folder cleared to **Official Closed (Sensitive Normal)** to store guidance materials associated with student context. A **Threat Risk Assessment (TRA)** must be completed before this folder can be used in production. This is a prerequisite for Phase 1.
+
 ### Out of Scope (this phase)
 
 - Domains beyond Student Intervention and Student Wellbeing
@@ -128,20 +131,19 @@ Glow CI consists of five interconnected parts:
 
 **Key capabilities:**
 
-- Ingest and index guidance materials from Student Intervention and Student Wellbeing domains (PDFs, Word docs)
-- Chunking and embedding pipeline to convert documents into a vector store for semantic retrieval
-- RAG orchestration layer: retrieve relevant document chunks based on context, assemble them with a system prompt, and pass to LLM for synthesis
+- Ingest and index guidance materials from Student Intervention and Student Wellbeing domains, sourced from a dedicated **Google Drive folder**
+- Chunking and embedding pipeline to convert documents into a vector store for semantic retrieval, using **Vertex AI** (embeddings + Vector Search)
+- RAG orchestration layer via **Vertex AI**: retrieve relevant document chunks based on context, assemble them with a system prompt, and pass to **Gemini** for synthesis
 - Strict grounding: all AI outputs must cite source documents; no unsupported claims
 - Context assembly and system prompt design owned by DXD/Glow team
-- Integration with GovTech-managed AI infrastructure (AIBots API or Platform AI Services) for LLM service
 
 **Technical considerations:**
 
-- AI infrastructure: GovTech AIBots API or Platform AI Services (managed, compliant)
+- AI infrastructure: **Google Cloud** — Vertex AI for embeddings, vector search, RAG orchestration, and Gemini LLM; Google Drive as the document source and knowledge management layer; chosen for scalability and reuse across MOE products
 - Context assembly + system prompt design: owned by Glow/DXD
 - TW rendering: owned by Glow/DXD
-- Vector store selection for document embeddings
-- Document refresh cadence: how often source materials are re-ingested
+- Document refresh cadence: how often source materials are re-ingested from Google Drive
+- **Open question** — confirm Vertex AI region / data residency satisfies MOE IT requirements
 - API contract with TW for serving recommendation cards and chat responses
 - Retrieval quality testing: ensure relevant chunks are retrieved for given contexts
 - **SDT API data classification** — the SDT API handles role-based filtering and returns only the student data the accessing teacher is authorised to view; Glow CI must read and respect the data classification level returned (Sensitive High vs Sensitive Normal) and must not elevate access beyond what the API provides
@@ -151,7 +153,7 @@ Glow CI consists of five interconnected parts:
 
 | # | As a... | I want to... | So that... |
 |---|---------|-------------|-----------|
-| 1.1 | Engineer | test the AIBots API on UAT for RAG + LLM capabilities | we validate that the AI infrastructure supports our retrieval and synthesis requirements before building on it |
+| 1.1 | Engineer | set up and validate Vertex AI for RAG + LLM capabilities (embeddings, vector search, Gemini) | we validate the Google Cloud AI stack meets our retrieval and synthesis requirements before building on it |
 | 1.2 | Engineer | pull student data from SDT | we can associate guidance recommendations with the right teacher context |
 | 1.3 | Engineer | pull teacher data from HR/EduPass | we can use student profile signals to trigger contextually relevant guidance retrieval |
 
@@ -262,11 +264,12 @@ Glow CI consists of five interconnected parts:
 
 **Technical considerations:**
 
-- Document storage: where and how materials are stored (cloud storage, CDN, etc.) — must comply with MOE data policies
+- Document storage: materials are stored in a dedicated Google Drive folder (cleared to Official Closed via TRA — see Data Classification Constraints)
 - Format handling: rendering pipeline for PDF, Word, and HTML content
 - Deep-linking / anchor support: ability to link to specific sections within a document
 - Sync with RAG pipeline (Part 1): the same ingested materials serve both the native viewer and the RAG vector store
 - Access control: ensure only authorised teachers can access domain-specific materials
+- **Open question — viewer approach:** Source documents now live in Google Drive. Evaluate whether Google Drive's native document preview (via Drive Viewer API or iframe) can serve as the inline viewer within TW, reducing custom build effort, vs. building a fully custom TW-native viewer. Decision needed before Phase 2.
 
 **User stories:**
 
@@ -340,7 +343,8 @@ Chat-first approach — the AI Chat interface is the primary value driver and sh
 
 - TW platform launch (Apr 2026) — integration surface must be available
 - SDT domain materials handoff — pilot content must be ingested before Phase 2
-- GovTech AI infrastructure access — API keys/onboarding for AIBots or Platform AI Services
+- Google Cloud access — Vertex AI project setup, service account provisioning, and Gemini model access
+- **Google Drive TRA** — dedicated folder must be cleared to Official Closed (Sensitive Normal) before document ingestion can begin; initiate early as a Phase 1 prerequisite
 - TW API contracts — agreed integration points for embedding chat, cards, and viewer
 
 ---
@@ -353,6 +357,7 @@ Chat-first approach — the AI Chat interface is the primary value driver and sh
 | Hallucination — AI fabricates guidance not in source materials | Strict RAG grounding; mandatory source citations; zero-tolerance guardrail metric |
 | Teacher over-reliance on AI recommendations | Clear positioning: "Guidance, not SOP — teachers make the final decision." Disclaimer in UI |
 | Source material staleness | Defined refresh cadence; process for domain owners to flag updated materials |
+| Google Drive data classification | Current GDrive is Sensitive Low; TRA required to clear a dedicated folder to Official Closed (Sensitive Normal). Ingestion cannot begin until TRA is approved. | Initiate TRA in parallel with Phase 1 setup; treat as a hard blocker |
 
 ---
 

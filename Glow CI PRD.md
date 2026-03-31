@@ -1,6 +1,6 @@
 # Glow Contextual Intelligence (Glow CI) — Product Requirements Document
 
-**Status:** Draft v2.2 | **Last updated:** 2026-03-31 | **Author:** Jasmine Tay, PM
+**Status:** Draft v2.3 | **Last updated:** 2026-03-31 | **Author:** Jasmine Tay, PM
 
 ---
 
@@ -40,6 +40,7 @@
 
 | Version | Date | Author | Summary |
 |---------|------|--------|---------|
+| v2.3 | 2026-03-31 | Jasmine Tay | Add Technical Options Evaluation to Part 1 (open-source vs cloud AI services in GCC vs Platform.gov AI) |
 | v2.2 | 2026-03-31 | Jasmine Tay | Move TW API contract stories to Part 2; add PM + Engineer stories across Parts 2–5 |
 | v2.1 | 2026-03-31 | Jasmine Tay | Remove 1.2 EduPass alignment story — existing MIMS roles doc sufficient; reindex |
 | v2.0 | 2026-03-31 | Jasmine Tay | Updated Part 1 user stories to cover all three layers (Contextual Data, Knowledge Base, AI Model) with PM + Engineer stories |
@@ -195,6 +196,35 @@ Glow CI consists of five interconnected parts:
 - **RAG orchestration** via Vertex AI — retrieves relevant document chunks based on assembled context
 - **LLM synthesis** via Gemini — synthesises retrieved chunks into digestible guidance
 - **Strict grounding** — all outputs must cite source documents; no unsupported claims
+
+**Technical options evaluation:**
+
+Three approaches were evaluated for the AI stack:
+
+| Option | Approach | Verdict |
+|--------|----------|---------|
+| **A — Self-host open-source AI** | Deploy and manage open-source LLMs (e.g. Llama 3, Mistral) on own infrastructure; build RAG pipeline from scratch | ❌ Not recommended |
+| **B — Cloud AI services in GCC** | Managed RAG + LLM via Google Cloud (Vertex AI + Gemini) or AWS Bedrock, within GCC environment | ✅ Recommended |
+| **C — Platform.gov AI** | Leverage Singapore Government's whole-of-government AI platform (e.g. Pair, Launchpad AI) for LLM synthesis | ⚠️ Partial fit — revisit |
+
+**Option A — Self-host open-source AI**
+- *Pros:* Full control; no vendor lock-in; lower marginal cost at scale
+- *Cons:* Heavy engineering burden (infra, security hardening, model ops); dedicated AI infra team needed; GCC compliance not pre-cleared; RAG tooling must be built from scratch
+- *Verdict:* Engineering overhead exceeds current team capacity (0.2 TL, 0.5 + 0.5 Engineers) and Aug 2026 pilot timeline
+
+**Option B — Cloud AI services in GCC (Vertex AI / AWS Bedrock)**
+- *Pros:* Managed and production-ready; Google Cloud already approved for MOE; integrated RAG orchestration + Vector Search + LLM in one stack; data residency and enterprise security built-in; fastest time-to-pilot
+- *Cons:* Vendor dependency; ongoing cloud costs; requires GCC-specific Vertex AI provisioning
+- *Verdict:* Best balance of capability, compliance, and delivery speed — **selected approach**
+
+**Option C — Platform.gov AI (e.g. Pair, Launchpad AI)**
+- *Pros:* Pre-cleared for government data classification; centrally managed; simplified procurement; aligns with WOG AI strategy
+- *Cons:* Limited support for custom RAG pipelines and knowledge base ingestion; dependency on platform roadmap; less control over retrieval quality and grounding
+- *Verdict:* Insufficient for full RAG orchestration at current platform maturity. Monitor roadmap — if a RAG-compatible managed offering becomes available, evaluate for the LLM synthesis layer to reduce costs and improve WOG alignment
+
+**Decision:** Proceed with **Option B (Vertex AI in GCC)**. Continue to track Platform.gov AI capabilities for potential adoption in a future phase.
+
+---
 
 **Open questions:**
 

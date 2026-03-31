@@ -1,12 +1,13 @@
 # Glow Contextual Intelligence (Glow CI) — Product Requirements Document
 
-**Status:** Draft v1.4 | **Last updated:** 2026-03-31 | **Author:** Jasmine Tay, PM
+**Status:** Draft v1.5 | **Last updated:** 2026-03-31 | **Author:** Jasmine Tay, PM
 
 <details>
 <summary>Changelog</summary>
 
 | Version | Date | Author | Summary |
 |---------|------|--------|---------|
+| v1.5 | 2026-03-31 | Jasmine Tay | Renumbered parts to reflect delivery priority order |
 | v1.4 | 2026-03-31 | Jasmine Tay | Added other commitments notes to Core Product Team |
 | v1.3 | 2026-03-31 | Jasmine Tay | Removed Stakeholders section (consolidated into Team Roles) |
 | v1.2 | 2026-03-31 | Jasmine Tay | Added team capacity to Core Product Team table |
@@ -163,7 +164,7 @@ Glow CI consists of five interconnected parts:
 
 ---
 
-### Part 2: Recommendation Card Surfacing in TW Student Page
+### Part 3: Recommendation Card Surfacing in TW Student Page
 
 **What it is:** Contextual recommendation cards that appear on a student's page in Teacher's Workspace, proactively surfacing just-in-time (JIT) learning and intervention guidance based on the teacher's current context.
 
@@ -172,7 +173,7 @@ Glow CI consists of five interconnected parts:
 1. Teacher navigates to a student's page in TW
 2. Context signals (e.g., student profile data, case notes, flags) trigger Glow CI to retrieve relevant guidance
 3. 2–4 recommendation cards are surfaced, each containing a concise, digestible summary of relevant guidance
-4. Tapping a card opens the AI Chat Interface (Part 3) with first-cut recommendations already presented
+4. Tapping a card opens the AI Chat Interface (Part 2) with first-cut recommendations already presented
 
 **Card anatomy:**
 
@@ -193,14 +194,14 @@ Glow CI consists of five interconnected parts:
 
 | # | As a... | I want to... | So that... |
 |---|---------|-------------|-----------|
-| 2.1 | Teacher | see contextually relevant recommendation cards when I view a student's page | I get just-in-time guidance without searching for it myself |
-| 2.2 | Teacher | see a concise summary on each card with a link to the source | I can quickly assess relevance and trust the recommendation |
-| 2.3 | Teacher | tap a card to explore deeper via AI Chat | I can get more detailed, tailored guidance when I need it |
-| 2.4 | Designer | design cards that integrate into TW's student page without disrupting existing layout | the experience feels native and non-intrusive |
+| 3.1 | Teacher | see contextually relevant recommendation cards when I view a student's page | I get just-in-time guidance without searching for it myself |
+| 3.2 | Teacher | see a concise summary on each card with a link to the source | I can quickly assess relevance and trust the recommendation |
+| 3.3 | Teacher | tap a card to explore deeper via AI Chat | I can get more detailed, tailored guidance when I need it |
+| 3.4 | Designer | design cards that integrate into TW's student page without disrupting existing layout | the experience feels native and non-intrusive |
 
 ---
 
-### Part 3: AI Chat Interface
+### Part 2: AI Chat Interface
 
 **What it is:** A conversational interface within TW that allows teachers to ask natural-language questions and receive AI-synthesised responses grounded in MOE guidance materials. Opened from recommendation cards with first-cut recommendations pre-loaded.
 
@@ -232,17 +233,17 @@ Glow CI consists of five interconnected parts:
 
 | # | As a... | I want to... | So that... |
 |---|---------|-------------|-----------|
-| 3.1 | Teacher | open a chat pre-loaded with relevant guidance from the card I tapped | I don't have to re-explain my context |
-| 3.2 | Teacher | ask follow-up questions in natural language | I can explore guidance relevant to my specific situation |
-| 3.3 | Teacher | add my own context (e.g., family situation, past interventions tried) | the AI can tailor its recommendations beyond what's in the standard materials |
-| 3.4 | Teacher | see source citations on every AI response | I can verify the guidance and refer to the original document if needed |
-| 3.5 | Designer | design a chat experience embedded in TW that feels native | teachers adopt it as part of their natural workflow |
+| 2.1 | Teacher | open a chat pre-loaded with relevant guidance from the card I tapped | I don't have to re-explain my context |
+| 2.2 | Teacher | ask follow-up questions in natural language | I can explore guidance relevant to my specific situation |
+| 2.3 | Teacher | add my own context (e.g., family situation, past interventions tried) | the AI can tailor its recommendations beyond what's in the standard materials |
+| 2.4 | Teacher | see source citations on every AI response | I can verify the guidance and refer to the original document if needed |
+| 2.5 | Designer | design a chat experience embedded in TW that feels native | teachers adopt it as part of their natural workflow |
 
 ---
 
-### Part 4: Knowledge Storage & Retrieval — Native Resource Viewer in TW
+### Part 5: Knowledge Storage & Retrieval — Native Resource Viewer in TW
 
-**What it is:** A view-only inline document viewer within Teacher's Workspace that lets teachers open and read MOE guidance materials natively — without being redirected to external sites (MOE Intranet, SharePoint, etc.). In this phase, resources are accessed via recommendation cards (Part 2) and AI Chat citations (Part 3), not through standalone browsing or search.
+**What it is:** A view-only inline document viewer within Teacher's Workspace that lets teachers open and read MOE guidance materials natively — without being redirected to external sites (MOE Intranet, SharePoint, etc.). In this phase, resources are accessed via recommendation cards (Part 3) and AI Chat citations (Part 2), not through standalone browsing or search.
 
 **How it works:**
 
@@ -254,7 +255,7 @@ Glow CI consists of five interconnected parts:
 **Key capabilities:**
 
 - Native document viewer within TW (PDFs, Word docs, web content) — teachers never leave the platform
-- Deep-linking from recommendation cards (Part 2) and AI Chat citations (Part 3) directly into the viewer
+- Deep-linking from recommendation cards (Part 3) and AI Chat citations (Part 2) directly into the viewer
 - Section-level anchoring: viewer opens at the relevant section where possible
 - Shared storage with RAG pipeline (Part 1) — materials are ingested once, served for both AI retrieval and native viewing
 
@@ -279,16 +280,16 @@ Glow CI consists of five interconnected parts:
 
 | # | As a... | I want to... | So that... |
 |---|---------|-------------|-----------|
-| 4.1 | Teacher | open a document natively within TW when I tap a source citation | I can read the full guidance without being redirected to an external site |
-| 4.2 | Teacher | land on the relevant section of the document when opening from a citation | I don't have to scroll through the entire document to find what was referenced |
-| 4.3 | Designer | design a native document viewer that integrates into TW's existing UX | the experience feels like a core part of the platform, not a bolt-on |
-| 4.4 | Engineer | sync document storage with the RAG ingestion pipeline | materials are stored once and serve both native viewing and AI retrieval |
+| 5.1 | Teacher | open a document natively within TW when I tap a source citation | I can read the full guidance without being redirected to an external site |
+| 5.2 | Teacher | land on the relevant section of the document when opening from a citation | I don't have to scroll through the entire document to find what was referenced |
+| 5.3 | Designer | design a native document viewer that integrates into TW's existing UX | the experience feels like a core part of the platform, not a bolt-on |
+| 5.4 | Engineer | sync document storage with the RAG ingestion pipeline | materials are stored once and serve both native viewing and AI retrieval |
 
 **Future phases (out of scope now):** Standalone browse/search, bookmarking, version tracking
 
 ---
 
-### Part 5: Analytics & Tracking
+### Part 4: Analytics & Tracking
 
 **What it is:** The instrumentation layer that enables measurement of product metrics and guardrail metrics. Glow CI uses a dedicated GA4 property (separate from TW), supplemented with custom events and server-side logging.
 
@@ -330,18 +331,18 @@ Chat-first approach — the AI Chat interface is the primary value driver and sh
 | Priority | Part | Rationale |
 |----------|------|-----------|
 | **P0** | Part 1: RAG + LLM Service | Foundation — everything depends on the retrieval and AI backend |
-| **P0** | Part 3: AI Chat Interface | Primary user-facing surface; delivers the core value of synthesised guidance |
-| **P1** | Part 2: Recommendation Cards | Contextual discovery layer; adds proactive surfacing once chat is validated |
-| **P1** | Part 5: Analytics & Tracking | Required for pilot baseline measurement — must be live before 31 Aug |
-| **P2** | Part 4: Native Resource Viewer | Completes the citation loop — teachers can verify source materials without leaving TW |
+| **P0** | Part 2: AI Chat Interface | Primary user-facing surface; delivers the core value of synthesised guidance |
+| **P1** | Part 3: Recommendation Cards | Contextual discovery layer; adds proactive surfacing once chat is validated |
+| **P1** | Part 4: Analytics & Tracking | Required for pilot baseline measurement — must be live before 31 Aug |
+| **P2** | Part 5: Native Resource Viewer | Completes the citation loop — teachers can verify source materials without leaving TW |
 ### Timeline
 
 | Phase | Dates | Milestone | What ships |
 |-------|-------|-----------|-----------|
 | **Phase 1 — Foundation** | Apr – May 2026 | RAG pipeline operational | Part 1: Document ingestion, vector store, RAG orchestration, LLM integration. End-to-end pipeline tested with pilot domain materials |
-| **Phase 2 — Chat MVP** | May – Jul 2026 | Internal dogfood ready | Part 3: AI Chat interface integrated in TW. Teachers can ask questions and receive cited, grounded responses. Part 4: View-only resource viewer for source citations |
-| **Phase 3 — Pilot launch** | Aug 2026 | **Pilot launch (31 Aug)** | Parts 1 + 3 + 4 + 5 live with select pilot teachers. GA4 custom events instrumented. Baseline metrics collection begins |
-| **Phase 4 — Cards + iteration** | Sep 2026 | GA readiness | Part 2: Recommendation cards surfaced on student page. Iteration based on pilot feedback. GA launch (Oct 2026) |
+| **Phase 2 — Chat MVP** | May – Jul 2026 | Internal dogfood ready | Part 2: AI Chat interface integrated in TW. Teachers can ask questions and receive cited, grounded responses. Part 5: View-only resource viewer for source citations |
+| **Phase 3 — Pilot launch** | Aug 2026 | **Pilot launch (31 Aug)** | Parts 1 + 2 + 4 + 5 live with select pilot teachers. GA4 custom events instrumented. Baseline metrics collection begins |
+| **Phase 4 — Cards + iteration** | Sep 2026 | GA readiness | Part 3: Recommendation cards surfaced on student page. Iteration based on pilot feedback. GA launch (Oct 2026) |
 
 ### Key dependencies
 

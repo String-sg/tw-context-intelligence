@@ -1,6 +1,6 @@
 # Glow Contextual Intelligence (Glow CI) — Product Requirements Document
 
-**Status:** Draft v2.1 | **Last updated:** 2026-03-31 | **Author:** Jasmine Tay, PM
+**Status:** Draft v2.2 | **Last updated:** 2026-03-31 | **Author:** Jasmine Tay, PM
 
 ---
 
@@ -40,6 +40,7 @@
 
 | Version | Date | Author | Summary |
 |---------|------|--------|---------|
+| v2.2 | 2026-03-31 | Jasmine Tay | Move TW API contract stories to Part 2; add PM + Engineer stories across Parts 2–5 |
 | v2.1 | 2026-03-31 | Jasmine Tay | Remove 1.2 EduPass alignment story — existing MIMS roles doc sufficient; reindex |
 | v2.0 | 2026-03-31 | Jasmine Tay | Updated Part 1 user stories to cover all three layers (Contextual Data, Knowledge Base, AI Model) with PM + Engineer stories |
 | v1.9 | 2026-03-31 | Jasmine Tay | Streamlined Part 1 Technical Considerations to open questions only |
@@ -222,8 +223,6 @@ Glow CI consists of five interconnected parts:
 | **AI Model** | | | |
 | 1.10 | Engineer | set up and validate Vertex AI through GCC for RAG orchestration and Gemini for LLM synthesis | we confirm the AI stack meets our retrieval and synthesis requirements before building on it |
 | 1.11 | Engineer | build the context assembly layer that combines teacher and student context into a structured retrieval query | the RAG system receives well-formed, contextually relevant inputs |
-| 1.12 | PM | align with TW team to define and agree the API contract for serving recommendation cards and chat responses | engineers on both sides have a clear integration spec |
-| 1.13 | Engineer | implement the TW API contract for serving recommendation cards and chat responses | Glow CI output is correctly rendered within Teacher's Workspace |
 
 ---
 
@@ -264,6 +263,9 @@ Glow CI consists of five interconnected parts:
 | 2.3 | Teacher | add my own context (e.g., family situation, past interventions tried) | the AI can tailor its recommendations beyond what's in the standard materials |
 | 2.4 | Teacher | see source citations on every AI response | I can verify the guidance and refer to the original document if needed |
 | 2.5 | Designer | design a chat experience embedded in TW that feels native | teachers adopt it as part of their natural workflow |
+| 2.6 | PM | align with TW team to define and agree the API contract for serving chat responses and recommendation cards | engineers on both sides have a clear integration spec |
+| 2.7 | Engineer | implement the TW API contract to serve AI chat responses within Teacher's Workspace | Glow CI output is correctly rendered in TW |
+| 2.8 | Engineer | build the chat UI in TW (slide-over or embedded panel) pre-loaded with card context | teachers can begin exploring guidance immediately without re-stating their situation |
 
 ---
 
@@ -301,6 +303,9 @@ Glow CI consists of five interconnected parts:
 | 3.2 | Teacher | see a concise summary on each card with a link to the source | I can quickly assess relevance and trust the recommendation |
 | 3.3 | Teacher | tap a card to explore deeper via AI Chat | I can get more detailed, tailored guidance when I need it |
 | 3.4 | Designer | design cards that integrate into TW's student page without disrupting existing layout | the experience feels native and non-intrusive |
+| 3.5 | PM | align with TW team on card placement and layout within the student page | engineers have a clear spec for where and how cards are surfaced |
+| 3.6 | Engineer | implement card rendering in TW student page, triggered by student context signals | cards appear at the right moment without teacher action |
+| 3.7 | Engineer | implement card loading, empty-state, and error-state handling | the experience is graceful even when no guidance is available or retrieval fails |
 
 ---
 
@@ -333,7 +338,14 @@ These cannot be tracked in GA and require server/API-level logging:
 - **Hallucination incidents** — flagged via teacher feedback + manual review process
 - **Data classification breach** — logged at SDT API integration layer
 
----
+**User stories:**
+
+| # | As a... | I want to... | So that... |
+|---|---------|-------------|-----------|
+| 4.1 | Engineer | set up a dedicated GA4 property for Glow CI (separate from TW) | analytics are isolated and attributable to CI specifically |
+| 4.2 | Engineer | implement custom event tracking across cards and chat | product metrics (engagement, CTR, usefulness) can be measured |
+| 4.3 | Engineer | implement server-side logging for guardrail metrics (latency, citation coverage, data classification breaches) | guardrail metrics are captured outside GA where they can't be tracked via frontend events |
+| 4.4 | PM | define the review and escalation process for guardrail metrics, especially hallucination incidents | there is a clear owner and response protocol when a guardrail threshold is breached |
 
 ---
 
@@ -380,6 +392,9 @@ These cannot be tracked in GA and require server/API-level logging:
 | 5.2 | Teacher | land on the relevant section of the document when opening from a citation | I don't have to scroll through the entire document to find what was referenced |
 | 5.3 | Designer | design a native document viewer that integrates into TW's existing UX | the experience feels like a core part of the platform, not a bolt-on |
 | 5.4 | Engineer | sync document storage with the RAG ingestion pipeline | materials are stored once and serve both native viewing and AI retrieval |
+| 5.5 | PM | decide on viewer approach — Google Drive native preview (Drive Viewer API / iframe) vs custom TW-native viewer | engineers have a clear direction before Phase 2 build begins |
+| 5.6 | Engineer | implement the inline document viewer in TW using the agreed approach | teachers can read source materials without leaving the platform |
+| 5.7 | Engineer | implement deep-linking and section-level anchoring so citations open at the referenced section | teachers land directly at the relevant passage, not the document start |
 
 **Future phases (out of scope now):** Standalone browse/search, bookmarking, version tracking
 

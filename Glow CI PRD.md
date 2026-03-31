@@ -1,12 +1,13 @@
 # Glow Contextual Intelligence (Glow CI) — Product Requirements Document
 
-**Status:** Draft v1.2 | **Last updated:** 2026-03-31 | **Author:** Jasmine Tay, PM
+**Status:** Draft v1.3 | **Last updated:** 2026-03-31 | **Author:** Jasmine Tay, PM
 
 <details>
 <summary>Changelog</summary>
 
 | Version | Date | Author | Summary |
 |---------|------|--------|---------|
+| v1.3 | 2026-03-31 | Jasmine Tay | Removed Stakeholders section (consolidated into Team Roles) |
 | v1.2 | 2026-03-31 | Jasmine Tay | Added team capacity to Core Product Team table |
 | v1.1 | 2026-03-31 | Jasmine Tay | Added Team Roles section |
 | v1.0 | 2026-03-25 | Jasmine Tay | Updated tech stack to Google Cloud (Vertex AI + Google Drive); added GDrive TRA as compliance prerequisite; flagged Drive viewer as open question for Part 4 |
@@ -401,13 +402,3 @@ Chat-first approach — the AI Chat interface is the primary value driver and sh
 | Guidance Branch (GB) | Professional partner on student intervention knowledge |
 | West Zone Sups | Owner of existing SDT AI bot with organic adoption in West Zone; subject matter expert on pilot approach |
 
----
-
-## Stakeholders
-
-| Team | Role |
-|------|------|
-| SDCD | Student Development domain owner — provides source materials and domain expertise |
-| GB | Student Wellness domain owner — provides source materials and domain expertise |
-| TW/SDT Product Team | Platform integration — student page layout, context signals, API contracts |
-| Glow Team | Product, Design, and Engineering — owns CI product, context assembly, system prompt design, TW rendering |

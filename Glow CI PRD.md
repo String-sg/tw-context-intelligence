@@ -1,12 +1,13 @@
 # Glow Contextual Intelligence (Glow CI) — Product Requirements Document
 
-**Status:** Draft v1.1 | **Last updated:** 2026-03-31 | **Author:** Jasmine Tay, PM
+**Status:** Draft v1.2 | **Last updated:** 2026-03-31 | **Author:** Jasmine Tay, PM
 
 <details>
 <summary>Changelog</summary>
 
 | Version | Date | Author | Summary |
 |---------|------|--------|---------|
+| v1.2 | 2026-03-31 | Jasmine Tay | Added team capacity to Core Product Team table |
 | v1.1 | 2026-03-31 | Jasmine Tay | Added Team Roles section |
 | v1.0 | 2026-03-25 | Jasmine Tay | Updated tech stack to Google Cloud (Vertex AI + Google Drive); added GDrive TRA as compliance prerequisite; flagged Drive viewer as open question for Part 4 |
 | v0.7 | 2026-03-18 | Jasmine Tay | Added changelog + Analytics & Tracking section |
@@ -366,15 +367,15 @@ Chat-first approach — the AI Chat interface is the primary value driver and sh
 
 ### Core Product Team
 
-| Name | Role | Notes |
-|------|------|-------|
-| Jasmine | Product Manager | |
-| Ivan | Tech Lead | |
-| Nicholas | Engineer | |
-| Ralph | Engineer | |
-| Wondo | UI/UX Designer | |
-| Rebecca | UI/UX Design Intern | Incoming 11 May – 30 Sep 2026 |
-| TBD | AI Engineer | Role to be filled |
+| Name | Role | Capacity | Notes |
+|------|------|----------|-------|
+| Jasmine | Product Manager | 0.3 | |
+| Ivan | Tech Lead | 0.2 | |
+| Nicholas | Engineer | 0.5 | |
+| Ralph | Engineer | 0.5 | |
+| Wondo | UI/UX Designer | 0.1 | |
+| Rebecca | UI/UX Design Intern | TBD | Incoming 11 May – 30 Sep 2026 |
+| TBD | AI Engineer | TBD | Role to be filled |
 
 ### Collaborative Products
 

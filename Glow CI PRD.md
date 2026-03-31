@@ -1,12 +1,13 @@
 # Glow Contextual Intelligence (Glow CI) — Product Requirements Document
 
-**Status:** Draft v1.0 | **Last updated:** 2026-03-25 | **Author:** Jasmine Tay, PM
+**Status:** Draft v1.1 | **Last updated:** 2026-03-31 | **Author:** Jasmine Tay, PM
 
 <details>
 <summary>Changelog</summary>
 
 | Version | Date | Author | Summary |
 |---------|------|--------|---------|
+| v1.1 | 2026-03-31 | Jasmine Tay | Added Team Roles section |
 | v1.0 | 2026-03-25 | Jasmine Tay | Updated tech stack to Google Cloud (Vertex AI + Google Drive); added GDrive TRA as compliance prerequisite; flagged Drive viewer as open question for Part 4 |
 | v0.7 | 2026-03-18 | Jasmine Tay | Added changelog + Analytics & Tracking section |
 | v0.6 | 2026-03-18 | Jasmine Tay | Added SDT data classification constraints and guardrail metric |
@@ -358,6 +359,46 @@ Chat-first approach — the AI Chat interface is the primary value driver and sh
 | Teacher over-reliance on AI recommendations | Clear positioning: "Guidance, not SOP — teachers make the final decision." Disclaimer in UI |
 | Source material staleness | Defined refresh cadence; process for domain owners to flag updated materials |
 | Google Drive data classification | Current GDrive is Sensitive Low; TRA required to clear a dedicated folder to Official Closed (Sensitive Normal). Ingestion cannot begin until TRA is approved. | Initiate TRA in parallel with Phase 1 setup; treat as a hard blocker |
+
+---
+
+## Team Roles
+
+### Core Product Team
+
+| Name | Role | Notes |
+|------|------|-------|
+| Jasmine | Product Manager | |
+| Ivan | Tech Lead | |
+| Nicholas | Engineer | |
+| Ralph | Engineer | |
+| Wondo | UI/UX Designer | |
+| Rebecca | UI/UX Design Intern | Incoming 11 May – 30 Sep 2026 |
+| TBD | AI Engineer | Role to be filled |
+
+### Collaborative Products
+
+**SDT** — provides student contextual data
+
+| Name | Role |
+|------|------|
+| Xingyu | TW Students Product Manager |
+| Eileen | TW Students Tech Lead |
+| Layhui | TW Students Designer |
+
+**SEConnect** — subject matter expert for student wellbeing domain; supplies socio-emotional data to SDT
+
+| Name | Role |
+|------|------|
+| Eric | SEConnect / TW Wellbeing — Product Manager |
+| Claire | SEConnect / TW Wellbeing — Designer |
+
+### Business Stakeholders
+
+| Organisation | Role |
+|-------------|------|
+| Guidance Branch (GB) | Professional partner on student intervention knowledge |
+| West Zone Sups | Owner of existing SDT AI bot with organic adoption in West Zone; subject matter expert on pilot approach |
 
 ---
 

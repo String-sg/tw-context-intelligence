@@ -1,6 +1,6 @@
 # Glow Contextual Intelligence (Glow CI) — Product Requirements Document
 
-**Status:** Draft v2.4 | **Last updated:** 2026-03-31 | **Author:** Jasmine Tay, PM
+**Status:** Draft v2.5 | **Last updated:** 2026-03-31 | **Author:** Jasmine Tay, PM
 
 ---
 
@@ -40,6 +40,7 @@
 
 | Version | Date | Author | Summary |
 |---------|------|--------|---------|
+| v2.5 | 2026-03-31 | Jasmine Tay | Condense Technical Stack Selection to single story 1.12 covering options eval, GCC validation, and spike |
 | v2.4 | 2026-03-31 | Jasmine Tay | Add user stories 1.12–1.14 for Technical Stack Selection (GCC validation, Vertex AI spike, Platform.gov AI assessment) |
 | v2.3 | 2026-03-31 | Jasmine Tay | Add Technical Options Evaluation to Part 1 (open-source vs cloud AI services in GCC vs Platform.gov AI) |
 | v2.2 | 2026-03-31 | Jasmine Tay | Move TW API contract stories to Part 2; add PM + Engineer stories across Parts 2–5 |
@@ -255,9 +256,7 @@ Three approaches were evaluated for the AI stack:
 | 1.10 | Engineer | set up and validate Vertex AI through GCC for RAG orchestration and Gemini for LLM synthesis | we confirm the AI stack meets our retrieval and synthesis requirements before building on it |
 | 1.11 | Engineer | build the context assembly layer that combines teacher and student context into a structured retrieval query | the RAG system receives well-formed, contextually relevant inputs |
 | **Technical Stack Selection** | | | |
-| 1.12 | PM | validate with ICT/GovTech that Vertex AI in GCC satisfies MOE data residency and security requirements before provisioning begins | engineers have clearance to proceed with Option B and GCC setup can start in Sprint 1 |
-| 1.13 | Engineer | run a time-boxed spike to validate Vertex AI RAG pipeline latency and retrieval quality against a sample knowledge base | we have evidence Option B is technically viable before committing to the full build |
-| 1.14 | PM | assess Platform.gov AI API capabilities (e.g. Pair, Launchpad AI) and flag to team if RAG-compatible features become available | we can make an informed decision about migrating the LLM synthesis layer to Platform.gov AI in a future phase |
+| 1.12 | PM + Engineer | evaluate AI stack options (open-source self-host, Vertex AI in GCC, Platform.gov AI), validate GCC compliance and run a retrieval quality spike, and document the selected approach | the team has a clear, evidence-backed technical direction before build begins |
 
 ---
 

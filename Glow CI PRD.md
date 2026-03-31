@@ -1,12 +1,46 @@
 # Glow Contextual Intelligence (Glow CI) — Product Requirements Document
 
-**Status:** Draft v1.5 | **Last updated:** 2026-03-31 | **Author:** Jasmine Tay, PM
+**Status:** Draft v1.6 | **Last updated:** 2026-03-31 | **Author:** Jasmine Tay, PM
+
+---
+
+## Table of Contents
+
+- [Background](#background)
+  - [Problem Statement](#problem-statement)
+  - [Evidence of Problem](#evidence-of-problem)
+  - [Hypothesis of Root Causes](#hypothesis-of-root-causes)
+- [Why Now](#why-now)
+- [Success](#success)
+  - [North Star Metric](#north-star-metric)
+  - [Product Metrics](#product-metrics)
+  - [Guardrail Metrics](#guardrail-metrics)
+- [In Scope](#in-scope)
+  - [SDT Pilot within TW](#sdt-pilot-within-tw)
+  - [Addressable Market](#addressable-market)
+  - [Data Classification Constraints](#data-classification-constraints)
+  - [Out of Scope](#out-of-scope-this-phase)
+- [Product Requirements](#product-requirements)
+  - [Part 1: RAG + LLM Service](#part-1-technical-integration--rag--llm-service)
+  - [Part 2: AI Chat Interface](#part-2-ai-chat-interface)
+  - [Part 3: Recommendation Cards](#part-3-recommendation-card-surfacing-in-tw-student-page)
+  - [Part 4: Analytics & Tracking](#part-4-analytics--tracking)
+  - [Part 5: Native Resource Viewer](#part-5-knowledge-storage--retrieval--native-resource-viewer-in-tw)
+- [Priority & Timeline](#priority--timeline)
+  - [Delivery Priority](#delivery-priority)
+  - [Timeline](#timeline)
+  - [Key Dependencies](#key-dependencies)
+- [Key Risks and Mitigations](#key-risks-and-mitigations)
+- [Team Roles](#team-roles)
+
+---
 
 <details>
 <summary>Changelog</summary>
 
 | Version | Date | Author | Summary |
 |---------|------|--------|---------|
+| v1.6 | 2026-03-31 | Jasmine Tay | Added table of contents |
 | v1.5 | 2026-03-31 | Jasmine Tay | Renumbered parts to reflect delivery priority order |
 | v1.4 | 2026-03-31 | Jasmine Tay | Added other commitments notes to Core Product Team |
 | v1.3 | 2026-03-31 | Jasmine Tay | Removed Stakeholders section (consolidated into Team Roles) |

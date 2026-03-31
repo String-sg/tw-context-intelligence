@@ -1,6 +1,6 @@
 # Glow Contextual Intelligence (Glow CI) — Product Requirements Document
 
-**Status:** Draft v1.8 | **Last updated:** 2026-03-31 | **Author:** Jasmine Tay, PM
+**Status:** Draft v1.9 | **Last updated:** 2026-03-31 | **Author:** Jasmine Tay, PM
 
 ---
 
@@ -40,6 +40,7 @@
 
 | Version | Date | Author | Summary |
 |---------|------|--------|---------|
+| v1.9 | 2026-03-31 | Jasmine Tay | Streamlined Part 1 Technical Considerations to open questions only |
 | v1.8 | 2026-03-31 | Jasmine Tay | Restructured Part 1 Key Capabilities into Contextual Data / Knowledge Base / AI Model sub-sections |
 | v1.7 | 2026-03-31 | Jasmine Tay | Reordered Product Requirements sections to match part numbering; renamed Part 1 |
 | v1.6 | 2026-03-31 | Jasmine Tay | Added table of contents |
@@ -192,17 +193,14 @@ Glow CI consists of five interconnected parts:
 - **LLM synthesis** via Gemini — synthesises retrieved chunks into digestible guidance
 - **Strict grounding** — all outputs must cite source documents; no unsupported claims
 
-**Technical considerations:**
+**Open questions:**
 
-- AI infrastructure: **Google Cloud** — Vertex AI for embeddings, vector search, RAG orchestration, and Gemini LLM; Google Drive as the document source and knowledge management layer; chosen for scalability and reuse across MOE products
-- Context assembly + system prompt design: owned by Glow/DXD
-- TW rendering: owned by Glow/DXD
-- Document refresh cadence: how often source materials are re-ingested from Google Drive
-- **Open question** — confirm Vertex AI region / data residency satisfies MOE IT requirements
-- API contract with TW for serving recommendation cards and chat responses
-- Retrieval quality testing: ensure relevant chunks are retrieved for given contexts
-- **SDT API data classification** — the SDT API handles role-based filtering and returns only the student data the accessing teacher is authorised to view; Glow CI must read and respect the data classification level returned (Sensitive High vs Sensitive Normal) and must not elevate access beyond what the API provides
-- **Open question** — confirm with SDT PM which API fields/metadata indicate the teacher's data access tier, so it can be correctly parsed in context assembly
+1. **Vertex AI data residency** — confirm Vertex AI region satisfies MOE IT / data residency requirements
+2. **SDT API fields** — confirm with SDT PM which API fields/metadata indicate the teacher's data access tier, so it can be correctly parsed in context assembly
+3. **Document refresh cadence** — define how often guidance materials are re-ingested from Google Drive; who triggers it and how
+4. **TW API contract** — agree integration points with TW for serving recommendation cards and chat responses
+5. **Retrieval quality** — define testing approach to ensure relevant chunks are retrieved for given student/teacher contexts
+6. **Google Drive data classification — Sensitive High** — current GDrive is cleared to Official Closed (Sensitive Normal) via TRA; if Sensitive High student data needs to be associated with guidance content, a separate special clearance is required — determine scope and feasibility
 
 **User stories:**
 

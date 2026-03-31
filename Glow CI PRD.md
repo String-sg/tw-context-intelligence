@@ -1,6 +1,6 @@
 # Glow Contextual Intelligence (Glow CI) — Product Requirements Document
 
-**Status:** Draft v1.9 | **Last updated:** 2026-03-31 | **Author:** Jasmine Tay, PM
+**Status:** Draft v2.0 | **Last updated:** 2026-03-31 | **Author:** Jasmine Tay, PM
 
 ---
 
@@ -40,6 +40,7 @@
 
 | Version | Date | Author | Summary |
 |---------|------|--------|---------|
+| v2.0 | 2026-03-31 | Jasmine Tay | Updated Part 1 user stories to cover all three layers (Contextual Data, Knowledge Base, AI Model) with PM + Engineer stories |
 | v1.9 | 2026-03-31 | Jasmine Tay | Streamlined Part 1 Technical Considerations to open questions only |
 | v1.8 | 2026-03-31 | Jasmine Tay | Restructured Part 1 Key Capabilities into Contextual Data / Knowledge Base / AI Model sub-sections |
 | v1.7 | 2026-03-31 | Jasmine Tay | Reordered Product Requirements sections to match part numbering; renamed Part 1 |
@@ -206,9 +207,23 @@ Glow CI consists of five interconnected parts:
 
 | # | As a... | I want to... | So that... |
 |---|---------|-------------|-----------|
-| 1.1 | Engineer | set up and validate Vertex AI for RAG + LLM capabilities (embeddings, vector search, Gemini) | we validate the Google Cloud AI stack meets our retrieval and synthesis requirements before building on it |
-| 1.2 | Engineer | pull student data from SDT | we can associate guidance recommendations with the right teacher context |
-| 1.3 | Engineer | pull teacher data from HR/EduPass | we can use student profile signals to trigger contextually relevant guidance retrieval |
+| **Contextual Data** | | | |
+| 1.1 | PM | align with SDT PM to confirm which API fields indicate the teacher's data access tier and agree the data contract | engineers have a clear spec before building the SDT integration |
+| 1.2 | PM | align with EduPass/HR team to confirm available teacher context fields (role, school) and agree the data contract | engineers have a clear spec before building the EduPass integration |
+| 1.3 | Engineer | integrate with EduPass/HR to pull teacher context (role, school) | we can scope guidance recommendations to the teacher's role and school |
+| 1.4 | Engineer | integrate with SDT API to pull student context (late-coming %, bullying offences count, low-mood count) | student signals can trigger contextually relevant guidance retrieval |
+| 1.5 | Engineer | read and enforce the SDT data classification tier returned per teacher | Glow CI only surfaces data the accessing teacher is authorised to view |
+| **Knowledge Base** | | | |
+| 1.6 | PM | complete TRA to clear a dedicated Google Drive folder to Official Closed (Sensitive Normal) | engineers can connect to GDrive and ingest guidance materials in a compliant environment |
+| 1.7 | PM | set up the dedicated Google Drive folder and onboard domain owners (SDCD, GB) to populate it with guidance materials | there is a managed, populated knowledge base ready for ingestion |
+| 1.8 | Engineer | connect to the designated Google Drive folder to ingest guidance materials | domain owners have a managed source-of-truth for CI content |
+| 1.9 | Engineer | build a chunking and embedding pipeline using Vertex AI | guidance documents are indexed in Vector Search for semantic retrieval |
+| 1.10 | Engineer | set up a document refresh process | the knowledge base stays current when domain owners update source materials |
+| **AI Model** | | | |
+| 1.11 | Engineer | set up and validate Vertex AI through GCC for RAG orchestration and Gemini for LLM synthesis | we confirm the AI stack meets our retrieval and synthesis requirements before building on it |
+| 1.12 | Engineer | build the context assembly layer that combines teacher and student context into a structured retrieval query | the RAG system receives well-formed, contextually relevant inputs |
+| 1.13 | PM | align with TW team to define and agree the API contract for serving recommendation cards and chat responses | engineers on both sides have a clear integration spec |
+| 1.14 | Engineer | implement the TW API contract for serving recommendation cards and chat responses | Glow CI output is correctly rendered within Teacher's Workspace |
 
 ---
 

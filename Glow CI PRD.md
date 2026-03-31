@@ -1,6 +1,6 @@
 # Glow Contextual Intelligence (Glow CI) — Product Requirements Document
 
-**Status:** Draft v1.7 | **Last updated:** 2026-03-31 | **Author:** Jasmine Tay, PM
+**Status:** Draft v1.8 | **Last updated:** 2026-03-31 | **Author:** Jasmine Tay, PM
 
 ---
 
@@ -40,6 +40,7 @@
 
 | Version | Date | Author | Summary |
 |---------|------|--------|---------|
+| v1.8 | 2026-03-31 | Jasmine Tay | Restructured Part 1 Key Capabilities into Contextual Data / Knowledge Base / AI Model sub-sections |
 | v1.7 | 2026-03-31 | Jasmine Tay | Reordered Product Requirements sections to match part numbering; renamed Part 1 |
 | v1.6 | 2026-03-31 | Jasmine Tay | Added table of contents |
 | v1.5 | 2026-03-31 | Jasmine Tay | Renumbered parts to reflect delivery priority order |
@@ -167,15 +168,29 @@ Glow CI consists of five interconnected parts:
 
 ### Part 1: Technical Integration — Contextual Data + RAG + LLM
 
-**What it is:** A backend service that ingests MOE domain-scoped guidance materials, indexes them for retrieval, and connects them to an LLM via Retrieval-Augmented Generation (RAG) — enabling the AI to synthesise and surface relevant guidance grounded in official materials.
+**What it is:** A backend service with three integrated layers: (1) contextual data ingestion from teacher and student signals, (2) a knowledge base of MOE guidance materials indexed for semantic retrieval, and (3) a RAG + LLM layer that synthesises relevant guidance grounded in official materials.
 
 **Key capabilities:**
 
-- Ingest and index guidance materials from Student Intervention and Student Wellbeing domains, sourced from a dedicated **Google Drive folder**
-- Chunking and embedding pipeline to convert documents into a vector store for semantic retrieval, using **Vertex AI** (embeddings + Vector Search)
-- RAG orchestration layer via **Vertex AI**: retrieve relevant document chunks based on context, assemble them with a system prompt, and pass to **Gemini** for synthesis
-- Strict grounding: all AI outputs must cite source documents; no unsupported claims
-- Context assembly and system prompt design owned by DXD/Glow team
+**Contextual Data** — dynamic, per-session signals that shape what gets retrieved
+
+- **Teacher context** (from EduPass/HR) — teacher role, school; used to scope relevant guidance
+- **Student context** (from SDT API) — student data such as late-coming %, bullying offences count, low-mood count; used as the primary trigger for retrieval
+
+*SDT API handles role-based filtering — only data the accessing teacher is authorised to view is returned. Data classification level (Sensitive High vs Sensitive Normal) must be respected in context assembly.*
+
+**Knowledge Base** — guidance content that the AI retrieves from; managed by domain owners
+
+- Guidance materials from Student Intervention and Student Wellbeing domains, sourced from a dedicated **Google Drive folder**
+- Chunking and embedding pipeline to convert documents into a searchable vector store, using **Vertex AI** (embeddings + Vector Search)
+- Document refresh cadence: re-ingestion process when domain owners update source materials
+
+**AI Model** — retrieval and synthesis layer that turns contextual signals + knowledge base content into grounded guidance
+
+- **Context assembly** — combines teacher + student context signals into a structured retrieval query; system prompt design owned by Glow/DXD
+- **RAG orchestration** via Vertex AI — retrieves relevant document chunks based on assembled context
+- **LLM synthesis** via Gemini — synthesises retrieved chunks into digestible guidance
+- **Strict grounding** — all outputs must cite source documents; no unsupported claims
 
 **Technical considerations:**
 

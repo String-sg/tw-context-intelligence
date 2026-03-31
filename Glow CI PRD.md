@@ -1,6 +1,6 @@
 # Glow Contextual Intelligence (Glow CI) — Product Requirements Document
 
-**Status:** Draft v1.6 | **Last updated:** 2026-03-31 | **Author:** Jasmine Tay, PM
+**Status:** Draft v1.7 | **Last updated:** 2026-03-31 | **Author:** Jasmine Tay, PM
 
 ---
 
@@ -21,7 +21,7 @@
   - [Data Classification Constraints](#data-classification-constraints)
   - [Out of Scope](#out-of-scope-this-phase)
 - [Product Requirements](#product-requirements)
-  - [Part 1: RAG + LLM Service](#part-1-technical-integration--rag--llm-service)
+  - [Part 1: Technical Integration — Contextual Data + RAG + LLM](#part-1-technical-integration--contextual-data--rag--llm)
   - [Part 2: AI Chat Interface](#part-2-ai-chat-interface)
   - [Part 3: Recommendation Cards](#part-3-recommendation-card-surfacing-in-tw-student-page)
   - [Part 4: Analytics & Tracking](#part-4-analytics--tracking)
@@ -40,6 +40,7 @@
 
 | Version | Date | Author | Summary |
 |---------|------|--------|---------|
+| v1.7 | 2026-03-31 | Jasmine Tay | Reordered Product Requirements sections to match part numbering; renamed Part 1 |
 | v1.6 | 2026-03-31 | Jasmine Tay | Added table of contents |
 | v1.5 | 2026-03-31 | Jasmine Tay | Renumbered parts to reflect delivery priority order |
 | v1.4 | 2026-03-31 | Jasmine Tay | Added other commitments notes to Core Product Team |
@@ -164,7 +165,7 @@ Glow CI consists of five interconnected parts:
 
 ---
 
-### Part 1: Technical Integration — RAG + LLM Service
+### Part 1: Technical Integration — Contextual Data + RAG + LLM
 
 **What it is:** A backend service that ingests MOE domain-scoped guidance materials, indexes them for retrieval, and connects them to an LLM via Retrieval-Augmented Generation (RAG) — enabling the AI to synthesise and surface relevant guidance grounded in official materials.
 
@@ -195,43 +196,6 @@ Glow CI consists of five interconnected parts:
 | 1.1 | Engineer | set up and validate Vertex AI for RAG + LLM capabilities (embeddings, vector search, Gemini) | we validate the Google Cloud AI stack meets our retrieval and synthesis requirements before building on it |
 | 1.2 | Engineer | pull student data from SDT | we can associate guidance recommendations with the right teacher context |
 | 1.3 | Engineer | pull teacher data from HR/EduPass | we can use student profile signals to trigger contextually relevant guidance retrieval |
-
----
-
-### Part 3: Recommendation Card Surfacing in TW Student Page
-
-**What it is:** Contextual recommendation cards that appear on a student's page in Teacher's Workspace, proactively surfacing just-in-time (JIT) learning and intervention guidance based on the teacher's current context.
-
-**How it works:**
-
-1. Teacher navigates to a student's page in TW
-2. Context signals (e.g., student profile data, case notes, flags) trigger Glow CI to retrieve relevant guidance
-3. 2–4 recommendation cards are surfaced, each containing a concise, digestible summary of relevant guidance
-4. Tapping a card opens the AI Chat Interface (Part 2) with first-cut recommendations already presented
-
-**Card anatomy:**
-
-- **Headline:** Concise insight or recommendation (e.g., "Tier 2 Intervention: Peer mediation strategies for recurring conflict")
-- **Summary:** 2–3 sentence digest of relevant guidance, extracted from source materials
-- **Source citation:** Link/reference to the original MOE document
-- **CTA:** Opens AI Chat for deeper exploration
-
-**Design requirements:**
-
-- Cards must be lightweight and glanceable — teachers are time-poor
-- Visual hierarchy: headline > summary > source > CTA
-- Integrate naturally into TW's existing student page layout (coordinate with TW team)
-- Handle loading, empty state (no relevant guidance to surface), and error states gracefully
-- Cards should feel proactive but not intrusive — they are suggestions, not mandates
-
-**User stories:**
-
-| # | As a... | I want to... | So that... |
-|---|---------|-------------|-----------|
-| 3.1 | Teacher | see contextually relevant recommendation cards when I view a student's page | I get just-in-time guidance without searching for it myself |
-| 3.2 | Teacher | see a concise summary on each card with a link to the source | I can quickly assess relevance and trust the recommendation |
-| 3.3 | Teacher | tap a card to explore deeper via AI Chat | I can get more detailed, tailored guidance when I need it |
-| 3.4 | Designer | design cards that integrate into TW's student page without disrupting existing layout | the experience feels native and non-intrusive |
 
 ---
 
@@ -272,6 +236,76 @@ Glow CI consists of five interconnected parts:
 | 2.3 | Teacher | add my own context (e.g., family situation, past interventions tried) | the AI can tailor its recommendations beyond what's in the standard materials |
 | 2.4 | Teacher | see source citations on every AI response | I can verify the guidance and refer to the original document if needed |
 | 2.5 | Designer | design a chat experience embedded in TW that feels native | teachers adopt it as part of their natural workflow |
+
+---
+
+### Part 3: Recommendation Card Surfacing in TW Student Page
+
+**What it is:** Contextual recommendation cards that appear on a student's page in Teacher's Workspace, proactively surfacing just-in-time (JIT) learning and intervention guidance based on the teacher's current context.
+
+**How it works:**
+
+1. Teacher navigates to a student's page in TW
+2. Context signals (e.g., student profile data, case notes, flags) trigger Glow CI to retrieve relevant guidance
+3. 2–4 recommendation cards are surfaced, each containing a concise, digestible summary of relevant guidance
+4. Tapping a card opens the AI Chat Interface (Part 2) with first-cut recommendations already presented
+
+**Card anatomy:**
+
+- **Headline:** Concise insight or recommendation (e.g., "Tier 2 Intervention: Peer mediation strategies for recurring conflict")
+- **Summary:** 2–3 sentence digest of relevant guidance, extracted from source materials
+- **Source citation:** Link/reference to the original MOE document
+- **CTA:** Opens AI Chat for deeper exploration
+
+**Design requirements:**
+
+- Cards must be lightweight and glanceable — teachers are time-poor
+- Visual hierarchy: headline > summary > source > CTA
+- Integrate naturally into TW's existing student page layout (coordinate with TW team)
+- Handle loading, empty state (no relevant guidance to surface), and error states gracefully
+- Cards should feel proactive but not intrusive — they are suggestions, not mandates
+
+**User stories:**
+
+| # | As a... | I want to... | So that... |
+|---|---------|-------------|-----------|
+| 3.1 | Teacher | see contextually relevant recommendation cards when I view a student's page | I get just-in-time guidance without searching for it myself |
+| 3.2 | Teacher | see a concise summary on each card with a link to the source | I can quickly assess relevance and trust the recommendation |
+| 3.3 | Teacher | tap a card to explore deeper via AI Chat | I can get more detailed, tailored guidance when I need it |
+| 3.4 | Designer | design cards that integrate into TW's student page without disrupting existing layout | the experience feels native and non-intrusive |
+
+---
+
+### Part 4: Analytics & Tracking
+
+**What it is:** The instrumentation layer that enables measurement of product metrics and guardrail metrics. Glow CI uses a dedicated GA4 property (separate from TW), supplemented with custom events and server-side logging.
+
+**Standard GA4 (no custom instrumentation needed):**
+- Sessions, users, DAU/WAU
+- Traffic sources, device/browser breakdown
+- Page-level engagement time
+
+**Custom events required:**
+
+| Event | Trigger | Maps to metric |
+|-------|---------|----------------|
+| `ci_card_impression` | CI cards rendered on student page | CI card engagement (denominator) |
+| `ci_card_click` | Teacher clicks/expands a card | CI card engagement |
+| `ci_card_cta_click` | Teacher taps "Open chat" CTA on a card | CI recommendations CTR |
+| `ci_usefulness_rating` | Teacher submits thumbs up/down on a card or chat response | Usefulness rating |
+| `ci_chat_session_start` | AI Chat opens (from card or standalone) | AI chat sessions per teacher |
+| `ci_chat_message_sent` | Teacher sends a follow-up message in chat | Chat depth signal |
+| `ci_citation_click` | Teacher taps a source citation link | Citation engagement |
+| `ci_resource_viewer_open` | Document opens in native resource viewer | Resource viewer adoption |
+
+**Server-side logging (outside GA — guardrail metrics):**
+These cannot be tracked in GA and require server/API-level logging:
+- **Response latency** — logged at API level (request → render time)
+- **Source citation coverage** — tracked at LLM response generation level
+- **Hallucination incidents** — flagged via teacher feedback + manual review process
+- **Data classification breach** — logged at SDT API integration layer
+
+---
 
 ---
 
@@ -321,39 +355,6 @@ Glow CI consists of five interconnected parts:
 
 **Future phases (out of scope now):** Standalone browse/search, bookmarking, version tracking
 
----
-
-### Part 4: Analytics & Tracking
-
-**What it is:** The instrumentation layer that enables measurement of product metrics and guardrail metrics. Glow CI uses a dedicated GA4 property (separate from TW), supplemented with custom events and server-side logging.
-
-**Standard GA4 (no custom instrumentation needed):**
-- Sessions, users, DAU/WAU
-- Traffic sources, device/browser breakdown
-- Page-level engagement time
-
-**Custom events required:**
-
-| Event | Trigger | Maps to metric |
-|-------|---------|----------------|
-| `ci_card_impression` | CI cards rendered on student page | CI card engagement (denominator) |
-| `ci_card_click` | Teacher clicks/expands a card | CI card engagement |
-| `ci_card_cta_click` | Teacher taps "Open chat" CTA on a card | CI recommendations CTR |
-| `ci_usefulness_rating` | Teacher submits thumbs up/down on a card or chat response | Usefulness rating |
-| `ci_chat_session_start` | AI Chat opens (from card or standalone) | AI chat sessions per teacher |
-| `ci_chat_message_sent` | Teacher sends a follow-up message in chat | Chat depth signal |
-| `ci_citation_click` | Teacher taps a source citation link | Citation engagement |
-| `ci_resource_viewer_open` | Document opens in native resource viewer | Resource viewer adoption |
-
-**Server-side logging (outside GA — guardrail metrics):**
-These cannot be tracked in GA and require server/API-level logging:
-- **Response latency** — logged at API level (request → render time)
-- **Source citation coverage** — tracked at LLM response generation level
-- **Hallucination incidents** — flagged via teacher feedback + manual review process
-- **Data classification breach** — logged at SDT API integration layer
-
----
-
 ## Priority & Timeline
 
 **Pilot launch target:** 31 Aug 2026 | **GA target:** Oct 2026
@@ -364,7 +365,7 @@ Chat-first approach — the AI Chat interface is the primary value driver and sh
 
 | Priority | Part | Rationale |
 |----------|------|-----------|
-| **P0** | Part 1: RAG + LLM Service | Foundation — everything depends on the retrieval and AI backend |
+| **P0** | Part 1: Technical Integration — Contextual Data + RAG + LLM | Foundation — everything depends on the retrieval and AI backend |
 | **P0** | Part 2: AI Chat Interface | Primary user-facing surface; delivers the core value of synthesised guidance |
 | **P1** | Part 3: Recommendation Cards | Contextual discovery layer; adds proactive surfacing once chat is validated |
 | **P1** | Part 4: Analytics & Tracking | Required for pilot baseline measurement — must be live before 31 Aug |

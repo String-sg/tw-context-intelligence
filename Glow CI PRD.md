@@ -1,6 +1,6 @@
 # Glow Contextual Intelligence (Glow CI) — Product Requirements Document
 
-**Status:** Draft v2.7 | **Last updated:** 2026-04-14 | **Author:** Jasmine Tay, PM
+**Status:** Draft v2.8 | **Last updated:** 2026-04-14 | **Author:** Jasmine Tay, PM
 
 ---
 
@@ -41,6 +41,7 @@
 
 | Version | Date | Author | Summary |
 |---------|------|--------|---------|
+| v2.8 | 2026-04-14 | Jasmine Tay | Remove story 6.1 (data governance + retention) — handled on cloud infrastructure side; update open questions and risks accordingly |
 | v2.7 | 2026-04-14 | Jasmine Tay | Refine Part 6 — rename conversation log viewer to conversation analytics (logs, usefulness ratings, query trends, citation engagement); remove log filters |
 | v2.6 | 2026-04-14 | Jasmine Tay | Add Part 6 Management Portal (pilot scope); migrate knowledge base storage from GDrive to cloud storage (GCS or S3 — TBD); update Business Stakeholders to Knowledge Base Steering Committee |
 | v2.5 | 2026-03-31 | Jasmine Tay | Condense Technical Stack Selection to single story 1.12 covering options eval, GCC validation, and spike |
@@ -239,7 +240,7 @@ Three approaches were evaluated for the AI stack:
 4. **TW API contract** — agree integration points with TW for serving recommendation cards and chat responses
 5. **Storage decision** — confirm GCS vs S3 as the knowledge base storage provider; verify the chosen storage is cleared to Official Closed (Sensitive Normal) in the GCC environment and assess whether this replaces a GDrive TRA requirement
 6. **Retrieval quality** — define testing approach to ensure relevant chunks are retrieved for given student/teacher contexts
-7. **Conversation log data governance** — define retention period, access controls, and classification level for teacher query logs before logging begins (see Part 6)
+7. **Conversation log access controls** — define who can access teacher query logs in the management portal and at what classification level (data governance and retention handled on the cloud infrastructure side)
 
 **User stories:**
 
@@ -457,15 +458,12 @@ These cannot be tracked in GA and require server/API-level logging:
 
 **Open questions:**
 
-1. Should query logs be stored at full query text level or anonymised/aggregated only? (Data governance implication)
-2. What is the retention period for conversation logs?
-3. Is the portal a standalone web app or a restricted-access admin section within an existing platform?
+1. Is the portal a standalone web app or a restricted-access admin section within an existing platform?
 
 **User stories:**
 
 | # | As a... | I want to... | So that... |
 |---|---------|-------------|-----------|
-| 6.1 | PM | define data governance and retention policy for conversation logs | we handle teacher query data compliantly before logging begins |
 | 6.2 | PM | align with West Zone Sups on what query insights they need from the portal | the portal is built to the right spec before engineers start |
 | 6.3 | Engineer | implement server-side conversation log storage (query + AI response per session) | query data is captured and available for domain owner review |
 | 6.4 | Engineer | build a conversation analytics view in the management portal (query logs, usefulness ratings, query volume trends, citation engagement) | domain owners and West Zone Sups can monitor how teachers are using the system |
@@ -505,7 +503,7 @@ Chat-first approach — the AI Chat interface is the primary value driver and sh
 - Google Cloud access — Vertex AI project setup, service account provisioning, and Gemini model access
 - **Cloud storage provisioning** — GCS or S3 bucket provisioned and confirmed cleared to Official Closed (Sensitive Normal) in GCC environment before document ingestion begins; initiate early as a Phase 1 prerequisite
 - TW API contracts — agreed integration points for embedding chat, cards, and viewer
-- **Conversation log governance** — data governance and retention policy agreed before Part 6 logging is enabled
+- **Conversation log access controls** — define who can access query logs in the portal before Part 6 logging is enabled
 
 ---
 
@@ -518,7 +516,7 @@ Chat-first approach — the AI Chat interface is the primary value driver and sh
 | Teacher over-reliance on AI recommendations | Clear positioning: "Guidance, not SOP — teachers make the final decision." Disclaimer in UI |
 | Source material staleness | Defined refresh cadence; domain owners use management portal to upload updated materials which trigger re-ingestion |
 | Cloud storage classification | Chosen storage (GCS or S3) must be confirmed cleared to Official Closed (Sensitive Normal) in GCC before ingestion begins; treat as a Phase 1 prerequisite |
-| Conversation log privacy | Teacher queries may contain sensitive student context; logs must be stored at the correct classification level, access restricted to authorised domain owners, and retention period defined before logging is enabled |
+| Conversation log access | Teacher queries may contain sensitive student context; access to query logs in the portal must be restricted to authorised domain owners — data governance and retention are handled on the cloud infrastructure side |
 
 ---
 

@@ -1,6 +1,6 @@
 # Glow Contextual Intelligence (Glow CI) — Product Requirements Document
 
-**Status:** Draft v2.6 | **Last updated:** 2026-04-14 | **Author:** Jasmine Tay, PM
+**Status:** Draft v2.7 | **Last updated:** 2026-04-14 | **Author:** Jasmine Tay, PM
 
 ---
 
@@ -41,6 +41,7 @@
 
 | Version | Date | Author | Summary |
 |---------|------|--------|---------|
+| v2.7 | 2026-04-14 | Jasmine Tay | Refine Part 6 — rename conversation log viewer to conversation analytics (logs, usefulness ratings, query trends, citation engagement); remove log filters |
 | v2.6 | 2026-04-14 | Jasmine Tay | Add Part 6 Management Portal (pilot scope); migrate knowledge base storage from GDrive to cloud storage (GCS or S3 — TBD); update Business Stakeholders to Knowledge Base Steering Committee |
 | v2.5 | 2026-03-31 | Jasmine Tay | Condense Technical Stack Selection to single story 1.12 covering options eval, GCC validation, and spike |
 | v2.4 | 2026-03-31 | Jasmine Tay | Add user stories 1.12–1.14 for Technical Stack Selection (GCC validation, Vertex AI spike, Platform.gov AI assessment) |
@@ -450,9 +451,9 @@ These cannot be tracked in GA and require server/API-level logging:
 **Key capabilities:**
 
 - **Knowledge base management** — upload, tag, and delete guidance materials per domain; changes trigger re-ingestion into the RAG pipeline
-- **Conversation log viewer** — view teacher queries and AI responses; filter by domain, date, school
+- **Conversation analytics** — view teacher query logs and AI responses; track usefulness ratings (thumbs up/down), query volume trends, and citation engagement to understand how teachers are using the system
 - **Query insights** — surface frequent query patterns to identify knowledge gaps
-- **Domain-scoped access** — each domain owner sees only their domain's materials and query logs
+- **Domain-scoped access** — each domain owner sees only their domain's materials and analytics
 
 **Open questions:**
 
@@ -467,7 +468,7 @@ These cannot be tracked in GA and require server/API-level logging:
 | 6.1 | PM | define data governance and retention policy for conversation logs | we handle teacher query data compliantly before logging begins |
 | 6.2 | PM | align with West Zone Sups on what query insights they need from the portal | the portal is built to the right spec before engineers start |
 | 6.3 | Engineer | implement server-side conversation log storage (query + AI response per session) | query data is captured and available for domain owner review |
-| 6.4 | Engineer | build a query viewer in the management portal with filters (domain, date, school) | domain owners and West Zone Sups can monitor what teachers are asking |
+| 6.4 | Engineer | build a conversation analytics view in the management portal (query logs, usefulness ratings, query volume trends, citation engagement) | domain owners and West Zone Sups can monitor how teachers are using the system |
 | 6.5 | Engineer | build a knowledge base management UI (upload, tag, delete materials) | domain owners can manage their materials without needing direct storage access |
 | 6.6 | Engineer | implement domain-scoped access control in the portal | each domain owner sees only their domain's materials and queries |
 | 6.7 | PM | define the process for domain owners to act on query insights and update the knowledge base | there is a clear feedback loop from teacher query patterns to material updates |

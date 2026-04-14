@@ -498,7 +498,7 @@ These cannot be tracked in GA and require server/API-level logging:
 |---|---------|-------------|-----------|
 | 7.1 | PM | align with AI team to define Glow CI eval requirements (hallucination, citation coverage, response relevance) | we have agreed criteria before instrumentation begins |
 | 7.2 | Engineer | instrument Glow CI LLM calls with Langfuse tracing and connect to the evals platform | all RAG retrievals and Gemini responses are observable and the evals platform can run LLM judge evaluations |
-| 7.3 | Team | configure stakeholder-defined eval criteria on the evals platform and set up automated runs | business teams own quality requirements and evals run continuously without engineering involvement |
+| 7.3 | Engineer | configure stakeholder-defined eval criteria on the evals platform and set up automated runs | business teams own quality requirements and evals run continuously without engineering involvement |
 
 ## Priority & Timeline
 

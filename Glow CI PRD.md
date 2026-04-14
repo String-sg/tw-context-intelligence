@@ -1,6 +1,6 @@
 # Glow Contextual Intelligence (Glow CI) — Product Requirements Document
 
-**Status:** Draft v2.8 | **Last updated:** 2026-04-14 | **Author:** Jasmine Tay, PM
+**Status:** Draft v2.9 | **Last updated:** 2026-04-14 | **Author:** Jasmine Tay, PM
 
 ---
 
@@ -27,6 +27,7 @@
   - [Part 4: Analytics & Tracking](#part-4-analytics--tracking)
   - [Part 5: Native Resource Viewer](#part-5-knowledge-storage--retrieval--native-resource-viewer-in-tw)
   - [Part 6: Management Portal](#part-6-management-portal)
+  - [Part 7: AI Evaluations](#part-7-ai-evaluations)
 - [Priority & Timeline](#priority--timeline)
   - [Delivery Priority](#delivery-priority)
   - [Timeline](#timeline)
@@ -41,6 +42,7 @@
 
 | Version | Date | Author | Summary |
 |---------|------|--------|---------|
+| v2.9 | 2026-04-14 | Jasmine Tay | Add Part 7: AI Evaluations — Langfuse instrumentation + evals platform integration (3 stories: 7.1–7.3) |
 | v2.8 | 2026-04-14 | Jasmine Tay | Remove story 6.1 (data governance + retention) — handled on cloud infrastructure side; update open questions and risks accordingly |
 | v2.7 | 2026-04-14 | Jasmine Tay | Refine Part 6 — rename conversation log viewer to conversation analytics (logs, usefulness ratings, query trends, citation engagement); remove log filters |
 | v2.6 | 2026-04-14 | Jasmine Tay | Add Part 6 Management Portal (pilot scope); migrate knowledge base storage from GDrive to cloud storage (GCS or S3 — TBD); update Business Stakeholders to Knowledge Base Steering Committee |
@@ -173,7 +175,7 @@ SDT student data has two classification tiers. Teacher roles determine which tie
 
 ## Product Requirements
 
-Glow CI consists of six interconnected parts:
+Glow CI consists of seven interconnected parts:
 
 ---
 
@@ -471,6 +473,33 @@ These cannot be tracked in GA and require server/API-level logging:
 | 6.6 | Engineer | implement domain-scoped access control in the portal | each domain owner sees only their domain's materials and queries |
 | 6.7 | PM | define the process for domain owners to act on query insights and update the knowledge base | there is a clear feedback loop from teacher query patterns to material updates |
 
+---
+
+### Part 7: AI Evaluations
+
+**What it is:** Integration with the AI team's evals platform, via Langfuse instrumentation on Glow CI's LLM calls. Enables business stakeholders to define evaluation criteria in plain language (e.g. "no hallucination", "always cite sources") — the platform translates these into LLM judge prompts and runs automated evaluations against live Glow CI outputs. Gives business teams direct ownership over quality requirements without engineering involvement.
+
+**Key capabilities:**
+
+- **Langfuse tracing** — all Glow CI LLM calls (RAG retrieval + Gemini synthesis) are instrumented and observable
+- **Evals platform integration** — Langfuse traces feed the AI team's evals platform for LLM judge evaluation
+- **Stakeholder-defined criteria** — business teams define quality requirements (hallucination, citation coverage, relevance) directly on the evals platform
+- **Automated eval runs** — continuous evaluation of Glow CI outputs with results visible to stakeholders
+
+**Open questions:**
+
+1. **Langfuse deployment** — self-hosted vs cloud; confirm data residency requirements for GCC (self-hosted = no licensing cost; cloud = free tier with limits)
+2. **Eval scope for pilot** — which eval criteria must be live before 31 Aug vs post-pilot?
+3. **Evals platform readiness** — confirm the AI team's platform is deployed and accessible for Glow CI onboarding
+
+**User stories:**
+
+| # | As a... | I want to... | So that... |
+|---|---------|-------------|-----------|
+| 7.1 | PM | align with AI team to define Glow CI eval requirements (hallucination, citation coverage, response relevance) | we have agreed criteria before instrumentation begins |
+| 7.2 | Engineer | instrument Glow CI LLM calls with Langfuse tracing and connect to the evals platform | all RAG retrievals and Gemini responses are observable and the evals platform can run LLM judge evaluations |
+| 7.3 | Team | configure stakeholder-defined eval criteria on the evals platform and set up automated runs | business teams own quality requirements and evals run continuously without engineering involvement |
+
 ## Priority & Timeline
 
 **Pilot launch target:** 31 Aug 2026 | **GA target:** Oct 2026
@@ -487,13 +516,14 @@ Chat-first approach — the AI Chat interface is the primary value driver and sh
 | **P1** | Part 4: Analytics & Tracking | Required for pilot baseline measurement — must be live before 31 Aug |
 | **P2** | Part 5: Native Resource Viewer | Completes the citation loop — teachers can verify source materials without leaving TW |
 | **P1** | Part 6: Management Portal | Required for pilot — West Zone Sups need query monitoring from day 1; domain owners need a managed way to update the knowledge base |
+| **P1** | Part 7: AI Evaluations | Required before pilot — evals must be running to catch quality issues before teachers use the system |
 ### Timeline
 
 | Phase | Dates | Milestone | What ships |
 |-------|-------|-----------|-----------|
 | **Phase 1 — Foundation** | Apr – May 2026 | RAG pipeline operational | Part 1: Document ingestion, vector store, RAG orchestration, LLM integration. End-to-end pipeline tested with pilot domain materials |
 | **Phase 2 — Chat MVP** | May – Jul 2026 | Internal dogfood ready | Part 2: AI Chat interface integrated in TW. Teachers can ask questions and receive cited, grounded responses. Part 5: View-only resource viewer for source citations |
-| **Phase 3 — Pilot launch** | Aug 2026 | **Pilot launch (31 Aug)** | Parts 1 + 2 + 4 + 5 + 6 live with select pilot teachers. GA4 custom events instrumented. Baseline metrics collection begins. Domain owners and West Zone Sups onboarded to management portal |
+| **Phase 3 — Pilot launch** | Aug 2026 | **Pilot launch (31 Aug)** | Parts 1 + 2 + 4 + 5 + 6 + 7 live with select pilot teachers. GA4 custom events instrumented. Baseline metrics collection begins. Domain owners and West Zone Sups onboarded to management portal. Evals running on live LLM outputs |
 | **Phase 4 — Cards + iteration** | Sep 2026 | GA readiness | Part 3: Recommendation cards surfaced on student page. Iteration based on pilot feedback. GA launch (Oct 2026) |
 
 ### Key dependencies

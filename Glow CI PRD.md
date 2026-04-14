@@ -42,7 +42,7 @@
 
 | Version | Date | Author | Summary |
 |---------|------|--------|---------|
-| v2.9 | 2026-04-14 | Jasmine Tay | Add Part 7: AI Evaluations — Langfuse instrumentation + evals platform integration (3 stories: 7.1–7.3) |
+| v2.9 | 2026-04-14 | Jasmine Tay | Add Part 7: AI Evaluations — Langfuse instrumentation + evals platform integration (2 stories: 7.1–7.2); remove 7.3 (eval config handled by AI team) |
 | v2.8 | 2026-04-14 | Jasmine Tay | Remove story 6.1 (data governance + retention) — handled on cloud infrastructure side; update open questions and risks accordingly |
 | v2.7 | 2026-04-14 | Jasmine Tay | Refine Part 6 — rename conversation log viewer to conversation analytics (logs, usefulness ratings, query trends, citation engagement); remove log filters |
 | v2.6 | 2026-04-14 | Jasmine Tay | Add Part 6 Management Portal (pilot scope); migrate knowledge base storage from GDrive to cloud storage (GCS or S3 — TBD); update Business Stakeholders to Knowledge Base Steering Committee |
@@ -498,7 +498,6 @@ These cannot be tracked in GA and require server/API-level logging:
 |---|---------|-------------|-----------|
 | 7.1 | PM | align with AI team to define Glow CI eval requirements (hallucination, citation coverage, response relevance) | we have agreed criteria before instrumentation begins |
 | 7.2 | Engineer | instrument Glow CI LLM calls with Langfuse tracing and connect to the evals platform | all RAG retrievals and Gemini responses are observable and the evals platform can run LLM judge evaluations |
-| 7.3 | Engineer | configure stakeholder-defined eval criteria on the evals platform and set up automated runs | business teams own quality requirements and evals run continuously without engineering involvement |
 
 ## Priority & Timeline
 

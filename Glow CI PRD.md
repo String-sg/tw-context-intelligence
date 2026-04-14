@@ -1,6 +1,6 @@
 # Glow Contextual Intelligence (Glow CI) — Product Requirements Document
 
-**Status:** Draft v2.5 | **Last updated:** 2026-03-31 | **Author:** Jasmine Tay, PM
+**Status:** Draft v2.6 | **Last updated:** 2026-04-14 | **Author:** Jasmine Tay, PM
 
 ---
 
@@ -26,6 +26,7 @@
   - [Part 3: Recommendation Cards](#part-3-recommendation-card-surfacing-in-tw-student-page)
   - [Part 4: Analytics & Tracking](#part-4-analytics--tracking)
   - [Part 5: Native Resource Viewer](#part-5-knowledge-storage--retrieval--native-resource-viewer-in-tw)
+  - [Part 6: Management Portal](#part-6-management-portal)
 - [Priority & Timeline](#priority--timeline)
   - [Delivery Priority](#delivery-priority)
   - [Timeline](#timeline)
@@ -40,6 +41,7 @@
 
 | Version | Date | Author | Summary |
 |---------|------|--------|---------|
+| v2.6 | 2026-04-14 | Jasmine Tay | Add Part 6 Management Portal (pilot scope); migrate knowledge base storage from GDrive to cloud storage (GCS or S3 — TBD); update Business Stakeholders to Knowledge Base Steering Committee |
 | v2.5 | 2026-03-31 | Jasmine Tay | Condense Technical Stack Selection to single story 1.12 covering options eval, GCC validation, and spike |
 | v2.4 | 2026-03-31 | Jasmine Tay | Add user stories 1.12–1.14 for Technical Stack Selection (GCC validation, Vertex AI spike, Platform.gov AI assessment) |
 | v2.3 | 2026-03-31 | Jasmine Tay | Add Technical Options Evaluation to Part 1 (open-source vs cloud AI services in GCC vs Platform.gov AI) |
@@ -98,7 +100,7 @@ Teachers face high cognitive load daily. MOE has extensive domain-scoped learnin
 - **TW ready in April 2026** — Teacher's Workspace is launching as the primary working tool for teachers, providing the ideal integration surface to contextually surface guidance
 - **Available content from SDT** — Student development and wellbeing domains have structured materials ready to be ingested as the knowledge base
 - **AI appetite on the ground is growing** — Teachers and school leaders are increasingly receptive to AI-assisted workflows; this is the right window to establish a trustworthy first experience
-- **Google Cloud selected as AI infrastructure** — Vertex AI and Google Drive provide a scalable, sustainable foundation for RAG and knowledge management that can be extended across MOE products beyond CI
+- **Google Cloud selected as AI infrastructure** — Vertex AI provides a scalable, sustainable foundation for RAG and knowledge management that can be extended across MOE products beyond CI
 
 ---
 
@@ -134,7 +136,7 @@ Teachers face high cognitive load daily. MOE has extensive domain-scoped learnin
 
 - **Pilot domains:** Tier 2/3 Student Intervention and Student Wellbeing
 - **Pilot audience:** Select group of teachers using Teacher's Workspace, moving to GA in Oct 2026
-- **Domain owners:** SDCD (Student Development), GB (Student Wellness)
+- **Domain owners:** Knowledge Base Steering Committee (GB, CCE, and other profwing branches — see Team Roles)
 - **Addressable market:** All 33,000 General Education Officers (EOs) in MOE (post-pilot)
 
 ### Addressable Market
@@ -156,7 +158,7 @@ SDT student data has two classification tiers. Teacher roles determine which tie
 
 > Glow CI must only use student data the accessing teacher is authorised to view. Context assembly and card surfacing must be scoped to the teacher's data access level as determined by the SDT API.
 
-> **Google Drive data classification gap:** The current MOE Google Drive environment is classified Sensitive Low. Glow CI requires a dedicated GDrive folder cleared to **Official Closed (Sensitive Normal)** to store guidance materials associated with student context. A **Threat Risk Assessment (TRA)** must be completed before this folder can be used in production. This is a prerequisite for Phase 1.
+> **Knowledge base storage classification:** Guidance materials stored for RAG ingestion must be classified at **Official Closed (Sensitive Normal)** or above. The chosen cloud storage (GCS or S3 — TBD) must be confirmed as cleared to this level in the GCC environment before document ingestion begins. See Part 1 open questions.
 
 ### Out of Scope (this phase)
 
@@ -169,7 +171,7 @@ SDT student data has two classification tiers. Teacher roles determine which tie
 
 ## Product Requirements
 
-Glow CI consists of five interconnected parts:
+Glow CI consists of six interconnected parts:
 
 ---
 
@@ -188,9 +190,9 @@ Glow CI consists of five interconnected parts:
 
 **Knowledge Base** — guidance content that the AI retrieves from; managed by domain owners
 
-- Guidance materials from Student Intervention and Student Wellbeing domains, sourced from a dedicated **Google Drive folder**
+- Guidance materials from Student Intervention and Student Wellbeing domains, stored in a **cloud storage bucket (GCS or S3 — TBD)** and managed via the Management Portal (Part 6)
 - Chunking and embedding pipeline to convert documents into a searchable vector store, using **Vertex AI** (embeddings + Vector Search)
-- Document refresh cadence: re-ingestion process when domain owners update source materials
+- Document refresh cadence: re-ingestion process triggered when domain owners upload or update materials via the portal
 
 **AI Model** — retrieval and synthesis layer that turns contextual signals + knowledge base content into grounded guidance
 
@@ -232,10 +234,11 @@ Three approaches were evaluated for the AI stack:
 
 1. **Vertex AI data residency** — confirm Vertex AI region satisfies MOE IT / data residency requirements
 2. **SDT API fields** — confirm with SDT PM which API fields/metadata indicate the teacher's data access tier, so it can be correctly parsed in context assembly
-3. **Document refresh cadence** — define how often guidance materials are re-ingested from Google Drive; who triggers it and how
+3. **Document refresh cadence** — define how often guidance materials are re-ingested from cloud storage; whether ingestion is triggered automatically on upload or run on a schedule
 4. **TW API contract** — agree integration points with TW for serving recommendation cards and chat responses
-5. **Retrieval quality** — define testing approach to ensure relevant chunks are retrieved for given student/teacher contexts
-6. **Google Drive data classification — Sensitive High** — current GDrive is cleared to Official Closed (Sensitive Normal) via TRA; if Sensitive High student data needs to be associated with guidance content, a separate special clearance is required — determine scope and feasibility
+5. **Storage decision** — confirm GCS vs S3 as the knowledge base storage provider; verify the chosen storage is cleared to Official Closed (Sensitive Normal) in the GCC environment and assess whether this replaces a GDrive TRA requirement
+6. **Retrieval quality** — define testing approach to ensure relevant chunks are retrieved for given student/teacher contexts
+7. **Conversation log data governance** — define retention period, access controls, and classification level for teacher query logs before logging begins (see Part 6)
 
 **User stories:**
 
@@ -247,9 +250,9 @@ Three approaches were evaluated for the AI stack:
 | 1.3 | Engineer | integrate with SDT API to pull student context (late-coming %, bullying offences count, low-mood count) | student signals can trigger contextually relevant guidance retrieval |
 | 1.4 | Engineer | read and enforce the SDT data classification tier returned per teacher | Glow CI only surfaces data the accessing teacher is authorised to view |
 | **Knowledge Base** | | | |
-| 1.5 | PM | complete TRA to clear a dedicated Google Drive folder to Official Closed (Sensitive Normal) | engineers can connect to GDrive and ingest guidance materials in a compliant environment |
-| 1.6 | PM | set up the dedicated Google Drive folder and onboard domain owners (SDCD, GB) to populate it with guidance materials | there is a managed, populated knowledge base ready for ingestion |
-| 1.7 | Engineer | connect to the designated Google Drive folder to ingest guidance materials | domain owners have a managed source-of-truth for CI content |
+| 1.5 | PM | provision cloud storage bucket (GCS or S3) and confirm classification clearance to Official Closed (Sensitive Normal) in the GCC environment | engineers can connect to storage and ingest guidance materials in a compliant environment |
+| 1.6 | PM | set up cloud storage and onboard steering committee representatives to populate guidance materials via the Management Portal (Part 6) | there is a managed, populated knowledge base ready for ingestion |
+| 1.7 | Engineer | connect to the designated cloud storage bucket to ingest guidance materials | domain owners have a managed source-of-truth for CI content |
 | 1.8 | Engineer | build a chunking and embedding pipeline using Vertex AI | guidance documents are indexed in Vector Search for semantic retrieval |
 | 1.9 | Engineer | set up a document refresh process | the knowledge base stays current when domain owners update source materials |
 | **AI Model** | | | |
@@ -411,12 +414,12 @@ These cannot be tracked in GA and require server/API-level logging:
 
 **Technical considerations:**
 
-- Document storage: materials are stored in a dedicated Google Drive folder (cleared to Official Closed via TRA — see Data Classification Constraints)
+- Document storage: materials are stored in a cloud storage bucket (GCS or S3 — TBD, cleared to Official Closed — see Data Classification Constraints)
 - Format handling: rendering pipeline for PDF, Word, and HTML content
 - Deep-linking / anchor support: ability to link to specific sections within a document
 - Sync with RAG pipeline (Part 1): the same ingested materials serve both the native viewer and the RAG vector store
 - Access control: ensure only authorised teachers can access domain-specific materials
-- **Open question — viewer approach:** Source documents now live in Google Drive. Evaluate whether Google Drive's native document preview (via Drive Viewer API or iframe) can serve as the inline viewer within TW, reducing custom build effort, vs. building a fully custom TW-native viewer. Decision needed before Phase 2.
+- **Open question — viewer approach:** Evaluate whether a cloud storage–backed document preview (e.g. GCS signed URL + PDF.js, or Drive Viewer API if using GDrive) can serve as the inline viewer within TW, vs. building a fully custom TW-native viewer. Decision needed before Phase 2.
 
 **User stories:**
 
@@ -431,6 +434,43 @@ These cannot be tracked in GA and require server/API-level logging:
 | 5.7 | Engineer | implement deep-linking and section-level anchoring so citations open at the referenced section | teachers land directly at the relevant passage, not the document start |
 
 **Future phases (out of scope now):** Standalone browse/search, bookmarking, version tracking
+
+---
+
+### Part 6: Management Portal
+
+**What it is:** An internal web portal for Knowledge Base Steering Committee members and West Zone Sups to manage guidance materials and monitor teacher query logs. Enables a data-driven feedback loop from teacher usage patterns back to knowledge base maintenance.
+
+**How it works:**
+
+1. Domain owners log into the portal and upload, tag, or remove guidance materials for their domain — changes flow automatically into the RAG ingestion pipeline (Part 1)
+2. West Zone Sups and domain owners view conversation logs filtered by domain, date, or school to understand what teachers are asking
+3. Query patterns surface knowledge gaps (e.g. recurring questions with no strong source match), informing what new materials to add
+
+**Key capabilities:**
+
+- **Knowledge base management** — upload, tag, and delete guidance materials per domain; changes trigger re-ingestion into the RAG pipeline
+- **Conversation log viewer** — view teacher queries and AI responses; filter by domain, date, school
+- **Query insights** — surface frequent query patterns to identify knowledge gaps
+- **Domain-scoped access** — each domain owner sees only their domain's materials and query logs
+
+**Open questions:**
+
+1. Should query logs be stored at full query text level or anonymised/aggregated only? (Data governance implication)
+2. What is the retention period for conversation logs?
+3. Is the portal a standalone web app or a restricted-access admin section within an existing platform?
+
+**User stories:**
+
+| # | As a... | I want to... | So that... |
+|---|---------|-------------|-----------|
+| 6.1 | PM | define data governance and retention policy for conversation logs | we handle teacher query data compliantly before logging begins |
+| 6.2 | PM | align with West Zone Sups on what query insights they need from the portal | the portal is built to the right spec before engineers start |
+| 6.3 | Engineer | implement server-side conversation log storage (query + AI response per session) | query data is captured and available for domain owner review |
+| 6.4 | Engineer | build a query viewer in the management portal with filters (domain, date, school) | domain owners and West Zone Sups can monitor what teachers are asking |
+| 6.5 | Engineer | build a knowledge base management UI (upload, tag, delete materials) | domain owners can manage their materials without needing direct storage access |
+| 6.6 | Engineer | implement domain-scoped access control in the portal | each domain owner sees only their domain's materials and queries |
+| 6.7 | PM | define the process for domain owners to act on query insights and update the knowledge base | there is a clear feedback loop from teacher query patterns to material updates |
 
 ## Priority & Timeline
 
@@ -447,13 +487,14 @@ Chat-first approach — the AI Chat interface is the primary value driver and sh
 | **P1** | Part 3: Recommendation Cards | Contextual discovery layer; adds proactive surfacing once chat is validated |
 | **P1** | Part 4: Analytics & Tracking | Required for pilot baseline measurement — must be live before 31 Aug |
 | **P2** | Part 5: Native Resource Viewer | Completes the citation loop — teachers can verify source materials without leaving TW |
+| **P1** | Part 6: Management Portal | Required for pilot — West Zone Sups need query monitoring from day 1; domain owners need a managed way to update the knowledge base |
 ### Timeline
 
 | Phase | Dates | Milestone | What ships |
 |-------|-------|-----------|-----------|
 | **Phase 1 — Foundation** | Apr – May 2026 | RAG pipeline operational | Part 1: Document ingestion, vector store, RAG orchestration, LLM integration. End-to-end pipeline tested with pilot domain materials |
 | **Phase 2 — Chat MVP** | May – Jul 2026 | Internal dogfood ready | Part 2: AI Chat interface integrated in TW. Teachers can ask questions and receive cited, grounded responses. Part 5: View-only resource viewer for source citations |
-| **Phase 3 — Pilot launch** | Aug 2026 | **Pilot launch (31 Aug)** | Parts 1 + 2 + 4 + 5 live with select pilot teachers. GA4 custom events instrumented. Baseline metrics collection begins |
+| **Phase 3 — Pilot launch** | Aug 2026 | **Pilot launch (31 Aug)** | Parts 1 + 2 + 4 + 5 + 6 live with select pilot teachers. GA4 custom events instrumented. Baseline metrics collection begins. Domain owners and West Zone Sups onboarded to management portal |
 | **Phase 4 — Cards + iteration** | Sep 2026 | GA readiness | Part 3: Recommendation cards surfaced on student page. Iteration based on pilot feedback. GA launch (Oct 2026) |
 
 ### Key dependencies
@@ -461,8 +502,9 @@ Chat-first approach — the AI Chat interface is the primary value driver and sh
 - TW platform launch (Apr 2026) — integration surface must be available
 - SDT domain materials handoff — pilot content must be ingested before Phase 2
 - Google Cloud access — Vertex AI project setup, service account provisioning, and Gemini model access
-- **Google Drive TRA** — dedicated folder must be cleared to Official Closed (Sensitive Normal) before document ingestion can begin; initiate early as a Phase 1 prerequisite
+- **Cloud storage provisioning** — GCS or S3 bucket provisioned and confirmed cleared to Official Closed (Sensitive Normal) in GCC environment before document ingestion begins; initiate early as a Phase 1 prerequisite
 - TW API contracts — agreed integration points for embedding chat, cards, and viewer
+- **Conversation log governance** — data governance and retention policy agreed before Part 6 logging is enabled
 
 ---
 
@@ -473,8 +515,9 @@ Chat-first approach — the AI Chat interface is the primary value driver and sh
 | Retrieval quality — wrong or irrelevant guidance surfaced | Rigorous retrieval testing; tuning chunk size, embedding model, and similarity thresholds |
 | Hallucination — AI fabricates guidance not in source materials | Strict RAG grounding; mandatory source citations; zero-tolerance guardrail metric |
 | Teacher over-reliance on AI recommendations | Clear positioning: "Guidance, not SOP — teachers make the final decision." Disclaimer in UI |
-| Source material staleness | Defined refresh cadence; process for domain owners to flag updated materials |
-| Google Drive data classification | Current GDrive is Sensitive Low; TRA required to clear a dedicated folder to Official Closed (Sensitive Normal). Ingestion cannot begin until TRA is approved. | Initiate TRA in parallel with Phase 1 setup; treat as a hard blocker |
+| Source material staleness | Defined refresh cadence; domain owners use management portal to upload updated materials which trigger re-ingestion |
+| Cloud storage classification | Chosen storage (GCS or S3) must be confirmed cleared to Official Closed (Sensitive Normal) in GCC before ingestion begins; treat as a Phase 1 prerequisite |
+| Conversation log privacy | Teacher queries may contain sensitive student context; logs must be stored at the correct classification level, access restricted to authorised domain owners, and retention period defined before logging is enabled |
 
 ---
 
@@ -509,10 +552,19 @@ Chat-first approach — the AI Chat interface is the primary value driver and sh
 | Eric | SEConnect / TW Wellbeing — Product Manager |
 | Claire | SEConnect / TW Wellbeing — Designer |
 
-### Business Stakeholders
+### Knowledge Base Steering Committee
+
+A cross-branch committee of professional wing representatives who own and contribute domain-specific guidance materials to the Glow CI knowledge base. Each branch is responsible for their domain's content quality and currency.
+
+| Organisation | Domain | Role |
+|-------------|--------|------|
+| Guidance Branch (GB) | Student wellbeing | **Lead domain owner** for wellbeing; professional partner on student intervention knowledge |
+| CCE | Character & Citizenship Education | Domain owner — contributes CCE guidance materials |
+| *(other branches TBC)* | TBC | Domain owners — contribute domain-specific guidance materials |
+
+### Other Business Stakeholders
 
 | Organisation | Role |
 |-------------|------|
-| Guidance Branch (GB) | Professional partner on student intervention knowledge |
-| West Zone Sups | Owner of existing SDT AI bot with organic adoption in West Zone; subject matter expert on pilot approach |
+| West Zone Sups | Owner of existing SDT AI bot with organic adoption in West Zone; subject matter expert on pilot approach; primary user of management portal query insights |
 

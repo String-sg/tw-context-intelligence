@@ -1,6 +1,6 @@
 # Glow Contextual Intelligence (Glow CI) — Product Requirements Document
 
-**Status:** Draft v2.9 | **Last updated:** 2026-04-14 | **Author:** Jasmine Tay, PM
+**Status:** Draft v2.10 | **Last updated:** 2026-04-29 | **Authors:** Jasmine Tay, PM; Ralph Santos, Engineer
 
 ---
 
@@ -42,6 +42,7 @@
 
 | Version | Date | Author | Summary |
 |---------|------|--------|---------|
+| v2.10 | 2026-04-29 | Ralph Santos | Part 1 — add unified SDK evaluation: Vercel AI SDK not adopted (RAG Engine unsupported, no portability or UI-hook benefit); selected first-party `@google-cloud/aiplatform` (Vertex RAG Engine) + `@google/genai` (Gemini synthesis) with pros/cons documented |
 | v2.9 | 2026-04-14 | Jasmine Tay | Add Part 7: AI Evaluations — Langfuse instrumentation + evals platform integration (2 stories: 7.1–7.2); remove 7.3 (eval config handled by AI team) |
 | v2.8 | 2026-04-14 | Jasmine Tay | Remove story 6.1 (data governance + retention) — handled on cloud infrastructure side; update open questions and risks accordingly |
 | v2.7 | 2026-04-14 | Jasmine Tay | Refine Part 6 — rename conversation log viewer to conversation analytics (logs, usefulness ratings, query trends, citation engagement); remove log filters |
@@ -231,6 +232,35 @@ Three approaches were evaluated for the AI stack:
 - *Verdict:* Insufficient for full RAG orchestration at current platform maturity. Monitor roadmap — if a RAG-compatible managed offering becomes available, evaluate for the LLM synthesis layer to reduce costs and improve WOG alignment
 
 **Decision:** Proceed with **Option B (Vertex AI in GCC)**. Continue to track Platform.gov AI capabilities for potential adoption in a future phase.
+
+**SDK evaluation:**
+
+Two questions decided here: (1) whether to use a third-party LLM abstraction layer (e.g. Vercel AI SDK), and (2) which first-party SDK(s) to use against the Vertex RAG Engine + Gemini stack.
+
+*1. Abstraction layer — Vercel AI SDK*
+
+- *Pros:* Slim, modern API; normalised streaming protocol with `useChat` / `useCompletion` UI hooks; built-in helpers for tool calls and Zod-schema structured outputs; easy provider switching across supported vendors
+- *Cons:* Adds a third-party dependency between us and Vertex AI; **does not support Vertex RAG Engine** (no corpus management, no `retrieveContexts` / `augmentPrompt`) — we would still need `@google-cloud/aiplatform` alongside it; trails first-party SDKs on new Gemini features
+- *Verdict:* ❌ **Not adopted.** Vertex RAG Engine is the selected stack with no near-term plan to switch providers, and TW renders the chat UI itself (so Vercel's UI hooks add no value). Adopting it would mean carrying *both* Vercel AI SDK and `@google-cloud/aiplatform` while realising none of the portability or UI benefits. Revisit only if a future phase requires multi-provider support.
+
+*2. First-party SDKs — selected*
+
+Google's official Node SDKs, called directly. Two packages cover the stack:
+
+| Package | Role | Notes |
+|---------|------|-------|
+| `@google-cloud/aiplatform` | Vertex RAG Engine — corpus management, file import, context retrieval, prompt augmentation | Uses `VertexRagDataServiceClient` and `VertexRagServiceClient`. The only Node SDK that exposes RAG Engine APIs |
+| `@google/genai` | Gemini synthesis — content generation, streaming, function calling | Google's current unified Gemini SDK; supersedes the older `@google-cloud/vertexai` and `@google/generative-ai` packages for new Gemini features |
+
+> `@google-cloud/aiplatform` could technically cover Gemini synthesis as well (via `PredictionServiceClient`), but its GAPIC-style API is verbose. `@google/genai` is added for its slimmer, more modern interface on the synthesis path. To revisit if the second SDK starts to feel like overhead.
+
+*Top trade-offs of going first-party* (vs an abstraction layer):
+
+| Pros | Cons |
+|------|------|
+| Full Vertex RAG Engine support — the only Node SDK that exposes it | No provider portability — Vertex AI only; swapping providers later is a rewrite, not a config change |
+| Day-one access to new Vertex / Gemini features (no third-party adaptation lag) | `@google-cloud/aiplatform` uses verbose GAPIC-style APIs; more boilerplate than slim wrappers |
+| Native Google Cloud auth (Application Default Credentials, service accounts, workload identity) — no extra auth layer to configure | No built-in UI/streaming helpers; we forward Gemini streams to TW over our own SSE layer (minor — TW owns the chat UI anyway) |
 
 ---
 

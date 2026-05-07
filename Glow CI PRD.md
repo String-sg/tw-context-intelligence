@@ -155,14 +155,7 @@ Teachers face high cognitive load daily. MOE has extensive domain-scoped learnin
 
 ### Data Classification Constraints
 
-SDT student data has two classification tiers. Teacher roles determine which tier they can access:
-
-| Classification | Data included | Teacher access |
-|---|---|---|
-| Sensitive High | Counselling details, offence details | Role-restricted (e.g., counsellors, HODs) |
-| Sensitive Normal | Number of offences | Broader teacher access |
-
-> Glow CI must only use student data the accessing teacher is authorised to view. Context assembly and card surfacing must be scoped to the teacher's data access level as determined by the SDT API.
+> **Note:** For the pilot, Glow CI surfaces guidance based on 5 fixed student signals. Before surfacing CI, the system must verify that the accessing teacher's role has permission to view each of these signals via the SDT API. If a teacher does not have access to a signal, CI must not be surfaced for that context.
 
 > **Knowledge base storage classification:** Guidance materials stored for RAG ingestion must be classified at **Official Closed (Sensitive Normal)** or above. Google Cloud Storage (GCS) must be confirmed as cleared to this level in the GCC environment before document ingestion begins. See Part 1 open questions.
 

@@ -157,7 +157,7 @@ Teachers face high cognitive load daily. MOE has extensive domain-scoped learnin
 
 > **Note:** For the pilot, Glow CI surfaces guidance based on 5 fixed student signals. Before surfacing CI, the system must verify that the accessing teacher's role has permission to view each of these signals via the SDT API. If a teacher does not have access to a signal, CI must not be surfaced for that context.
 
-> **Knowledge base storage classification:** Guidance materials stored for RAG ingestion must be classified at **Official Closed (Sensitive Normal)** or above. Google Cloud Storage (GCS) must be confirmed as cleared to this level in the GCC environment before document ingestion begins. See Part 1 open questions.
+> **Knowledge base storage classification:** Guidance materials stored for RAG ingestion must be classified at **Official Closed (Sensitive Normal)** or above. Amazon S3 must be confirmed as cleared to this level in the GCC environment before document ingestion begins. See Part 1 open questions.
 
 ### Out of Scope (this phase)
 
@@ -189,7 +189,7 @@ Glow CI consists of seven interconnected parts:
 
 **Knowledge Base** — guidance content that the AI retrieves from; managed by domain owners
 
-- Guidance materials from Student Intervention and Student Wellbeing domains, stored in a **Google Cloud Storage (GCS) bucket** and managed via the Management Portal (Part 6)
+- Guidance materials from Student Intervention and Student Wellbeing domains, stored in a **Amazon S3 bucket** and managed via the Management Portal (Part 6)
 - Chunking and embedding pipeline to convert documents into a searchable vector store, using **Vertex AI** (embeddings + Vector Search)
 - Document refresh cadence: re-ingestion process triggered when domain owners upload or update materials via the portal
 
@@ -264,7 +264,7 @@ Google's official Node SDKs, called directly. Two packages cover the stack:
 2. **SDT API fields** — confirm with SDT PM which API fields/metadata indicate the teacher's data access tier, so it can be correctly parsed in context assembly
 3. **Document refresh cadence** — define how often guidance materials are re-ingested from cloud storage; whether ingestion is triggered automatically on upload or run on a schedule
 4. **TW API contract** — agree integration points with TW for serving recommendation cards and chat responses
-5. **GCS clearance** — confirm GCS bucket is cleared to Official Closed (Sensitive Normal) in the GCC environment
+5. **S3 clearance** — confirm S3 bucket is cleared to Official Closed (Sensitive Normal) in the GCC environment
 6. **Retrieval quality** — define testing approach to ensure relevant chunks are retrieved for given student/teacher contexts
 7. **Conversation log access controls** — define who can access teacher query logs in the management portal and at what classification level (data governance and retention handled on the cloud infrastructure side)
 
@@ -278,7 +278,7 @@ Google's official Node SDKs, called directly. Two packages cover the stack:
 | 1.3 | Engineer | integrate with SDT API to pull student context (late-coming %, bullying offences count, low-mood count) | student signals can trigger contextually relevant guidance retrieval |
 | 1.4 | Engineer | read and enforce the SDT data classification tier returned per teacher | Glow CI only surfaces data the accessing teacher is authorised to view |
 | **Knowledge Base** | | | |
-| 1.5 | PM | provision GCS bucket and confirm classification clearance to Official Closed (Sensitive Normal) in the GCC environment | engineers can connect to storage and ingest guidance materials in a compliant environment |
+| 1.5 | PM | provision S3 bucket and confirm classification clearance to Official Closed (Sensitive Normal) in the GCC environment | engineers can connect to storage and ingest guidance materials in a compliant environment |
 | 1.6 | PM | set up cloud storage and onboard steering committee representatives to populate guidance materials via the Management Portal (Part 6) | there is a managed, populated knowledge base ready for ingestion |
 | 1.7 | Engineer | connect to the designated cloud storage bucket to ingest guidance materials | domain owners have a managed source-of-truth for CI content |
 | 1.8 | Engineer | build a chunking and embedding pipeline using Vertex AI | guidance documents are indexed in Vector Search for semantic retrieval |
@@ -442,12 +442,12 @@ These cannot be tracked in GA and require server/API-level logging:
 
 **Technical considerations:**
 
-- Document storage: materials are stored in a Google Cloud Storage (GCS) bucket (cleared to Official Closed — see Data Classification Constraints)
+- Document storage: materials are stored in a Amazon S3 bucket (cleared to Official Closed — see Data Classification Constraints)
 - Format handling: rendering pipeline for PDF, Word, and HTML content
 - Deep-linking / anchor support: ability to link to specific sections within a document
 - Sync with RAG pipeline (Part 1): the same ingested materials serve both the native viewer and the RAG vector store
 - Access control: ensure only authorised teachers can access domain-specific materials
-- **Open question — viewer approach:** Evaluate whether a cloud storage–backed document preview (e.g. GCS signed URL + PDF.js, or Drive Viewer API if using GDrive) can serve as the inline viewer within TW, vs. building a fully custom TW-native viewer. Decision needed before Phase 2.
+- **Open question — viewer approach:** Evaluate whether a cloud storage–backed document preview (e.g. S3 pre-signed URL + PDF.js) can serve as the inline viewer within TW, vs. building a fully custom TW-native viewer. Decision needed before Phase 2.
 
 **User stories:**
 
@@ -554,7 +554,7 @@ Chat-first approach — the AI Chat interface is the primary value driver and sh
 - TW platform launch (Apr 2026) — integration surface must be available
 - SDT domain materials handoff — pilot content must be ingested before Phase 2
 - Google Cloud access — Vertex AI project setup, service account provisioning, and Gemini model access
-- **Cloud storage provisioning** — GCS bucket provisioned and confirmed cleared to Official Closed (Sensitive Normal) in GCC environment before document ingestion begins; initiate early as a Phase 1 prerequisite
+- **Cloud storage provisioning** — S3 bucket provisioned and confirmed cleared to Official Closed (Sensitive Normal) in GCC environment before document ingestion begins; initiate early as a Phase 1 prerequisite
 - TW API contracts — agreed integration points for embedding chat, cards, and viewer
 - **Conversation log access controls** — define who can access query logs in the portal before Part 6 logging is enabled
 
@@ -568,7 +568,7 @@ Chat-first approach — the AI Chat interface is the primary value driver and sh
 | Hallucination — AI fabricates guidance not in source materials | Strict RAG grounding; mandatory source citations; zero-tolerance guardrail metric |
 | Teacher over-reliance on AI recommendations | Clear positioning: "Guidance, not SOP — teachers make the final decision." Disclaimer in UI |
 | Source material staleness | Defined refresh cadence; domain owners use management portal to upload updated materials which trigger re-ingestion |
-| Cloud storage classification | GCS must be confirmed cleared to Official Closed (Sensitive Normal) in GCC before ingestion begins; treat as a Phase 1 prerequisite |
+| Cloud storage classification | S3 must be confirmed cleared to Official Closed (Sensitive Normal) in GCC before ingestion begins; treat as a Phase 1 prerequisite |
 | Conversation log access | Teacher queries may contain sensitive student context; access to query logs in the portal must be restricted to authorised domain owners — data governance and retention are handled on the cloud infrastructure side |
 
 ---

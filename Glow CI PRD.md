@@ -1,6 +1,6 @@
 # Glow Contextual Intelligence (Glow CI) — Product Requirements Document
 
-**Status:** Draft v2.10 | **Last updated:** 2026-04-29 | **Authors:** Jasmine Tay, PM; Ralph Santos, Engineer
+**Status:** Draft v3.1 | **Last updated:** 2026-05-07 | **Authors:** Jasmine Tay, PM; Ralph Santos, Engineer
 
 ---
 
@@ -42,6 +42,8 @@
 
 | Version | Date | Author | Summary |
 |---------|------|--------|---------|
+| v3.1 | 2026-05-07 | Jasmine Tay | Reframe addressable market: Phase 1 pilot is TW GA (all 33,000 teachers) scoped to 5 student signals; Phases 2–3 now reflect feature/domain expansion rather than audience rollout |
+| v3.0 | 2026-05-07 | Jasmine Tay | Tech stack finalised: `@google-cloud/aiplatform` (Vertex RAG Engine) + `@google/genai` (Gemini); resolve storage to GCS; update Part 7 AI Evaluations from Langfuse to Vertex AI Evaluation Service + Cloud Logging |
 | v2.10 | 2026-04-29 | Ralph Santos | Part 1 — add unified SDK evaluation: Vercel AI SDK not adopted (RAG Engine unsupported, no portability or UI-hook benefit); selected first-party `@google-cloud/aiplatform` (Vertex RAG Engine) + `@google/genai` (Gemini synthesis) with pros/cons documented |
 | v2.9 | 2026-04-14 | Jasmine Tay | Add Part 7: AI Evaluations — Langfuse instrumentation + evals platform integration (2 stories: 7.1–7.2); remove 7.3 (eval config handled by AI team) |
 | v2.8 | 2026-04-14 | Jasmine Tay | Remove story 6.1 (data governance + retention) — handled on cloud infrastructure side; update open questions and risks accordingly |
@@ -140,17 +142,16 @@ Teachers face high cognitive load daily. MOE has extensive domain-scoped learnin
 ### SDT Pilot within TW
 
 - **Pilot domains:** Tier 2/3 Student Intervention and Student Wellbeing
-- **Pilot audience:** Select group of teachers using Teacher's Workspace, moving to GA in Oct 2026
+- **Pilot audience:** All teachers on Teacher's Workspace — CI ships GA from TW launch; pilot scope is limited to 5 student context signals
 - **Domain owners:** Knowledge Base Steering Committee (GB, CCE, and other profwing branches — see Team Roles)
-- **Addressable market:** All 33,000 General Education Officers (EOs) in MOE (post-pilot)
+- **Addressable market:** All 33,000 General Education Officers (EOs) in MOE
 
 ### Addressable Market
 
-| Phase | Audience | Reach |
-|-------|----------|-------|
-| Phase 1 (Pilot) | All SDT team | Up to 3,300 |
-| Phase 2 (Expansion) | + 15 pilot schools | Up to 5,000 |
-| Phase 3 (GA — Sep/Oct 2026) | All teachers incl. independent schools | Up to 33,000 |
+| Phase | CI scope | Audience | Reach |
+|-------|---------|----------|-------|
+| Phase 1 (Pilot — Aug 2026) | Chat interface, 5 student signals, SDT domains | All TW users | Up to 33,000 |
+| Phase 2 (Expansion — post-pilot) | Expanded student signals, additional knowledge base domains | All TW users | Up to 33,000 |
 
 ### Data Classification Constraints
 
@@ -163,7 +164,7 @@ SDT student data has two classification tiers. Teacher roles determine which tie
 
 > Glow CI must only use student data the accessing teacher is authorised to view. Context assembly and card surfacing must be scoped to the teacher's data access level as determined by the SDT API.
 
-> **Knowledge base storage classification:** Guidance materials stored for RAG ingestion must be classified at **Official Closed (Sensitive Normal)** or above. The chosen cloud storage (GCS or S3 — TBD) must be confirmed as cleared to this level in the GCC environment before document ingestion begins. See Part 1 open questions.
+> **Knowledge base storage classification:** Guidance materials stored for RAG ingestion must be classified at **Official Closed (Sensitive Normal)** or above. Google Cloud Storage (GCS) must be confirmed as cleared to this level in the GCC environment before document ingestion begins. See Part 1 open questions.
 
 ### Out of Scope (this phase)
 
@@ -195,7 +196,7 @@ Glow CI consists of seven interconnected parts:
 
 **Knowledge Base** — guidance content that the AI retrieves from; managed by domain owners
 
-- Guidance materials from Student Intervention and Student Wellbeing domains, stored in a **cloud storage bucket (GCS or S3 — TBD)** and managed via the Management Portal (Part 6)
+- Guidance materials from Student Intervention and Student Wellbeing domains, stored in a **Google Cloud Storage (GCS) bucket** and managed via the Management Portal (Part 6)
 - Chunking and embedding pipeline to convert documents into a searchable vector store, using **Vertex AI** (embeddings + Vector Search)
 - Document refresh cadence: re-ingestion process triggered when domain owners upload or update materials via the portal
 
@@ -270,7 +271,7 @@ Google's official Node SDKs, called directly. Two packages cover the stack:
 2. **SDT API fields** — confirm with SDT PM which API fields/metadata indicate the teacher's data access tier, so it can be correctly parsed in context assembly
 3. **Document refresh cadence** — define how often guidance materials are re-ingested from cloud storage; whether ingestion is triggered automatically on upload or run on a schedule
 4. **TW API contract** — agree integration points with TW for serving recommendation cards and chat responses
-5. **Storage decision** — confirm GCS vs S3 as the knowledge base storage provider; verify the chosen storage is cleared to Official Closed (Sensitive Normal) in the GCC environment and assess whether this replaces a GDrive TRA requirement
+5. **GCS clearance** — confirm GCS bucket is cleared to Official Closed (Sensitive Normal) in the GCC environment
 6. **Retrieval quality** — define testing approach to ensure relevant chunks are retrieved for given student/teacher contexts
 7. **Conversation log access controls** — define who can access teacher query logs in the management portal and at what classification level (data governance and retention handled on the cloud infrastructure side)
 
@@ -284,7 +285,7 @@ Google's official Node SDKs, called directly. Two packages cover the stack:
 | 1.3 | Engineer | integrate with SDT API to pull student context (late-coming %, bullying offences count, low-mood count) | student signals can trigger contextually relevant guidance retrieval |
 | 1.4 | Engineer | read and enforce the SDT data classification tier returned per teacher | Glow CI only surfaces data the accessing teacher is authorised to view |
 | **Knowledge Base** | | | |
-| 1.5 | PM | provision cloud storage bucket (GCS or S3) and confirm classification clearance to Official Closed (Sensitive Normal) in the GCC environment | engineers can connect to storage and ingest guidance materials in a compliant environment |
+| 1.5 | PM | provision GCS bucket and confirm classification clearance to Official Closed (Sensitive Normal) in the GCC environment | engineers can connect to storage and ingest guidance materials in a compliant environment |
 | 1.6 | PM | set up cloud storage and onboard steering committee representatives to populate guidance materials via the Management Portal (Part 6) | there is a managed, populated knowledge base ready for ingestion |
 | 1.7 | Engineer | connect to the designated cloud storage bucket to ingest guidance materials | domain owners have a managed source-of-truth for CI content |
 | 1.8 | Engineer | build a chunking and embedding pipeline using Vertex AI | guidance documents are indexed in Vector Search for semantic retrieval |
@@ -448,7 +449,7 @@ These cannot be tracked in GA and require server/API-level logging:
 
 **Technical considerations:**
 
-- Document storage: materials are stored in a cloud storage bucket (GCS or S3 — TBD, cleared to Official Closed — see Data Classification Constraints)
+- Document storage: materials are stored in a Google Cloud Storage (GCS) bucket (cleared to Official Closed — see Data Classification Constraints)
 - Format handling: rendering pipeline for PDF, Word, and HTML content
 - Deep-linking / anchor support: ability to link to specific sections within a document
 - Sync with RAG pipeline (Part 1): the same ingested materials serve both the native viewer and the RAG vector store
@@ -507,27 +508,27 @@ These cannot be tracked in GA and require server/API-level logging:
 
 ### Part 7: AI Evaluations
 
-**What it is:** Integration with the AI team's evals platform, via Langfuse instrumentation on Glow CI's LLM calls. Enables business stakeholders to define evaluation criteria in plain language (e.g. "no hallucination", "always cite sources") — the platform translates these into LLM judge prompts and runs automated evaluations against live Glow CI outputs. Gives business teams direct ownership over quality requirements without engineering involvement.
+**What it is:** Integration with Vertex AI Evaluation Service to run automated LLM judge evaluations on Glow CI outputs. All LLM calls (RAG retrieval + Gemini synthesis) are logged via Cloud Logging and fed into Vertex AI evals. Enables business stakeholders to define evaluation criteria (e.g. "no hallucination", "always cite sources") — the platform runs automated evaluations and surfaces results. Gives business teams direct ownership over quality requirements without engineering involvement.
 
 **Key capabilities:**
 
-- **Langfuse tracing** — all Glow CI LLM calls (RAG retrieval + Gemini synthesis) are instrumented and observable
-- **Evals platform integration** — Langfuse traces feed the AI team's evals platform for LLM judge evaluation
+- **Cloud Logging** — all Glow CI LLM calls (RAG retrieval + Gemini synthesis) are instrumented and observable via GCP
+- **Vertex AI Evaluation Service** — LLM call logs feed automated evaluations using Vertex AI's built-in evaluation pipeline for LLM judge evaluation
 - **Stakeholder-defined criteria** — business teams define quality requirements (hallucination, citation coverage, relevance) directly on the evals platform
 - **Automated eval runs** — continuous evaluation of Glow CI outputs with results visible to stakeholders
 
 **Open questions:**
 
-1. **Langfuse deployment** — self-hosted vs cloud; confirm data residency requirements for GCC (self-hosted = no licensing cost; cloud = free tier with limits)
+1. **Vertex AI Evaluation Service setup** — confirm eval service is available in the provisioned GCC Vertex AI project; define which eval metrics to use (groundedness, coherence, fluency)
 2. **Eval scope for pilot** — which eval criteria must be live before 31 Aug vs post-pilot?
-3. **Evals platform readiness** — confirm the AI team's platform is deployed and accessible for Glow CI onboarding
+3. **Vertex AI eval pipeline readiness** — confirm the Vertex AI eval pipeline is configured and accessible for Glow CI onboarding
 
 **User stories:**
 
 | # | As a... | I want to... | So that... |
 |---|---------|-------------|-----------|
 | 7.1 | PM | align with AI team to define Glow CI eval requirements (hallucination, citation coverage, response relevance) | we have agreed criteria before instrumentation begins |
-| 7.2 | Engineer | instrument Glow CI LLM calls with Langfuse tracing and connect to the evals platform | all RAG retrievals and Gemini responses are observable and the evals platform can run LLM judge evaluations |
+| 7.2 | Engineer | instrument Glow CI LLM calls with Cloud Logging and connect to Vertex AI Evaluation Service | all RAG retrievals and Gemini responses are observable and Vertex AI can run LLM judge evaluations |
 
 ## Priority & Timeline
 
@@ -560,7 +561,7 @@ Chat-first approach — the AI Chat interface is the primary value driver and sh
 - TW platform launch (Apr 2026) — integration surface must be available
 - SDT domain materials handoff — pilot content must be ingested before Phase 2
 - Google Cloud access — Vertex AI project setup, service account provisioning, and Gemini model access
-- **Cloud storage provisioning** — GCS or S3 bucket provisioned and confirmed cleared to Official Closed (Sensitive Normal) in GCC environment before document ingestion begins; initiate early as a Phase 1 prerequisite
+- **Cloud storage provisioning** — GCS bucket provisioned and confirmed cleared to Official Closed (Sensitive Normal) in GCC environment before document ingestion begins; initiate early as a Phase 1 prerequisite
 - TW API contracts — agreed integration points for embedding chat, cards, and viewer
 - **Conversation log access controls** — define who can access query logs in the portal before Part 6 logging is enabled
 
@@ -574,7 +575,7 @@ Chat-first approach — the AI Chat interface is the primary value driver and sh
 | Hallucination — AI fabricates guidance not in source materials | Strict RAG grounding; mandatory source citations; zero-tolerance guardrail metric |
 | Teacher over-reliance on AI recommendations | Clear positioning: "Guidance, not SOP — teachers make the final decision." Disclaimer in UI |
 | Source material staleness | Defined refresh cadence; domain owners use management portal to upload updated materials which trigger re-ingestion |
-| Cloud storage classification | Chosen storage (GCS or S3) must be confirmed cleared to Official Closed (Sensitive Normal) in GCC before ingestion begins; treat as a Phase 1 prerequisite |
+| Cloud storage classification | GCS must be confirmed cleared to Official Closed (Sensitive Normal) in GCC before ingestion begins; treat as a Phase 1 prerequisite |
 | Conversation log access | Teacher queries may contain sensitive student context; access to query logs in the portal must be restricted to authorised domain owners — data governance and retention are handled on the cloud infrastructure side |
 
 ---

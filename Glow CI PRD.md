@@ -267,7 +267,7 @@ Google's official Node SDKs, called directly. Two packages cover the stack:
 
 **Open questions:**
 
-1. **Vertex AI data residency** — confirm Vertex AI region satisfies MOE IT / data residency requirements
+1. ✅ **Vertex AI data residency** — resolved: hosting in GCC satisfies MOE IT data residency requirements
 2. **SDT API fields** — confirm with SDT PM which API fields/metadata indicate the teacher's data access tier, so it can be correctly parsed in context assembly
 3. **Document refresh cadence** — define how often guidance materials are re-ingested from cloud storage; whether ingestion is triggered automatically on upload or run on a schedule
 4. **TW API contract** — agree integration points with TW for serving recommendation cards and chat responses

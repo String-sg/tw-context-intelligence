@@ -1,6 +1,6 @@
 # Glow Contextual Intelligence (Glow CI) — Product Requirements Document
 
-**Status:** Draft v3.1 | **Last updated:** 2026-05-07 | **Authors:** Jasmine Tay, PM; Ralph Santos, Engineer
+**Status:** Draft v3.2 | **Last updated:** 2026-06-10 | **Authors:** Jasmine Tay, PM; Ralph Santos, Engineer
 
 ---
 
@@ -20,13 +20,14 @@
   - [Addressable Market](#addressable-market)
   - [Data Classification Constraints](#data-classification-constraints)
   - [Out of Scope](#out-of-scope-this-phase)
+- [Epic Structure](#epic-structure)
 - [Product Requirements](#product-requirements)
   - [Part 1: Technical Integration — Contextual Data + RAG + LLM](#part-1-technical-integration--contextual-data--rag--llm)
   - [Part 2: AI Chat Interface](#part-2-ai-chat-interface)
   - [Part 3: Recommendation Cards](#part-3-recommendation-card-surfacing-in-tw-student-page)
   - [Part 4: Analytics & Tracking](#part-4-analytics--tracking)
   - [Part 5: Native Resource Viewer](#part-5-knowledge-storage--retrieval--native-resource-viewer-in-tw)
-  - [Part 6: Management Portal](#part-6-management-portal)
+  - [Part 6: Data integrations + Conversation Analytics](#part-6-data-integrations--conversation-analytics)
   - [Part 7: AI Evaluations](#part-7-ai-evaluations)
 - [Priority & Timeline](#priority--timeline)
   - [Delivery Priority](#delivery-priority)
@@ -42,6 +43,7 @@
 
 | Version | Date | Author | Summary |
 |---------|------|--------|---------|
+| v3.2 | 2026-06-10 | Jasmine Tay | Restructure delivery into 4 epics: E1 TW RAG + Model Service, E2 MicroFE for CI, E3 Data integrations, E4 Testing + Polishing + TRA; defer knowledge base management portal (story 6.5) to post-pilot |
 | v3.1 | 2026-05-07 | Jasmine Tay | Reframe addressable market: Phase 1 pilot is TW GA (all 33,000 teachers) scoped to 5 student signals; Phases 2–3 now reflect feature/domain expansion rather than audience rollout |
 | v3.0 | 2026-05-07 | Jasmine Tay | Tech stack finalised: `@google-cloud/aiplatform` (Vertex RAG Engine) + `@google/genai` (Gemini); resolve storage to GCS; update Part 7 AI Evaluations from Langfuse to Vertex AI Evaluation Service + Cloud Logging |
 | v2.10 | 2026-04-29 | Ralph Santos | Part 1 — add unified SDK evaluation: Vercel AI SDK not adopted (RAG Engine unsupported, no portability or UI-hook benefit); selected first-party `@google-cloud/aiplatform` (Vertex RAG Engine) + `@google/genai` (Gemini synthesis) with pros/cons documented |
@@ -165,6 +167,22 @@ Teachers face high cognitive load daily. MOE has extensive domain-scoped learnin
 - Automated actions (AI recommends, teacher decides)
 - Content creation or editing of source materials
 - No generative AI output
+- **Knowledge base management portal** — domain owner UI for uploading, tagging, and deleting materials (story 6.5) is deferred to post-pilot; initial ingestion handled directly by the engineering team
+
+---
+
+## Epic Structure
+
+Glow CI is delivered across 4 epics. Each epic maps to one or more product parts below.
+
+| Epic | Parts | What it covers |
+|------|-------|---------------|
+| **E1: TW RAG + Model Service** | Parts 1, 7 | Backend AI infrastructure: contextual data ingestion (SDT/EduPass), knowledge base (GCS + Vertex AI Vector Search), RAG + Gemini synthesis, Cloud Logging, AI evaluations |
+| **E2: MicroFE for CI** | Parts 2, 3, 5 | Micro-frontend embedded in Teacher's Workspace: AI chat interface, recommendation cards, native resource viewer |
+| **E3: Data integrations** | Parts 4, 6 | Analytics & tracking (GA4, custom events, server-side logging) and conversation analytics for West Zone Sups |
+| **E4: Testing + Polishing + TRA** | — | LLM guardrails testing, UX polish, technical risk assessment for pilot launch |
+
+> **Knowledge base management portal** (domain owner upload/tag/delete UI, story 6.5) is deferred to post-pilot. Initial knowledge base population is handled directly by the engineering team. See [Out of Scope](#out-of-scope-this-phase).
 
 ---
 
@@ -465,26 +483,30 @@ These cannot be tracked in GA and require server/API-level logging:
 
 ---
 
-### Part 6: Management Portal
+### Part 6: Data integrations + Conversation Analytics
 
-**What it is:** An internal web portal for Knowledge Base Steering Committee members and West Zone Sups to manage guidance materials and monitor teacher query logs. Enables a data-driven feedback loop from teacher usage patterns back to knowledge base maintenance.
+**What it is:** Server-side conversation logging and an analytics view for West Zone Sups and domain owners to monitor teacher query patterns. Provides the data feedback loop from teacher usage back to knowledge base maintenance.
+
+> **Knowledge base management UI (story 6.5) is deferred to post-pilot.** Initial knowledge base population is handled directly by the engineering team. Domain owner self-service upload/tag/delete will be scoped and built after the pilot based on observed usage patterns.
 
 **How it works:**
 
-1. Domain owners log into the portal and upload, tag, or remove guidance materials for their domain — changes flow automatically into the RAG ingestion pipeline (Part 1)
+1. Every teacher query and AI response is logged server-side (within GCC data residency)
 2. West Zone Sups and domain owners view conversation logs filtered by domain, date, or school to understand what teachers are asking
 3. Query patterns surface knowledge gaps (e.g. recurring questions with no strong source match), informing what new materials to add
 
-**Key capabilities:**
+**Key capabilities (pilot scope):**
 
-- **Knowledge base management** — upload, tag, and delete guidance materials per domain; changes trigger re-ingestion into the RAG pipeline
 - **Conversation analytics** — view teacher query logs and AI responses; track usefulness ratings (thumbs up/down), query volume trends, and citation engagement to understand how teachers are using the system
 - **Query insights** — surface frequent query patterns to identify knowledge gaps
 - **Domain-scoped access** — each domain owner sees only their domain's materials and analytics
 
+**Post-pilot (out of scope now):**
+- Knowledge base management UI — upload, tag, and delete guidance materials per domain
+
 **Open questions:**
 
-1. Is the portal a standalone web app or a restricted-access admin section within an existing platform?
+1. Is the analytics view a standalone web app or a restricted-access admin section within an existing platform?
 
 **User stories:**
 
@@ -493,7 +515,6 @@ These cannot be tracked in GA and require server/API-level logging:
 | 6.2 | PM | align with West Zone Sups on what query insights they need from the portal | the portal is built to the right spec before engineers start |
 | 6.3 | Engineer | implement server-side conversation log storage (query + AI response per session) | query data is captured and available for domain owner review |
 | 6.4 | Engineer | build a conversation analytics view in the management portal (query logs, usefulness ratings, query volume trends, citation engagement) | domain owners and West Zone Sups can monitor how teachers are using the system |
-| 6.5 | Engineer | build a knowledge base management UI (upload, tag, delete materials) | domain owners can manage their materials without needing direct storage access |
 | 6.6 | Engineer | implement domain-scoped access control in the portal | each domain owner sees only their domain's materials and queries |
 | 6.7 | PM | define the process for domain owners to act on query insights and update the knowledge base | there is a clear feedback loop from teacher query patterns to material updates |
 
@@ -531,23 +552,20 @@ These cannot be tracked in GA and require server/API-level logging:
 
 Chat-first approach — the AI Chat interface is the primary value driver and ships first. Recommendation cards follow as a contextual discovery layer once chat is proven.
 
-| Priority | Part | Rationale |
-|----------|------|-----------|
-| **P0** | Part 1: Technical Integration — Contextual Data + RAG + LLM | Foundation — everything depends on the retrieval and AI backend |
-| **P0** | Part 2: AI Chat Interface | Primary user-facing surface; delivers the core value of synthesised guidance |
-| **P1** | Part 3: Recommendation Cards | Contextual discovery layer; adds proactive surfacing once chat is validated |
-| **P1** | Part 4: Analytics & Tracking | Required for pilot baseline measurement — must be live before 31 Aug |
-| **P2** | Part 5: Native Resource Viewer | Completes the citation loop — teachers can verify source materials without leaving TW |
-| **P1** | Part 6: Management Portal | Required for pilot — West Zone Sups need query monitoring from day 1; domain owners need a managed way to update the knowledge base |
-| **P1** | Part 7: AI Evaluations | Required before pilot — evals must be running to catch quality issues before teachers use the system |
+| Priority | Epic | Parts | Rationale |
+|----------|------|-------|-----------|
+| **P0** | E1: TW RAG + Model Service | Parts 1, 7 | Foundation — everything depends on the retrieval and AI backend; AI evals must be running before pilot |
+| **P0** | E2: MicroFE for CI | Parts 2, 3, 5 | Primary teacher-facing surface; chat first, then cards and resource viewer |
+| **P1** | E3: Data integrations | Parts 4, 6 | Required for pilot — GA4 + guardrail logging must be live before 31 Aug; West Zone Sups need conversation analytics from day 1 |
+| **P1** | E4: Testing + Polishing + TRA | — | Required before pilot — LLM guardrails, UX polish, and TRA must clear before launch |
 ### Timeline
 
 | Phase | Dates | Milestone | What ships |
 |-------|-------|-----------|-----------|
-| **Phase 1 — Foundation** | Apr – May 2026 | RAG pipeline operational | Part 1: Document ingestion, vector store, RAG orchestration, LLM integration. End-to-end pipeline tested with pilot domain materials |
-| **Phase 2 — Chat MVP** | May – Jul 2026 | Internal dogfood ready | Part 2: AI Chat interface integrated in TW. Teachers can ask questions and receive cited, grounded responses. Part 5: View-only resource viewer for source citations |
-| **Phase 3 — Pilot launch** | Aug 2026 | **Pilot launch (31 Aug)** | Parts 1 + 2 + 4 + 5 + 6 + 7 live with select pilot teachers. GA4 custom events instrumented. Baseline metrics collection begins. Domain owners and West Zone Sups onboarded to management portal. Evals running on live LLM outputs |
-| **Phase 4 — Cards + iteration** | Sep 2026 | GA readiness | Part 3: Recommendation cards surfaced on student page. Iteration based on pilot feedback. GA launch (Oct 2026) |
+| **Phase 1 — Foundation** | Apr – May 2026 | RAG pipeline operational | **E1:** Document ingestion, vector store, RAG orchestration, LLM integration. End-to-end pipeline tested with pilot domain materials |
+| **Phase 2 — Chat MVP** | May – Jul 2026 | Internal dogfood ready | **E2:** AI Chat interface integrated in TW. Teachers can ask questions and receive cited, grounded responses. Resource viewer for source citations |
+| **Phase 3 — Pilot launch** | Aug 2026 | **Pilot launch (31 Aug)** | **E1 + E2 + E3 + E4** live. GA4 custom events instrumented. Baseline metrics collection begins. West Zone Sups onboarded to conversation analytics. Evals running on live LLM outputs. TRA cleared |
+| **Phase 4 — Cards + iteration** | Sep 2026 | GA readiness | **E2:** Recommendation cards surfaced on student page. Iteration based on pilot feedback. GA launch (Oct 2026). Post-pilot: knowledge base management portal scoped |
 
 ### Key dependencies
 

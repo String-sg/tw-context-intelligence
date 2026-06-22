@@ -327,17 +327,11 @@ Google's official Node SDKs, called directly. Two packages cover the stack:
 | # | As a... | I want to... | So that... |
 |---|---------|-------------|-----------|
 | **Knowledge Base** | | | |
-| 1.5 | PM | provision GCS bucket and confirm classification clearance to Official Closed (Sensitive Normal) in the GCC environment | engineers can connect to storage and ingest guidance materials in a compliant environment |
-| 1.6 | PM | set up cloud storage and onboard steering committee representatives to populate guidance materials via the Management Portal (Part 6) | there is a managed, populated knowledge base ready for ingestion |
 | 1.7 | System | ingest guidance materials from the designated GCS bucket | domain owners have a managed source-of-truth and engineers have a retrieval-ready document store |
 | 1.8 | System | chunk and embed ingested documents via Vertex AI | guidance materials are indexed in Vector Search for semantic retrieval |
 | 1.9 | System | detect changes in GCS and re-ingest updated documents on a defined refresh schedule | the knowledge base stays current when domain owners update source materials |
 | **AI Model + Model Service API** | | | |
-| 1.10 | Engineer | set up and validate Vertex AI through GCC for RAG orchestration and Gemini for LLM synthesis | we confirm the AI stack meets our retrieval and synthesis requirements before building on it |
-| 2.6 | PM | align with TW team to define and agree the API contract for serving chat responses and recommendation cards | engineers on both sides have a clear integration spec |
 | 2.7 | System | serve grounded, cited AI responses to TW apps via the agreed model service API contract | CI output is correctly rendered wherever a TW app embeds the CI MicroFE |
-| **Technical Stack Selection** | | | |
-| 1.12 | PM + Engineer | evaluate AI stack options (open-source self-host, Vertex AI in GCC, Platform.gov AI), validate GCC compliance and run a retrieval quality spike, and document the selected approach | the team has a clear, evidence-backed technical direction before build begins |
 
 ---
 
@@ -426,8 +420,6 @@ The "Learn" tab within the CI panel surfaces curated OPAL/Glow learning modules 
 | 2.2 | Teacher | ask follow-up questions in natural language | I can explore guidance relevant to my specific situation |
 | 2.3 | Teacher | add my own context (e.g., family situation, past interventions tried) | the AI can tailor its recommendations beyond what's in the standard materials |
 | 2.4 | Teacher | see source citations on every AI response | I can verify the guidance and refer to the original document if needed |
-| 2.5 | Designer | design a chat experience embedded in TW that feels native | teachers adopt it as part of their natural workflow |
-| 2.8 | Engineer | build the chat UI in TW (slide-over or embedded panel) pre-loaded with card context | teachers can begin exploring guidance immediately without re-stating their situation |
 
 ---
 
@@ -464,10 +456,6 @@ The "Learn" tab within the CI panel surfaces curated OPAL/Glow learning modules 
 | 3.1 | Teacher | see contextually relevant recommendation cards when I view a student's page | I get just-in-time guidance without searching for it myself |
 | 3.2 | Teacher | see a concise summary on each card with a link to the source | I can quickly assess relevance and trust the recommendation |
 | 3.3 | Teacher | tap a card to explore deeper via AI Chat | I can get more detailed, tailored guidance when I need it |
-| 3.4 | Designer | design cards that integrate into TW's student page without disrupting existing layout | the experience feels native and non-intrusive |
-| 3.5 | PM | align with TW team on card placement and layout within the student page | engineers have a clear spec for where and how cards are surfaced |
-| 3.6 | Engineer | implement card rendering in TW student page, triggered by student context signals | cards appear at the right moment without teacher action |
-| 3.7 | Engineer | implement card loading, empty-state, and error-state handling | the experience is graceful even when no guidance is available or retrieval fails |
 
 ---
 
@@ -512,11 +500,6 @@ The "Learn" tab within the CI panel surfaces curated OPAL/Glow learning modules 
 |---|---------|-------------|-----------|
 | 5.1 | Teacher | open a document natively within TW when I tap a source citation | I can read the full guidance without being redirected to an external site |
 | 5.2 | Teacher | land on the relevant section of the document when opening from a citation | I don't have to scroll through the entire document to find what was referenced |
-| 5.3 | Designer | design a native document viewer that integrates into TW's existing UX | the experience feels like a core part of the platform, not a bolt-on |
-| 5.4 | Engineer | sync document storage with the RAG ingestion pipeline | materials are stored once and serve both native viewing and AI retrieval |
-| 5.5 | PM | decide on viewer approach — Google Drive native preview (Drive Viewer API / iframe) vs custom TW-native viewer | engineers have a clear direction before Phase 2 build begins |
-| 5.6 | Engineer | implement the inline document viewer in TW using the agreed approach | teachers can read source materials without leaving the platform |
-| 5.7 | Engineer | implement deep-linking and section-level anchoring so citations open at the referenced section | teachers land directly at the relevant passage, not the document start |
 
 **Future phases (out of scope now):** Standalone browse/search, bookmarking, version tracking
 
@@ -542,15 +525,6 @@ The "Learn" tab within the CI panel surfaces curated OPAL/Glow learning modules 
 1. **SDT API fields** — confirm with SDT PM which API fields/metadata indicate the teacher's data access tier, so it can be correctly parsed in context assembly
 2. **EduPass integration approach** — confirm whether teacher role is pulled from EduPass or SDT; clarify the auth method (MIMS roles documentation)
 
-**User stories:**
-
-| # | As a... | I want to... | So that... |
-|---|---------|-------------|-----------|
-| 1.1 | PM | align with SDT PM to confirm which API fields indicate the teacher's data access tier and agree the data contract | engineers have a clear spec before building the SDT integration |
-| 1.2 | Engineer | integrate with EduPass/HR to pull teacher context (role, school) via existing MIMS roles documentation | we can scope guidance recommendations to the teacher's role and school |
-| 1.3 | Engineer | integrate with GB and SDT APIs to pull student context signals (Scope 1 — MySEI Intent Score, Social Links, TCI Low Mood; Scope 2 — LTA, offence type, SEN type) | student signals can trigger contextually relevant guidance retrieval |
-| 1.4 | Engineer | read and enforce the SDT data classification tier returned per teacher | CI only surfaces data the accessing teacher is authorised to view |
-| 1.11 | Engineer | build the context assembly layer that combines teacher and student context into a structured retrieval query | the RAG system receives well-formed, contextually relevant inputs |
 
 ---
 
@@ -583,14 +557,6 @@ These cannot be tracked in GA and require server/API-level logging:
 - **Hallucination incidents** — flagged via teacher feedback + manual review process
 - **Data classification breach** — logged at SDT API integration layer
 
-**User stories:**
-
-| # | As a... | I want to... | So that... |
-|---|---------|-------------|-----------|
-| 4.1 | Engineer | set up a dedicated GA4 property for CI (separate from TW) | analytics are isolated and attributable to CI specifically |
-| 4.2 | Engineer | implement custom event tracking across cards and chat | product metrics (engagement, CTR, usefulness) can be measured |
-| 4.3 | Engineer | implement server-side logging for guardrail metrics (latency, citation coverage, data classification breaches) | guardrail metrics are captured outside GA where they can't be tracked via frontend events |
-| 4.4 | PM | define the review and escalation process for guardrail metrics, especially hallucination incidents | there is a clear owner and response protocol when a guardrail threshold is breached |
 
 ---
 
@@ -619,15 +585,6 @@ These cannot be tracked in GA and require server/API-level logging:
 
 1. Is the analytics view a standalone web app or a restricted-access admin section within an existing platform?
 
-**User stories:**
-
-| # | As a... | I want to... | So that... |
-|---|---------|-------------|-----------|
-| 6.2 | PM | align with West Zone Sups on what query insights they need from the portal | the portal is built to the right spec before engineers start |
-| 6.3 | Engineer | implement server-side conversation log storage (query + AI response per session) | query data is captured and available for domain owner review |
-| 6.4 | Engineer | build a conversation analytics view in the management portal (query logs, usefulness ratings, query volume trends, citation engagement) | domain owners and West Zone Sups can monitor how teachers are using the system |
-| 6.6 | Engineer | implement domain-scoped access control in the portal | each domain owner sees only their domain's materials and queries |
-| 6.7 | PM | define the process for domain owners to act on query insights and update the knowledge base | there is a clear feedback loop from teacher query patterns to material updates |
 
 ---
 
@@ -651,12 +608,6 @@ LLM guardrails testing, end-to-end QA, UX polish, and TRA sign-off required befo
 1. **MOE AI Evals platform onboarding** — confirm eval service access and onboarding process with AI team; define eval criteria (hallucination = 0, citation coverage = 100%, response relevance)
 2. **Eval scope for pilot** — which criteria must pass before pilot launch vs post-pilot iteration?
 
-**User stories:**
-
-| # | As a... | I want to... | So that... |
-|---|---------|-------------|-----------|
-| 7.1 | PM | align with AI team to define CI eval requirements (hallucination, citation coverage, response relevance) and onboard to MOE AI Evals platform | we have agreed criteria before instrumentation begins |
-| 7.2 | Engineer | connect CI to MOE AI Evals platform (pre-deployment) and instrument LLM calls with Langfuse (post-deployment) | output quality is validated before launch and production costs + behaviour are observable |
 
 ## Priority & Timeline
 

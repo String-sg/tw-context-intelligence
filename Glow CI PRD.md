@@ -601,9 +601,10 @@ Chat-first approach — the AI Chat interface is the primary value driver and sh
 
 | Phase | Dates | Milestone | What ships |
 |-------|-------|-----------|-----------|
-| **Epic 1 — AI Foundation** | Jul – Aug 2026 | Standalone RAG + chat working on mock data | RAG pipeline (S3 + Vertex RAG), context assembly, Gemini synthesis, standalone chat UI |
-| **Epic 2 — Integrations + Portal** | Aug – Sep 2026 | TW-integrated chat with live data | SDT + GB data integrations, chat embedded in TW with live student signals, knowledge base management portal |
-| **Epic 3 — TW Entrypoints + Polishing + TRA** | Oct – Nov 2026 | **Pilot launch (Nov 2026)** | Recommendation cards on TW student page, LLM guardrails validated, analytics instrumented, TRA signed off |
+| **E1 — TW RAG + Model Service** (#1) | Jul – Aug 2026 | Model service API operational | Knowledge base ingestion pipeline, Vertex AI Vector Search, Gemini synthesis, model service API endpoint |
+| **E2 — MicroFE for CI** (#57) | Aug – Sep 2026 | CI MicroFE integrated in SDT app | Recommendation cards, AI chat (pre-loaded context, follow-up Q&A, citations), inline document viewer, UX design |
+| **E3 — Data Integrations** (#63) | Aug – Sep 2026 | Live data flowing into CI | SDT + EduPass integrations, data classification enforcement, context assembly layer, GA4 analytics |
+| **E4 — Testing + Polishing + TRA** (#45) | Oct – Nov 2026 | **Pilot launch (Nov 2026)** | AI evals (pre-deployment), Langfuse monitoring (post-deployment), LLM guardrails, end-to-end QA, TRA sign-off |
 
 ### Key dependencies
 

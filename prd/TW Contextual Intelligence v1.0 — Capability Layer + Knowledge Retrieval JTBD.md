@@ -244,11 +244,11 @@ CI is delivered across 4 epics. Each epic maps to one or more product parts belo
 - Document refresh cadence: re-ingestion process triggered when domain owners upload or update materials via the portal
 - **Metadata tagging schema** — every content piece carries mandatory tags to enable use-case-scoped retrieval:
 
-| Tag | Description |
-|-----|-------------|
-| `use_case` | Which CI use case(s) this content addresses (supports multi-tag for cross-use-case content) |
-| `signal_match` | Which specific student signals this content addresses |
-| `content_owner` | Team responsible for maintaining this content |
+| Tag | Description | Example values |
+|-----|-------------|---------------|
+| `category` | Which CI capability this content serves | `knowledge_retrieval` \| `insights_summary` \| `drafting` |
+| `use_case` | Which CI use case(s) this content addresses (supports multi-tag for cross-use-case content) | `swan_intervention` \| `growth_conversations` \| `exam_facilitation` |
+| `signal_match` | Which student signal(s) trigger retrieval of this content — any matching signal in the group pulls the content | SwAN group: `absent_count_gt_40` \| `active_sen_type` \| `active_offence_type` |
 
 Content owners tag their own material. Schema is shared and enforced centrally.
 

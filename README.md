@@ -27,4 +27,4 @@ Generate first drafts of communications, case notes, or reports — reducing doc
 
 ## PRDs
 
-- [Product Requirements Document](./prd/TW%20Contextual%20Intelligence%20v1.0%20%E2%80%94%20Capability%20Layer%20+%20Knowledge%20Retrieval%20JTBD.md)
+- [TW Contextual Intelligence v1.0: Capability Layer + Knowledge Retrieval JTBD](./prd/TW%20Contextual%20Intelligence%20v1.0%20%E2%80%94%20Capability%20Layer%20+%20Knowledge%20Retrieval%20JTBD.md)

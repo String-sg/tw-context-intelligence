@@ -87,7 +87,7 @@
 
 ![CI Overview](https://raw.githubusercontent.com/jasminetay-moe/product-strategy/main/assets/ci-overview.svg)
 
-Glow CI is a **platform capability layer within Teacher's Workspace** — not a single feature, but a foundation for surfacing AI-assisted support at the moments teachers need it most. It is designed to serve multiple teacher jobs-to-be-done over time:
+CI is a **platform capability layer within Teacher's Workspace** — not a single feature, but a foundation for surfacing AI-assisted support at the moments teachers need it most. It is designed to serve multiple teacher jobs-to-be-done over time:
 
 | JTBD | Description | Status |
 |------|-------------|--------|
@@ -179,7 +179,7 @@ Teachers face high cognitive load daily. MOE has extensive domain-scoped learnin
 
 ### Data Classification Constraints
 
-> **Note:** For the pilot, Glow CI surfaces guidance based on 5 fixed student signals. Before surfacing CI, the system must verify that the accessing teacher's role has permission to view each signal. If a teacher does not have access to a signal, CI must not be surfaced for that context.
+> **Note:** For the pilot, CI surfaces guidance based on 5 fixed student signals. Before surfacing CI, the system must verify that the accessing teacher's role has permission to view each signal. If a teacher does not have access to a signal, CI must not be surfaced for that context.
 
 **Scope 1: Holistic Development Growth Conversations** *(GB data)*
 
@@ -211,7 +211,7 @@ Teachers face high cognitive load daily. MOE has extensive domain-scoped learnin
 
 ## Epic Structure
 
-Glow CI is delivered across 4 epics. Each epic maps to one or more product parts below.
+CI is delivered across 4 epics. Each epic maps to one or more product parts below.
 
 | Epic | Parts | What it covers |
 |------|-------|---------------|
@@ -226,7 +226,7 @@ Glow CI is delivered across 4 epics. Each epic maps to one or more product parts
 
 ## Product Requirements
 
-Glow CI consists of seven interconnected parts:
+CI consists of seven interconnected parts:
 
 ---
 
@@ -253,7 +253,7 @@ Glow CI consists of seven interconnected parts:
 
 **AI Model** — retrieval and synthesis layer that turns contextual signals + knowledge base content into grounded guidance
 
-- **Context assembly** — combines teacher + student context signals into a structured retrieval query; system prompt design owned by Glow/DXD
+- **Context assembly** — combines teacher + student context signals into a structured retrieval query; system prompt design owned by CI/DXD
 - **RAG orchestration** via Vertex AI — retrieves relevant document chunks based on assembled context
 - **LLM synthesis** via Gemini — synthesises retrieved chunks into digestible guidance
 - **Strict grounding** — all outputs must cite source documents; no unsupported claims
@@ -334,7 +334,7 @@ Google's official Node SDKs, called directly. Two packages cover the stack:
 | 1.1 | PM | align with SDT PM to confirm which API fields indicate the teacher's data access tier and agree the data contract | engineers have a clear spec before building the SDT integration |
 | 1.2 | Engineer | integrate with EduPass/HR to pull teacher context (role, school) via existing MIMS roles documentation | we can scope guidance recommendations to the teacher's role and school |
 | 1.3 | Engineer | integrate with GB and SDT APIs to pull student context signals (Scope 1 — MySEI Intent Score, Social Links, TCI Low Mood; Scope 2 — LTA, offence type, SEN type) | student signals can trigger contextually relevant guidance retrieval |
-| 1.4 | Engineer | read and enforce the SDT data classification tier returned per teacher | Glow CI only surfaces data the accessing teacher is authorised to view |
+| 1.4 | Engineer | read and enforce the SDT data classification tier returned per teacher | CI only surfaces data the accessing teacher is authorised to view |
 | **Knowledge Base** | | | |
 | 1.5 | PM | provision GCS bucket and confirm classification clearance to Official Closed (Sensitive Normal) in the GCC environment | engineers can connect to storage and ingest guidance materials in a compliant environment |
 | 1.6 | PM | set up cloud storage and onboard steering committee representatives to populate guidance materials via the Management Portal (Part 6) | there is a managed, populated knowledge base ready for ingestion |
@@ -387,7 +387,7 @@ Google's official Node SDKs, called directly. Two packages cover the stack:
 | 2.4 | Teacher | see source citations on every AI response | I can verify the guidance and refer to the original document if needed |
 | 2.5 | Designer | design a chat experience embedded in TW that feels native | teachers adopt it as part of their natural workflow |
 | 2.6 | PM | align with TW team to define and agree the API contract for serving chat responses and recommendation cards | engineers on both sides have a clear integration spec |
-| 2.7 | Engineer | implement the TW API contract to serve AI chat responses within Teacher's Workspace | Glow CI output is correctly rendered in TW |
+| 2.7 | Engineer | implement the TW API contract to serve AI chat responses within Teacher's Workspace | CI output is correctly rendered in TW |
 | 2.8 | Engineer | build the chat UI in TW (slide-over or embedded panel) pre-loaded with card context | teachers can begin exploring guidance immediately without re-stating their situation |
 
 ---
@@ -399,7 +399,7 @@ Google's official Node SDKs, called directly. Two packages cover the stack:
 **How it works:**
 
 1. Teacher navigates to a student's page in TW
-2. Context signals (e.g., student profile data, case notes, flags) trigger Glow CI to retrieve relevant guidance
+2. Context signals (e.g., student profile data, case notes, flags) trigger CI to retrieve relevant guidance
 3. 2–4 recommendation cards are surfaced, each containing a concise, digestible summary of relevant guidance
 4. Tapping a card opens the AI Chat Interface (Part 2) with first-cut recommendations already presented
 
@@ -434,7 +434,7 @@ Google's official Node SDKs, called directly. Two packages cover the stack:
 
 ### Part 4: Analytics & Tracking
 
-**What it is:** The instrumentation layer that enables measurement of product metrics and guardrail metrics. Glow CI uses a dedicated GA4 property (separate from TW), supplemented with custom events and server-side logging.
+**What it is:** The instrumentation layer that enables measurement of product metrics and guardrail metrics. CI uses a dedicated GA4 property (separate from TW), supplemented with custom events and server-side logging.
 
 **Standard GA4 (no custom instrumentation needed):**
 - Sessions, users, DAU/WAU
@@ -465,7 +465,7 @@ These cannot be tracked in GA and require server/API-level logging:
 
 | # | As a... | I want to... | So that... |
 |---|---------|-------------|-----------|
-| 4.1 | Engineer | set up a dedicated GA4 property for Glow CI (separate from TW) | analytics are isolated and attributable to CI specifically |
+| 4.1 | Engineer | set up a dedicated GA4 property for CI (separate from TW) | analytics are isolated and attributable to CI specifically |
 | 4.2 | Engineer | implement custom event tracking across cards and chat | product metrics (engagement, CTR, usefulness) can be measured |
 | 4.3 | Engineer | implement server-side logging for guardrail metrics (latency, citation coverage, data classification breaches) | guardrail metrics are captured outside GA where they can't be tracked via frontend events |
 | 4.4 | PM | define the review and escalation process for guardrail metrics, especially hallucination incidents | there is a clear owner and response protocol when a guardrail threshold is breached |
@@ -566,8 +566,8 @@ These cannot be tracked in GA and require server/API-level logging:
 
 **Key capabilities:**
 
-- **MOE AI Evals platform (pre-deployment)** — connect Glow CI LLM outputs to [eval.ai-platform.string.sg](https://eval.ai-platform.string.sg/); run automated eval suite (hallucination, citation coverage, response relevance) before pilot launch
-- **Langfuse (post-deployment)** — instrument Glow CI LLM calls for production monitoring; track LLM cost (token usage, cost per session) and user chat sessions (query, response, latency)
+- **MOE AI Evals platform (pre-deployment)** — connect CI LLM outputs to [eval.ai-platform.string.sg](https://eval.ai-platform.string.sg/); run automated eval suite (hallucination, citation coverage, response relevance) before pilot launch
+- **Langfuse (post-deployment)** — instrument CI LLM calls for production monitoring; track LLM cost (token usage, cost per session) and user chat sessions (query, response, latency)
 - **Stakeholder-defined criteria** — business teams define quality requirements (hallucination, citation coverage, relevance) on the evals platform
 - **Automated eval runs** — pre-deployment test suite must pass before pilot launch
 
@@ -580,8 +580,8 @@ These cannot be tracked in GA and require server/API-level logging:
 
 | # | As a... | I want to... | So that... |
 |---|---------|-------------|-----------|
-| 7.1 | PM | align with AI team to define Glow CI eval requirements (hallucination, citation coverage, response relevance) and onboard to MOE AI Evals platform | we have agreed criteria before instrumentation begins |
-| 7.2 | Engineer | connect Glow CI to MOE AI Evals platform (pre-deployment) and instrument LLM calls with Langfuse (post-deployment) | output quality is validated before launch and production costs + behaviour are observable |
+| 7.1 | PM | align with AI team to define CI eval requirements (hallucination, citation coverage, response relevance) and onboard to MOE AI Evals platform | we have agreed criteria before instrumentation begins |
+| 7.2 | Engineer | connect CI to MOE AI Evals platform (pre-deployment) and instrument LLM calls with Langfuse (post-deployment) | output quality is validated before launch and production costs + behaviour are observable |
 
 ## Priority & Timeline
 
@@ -663,7 +663,7 @@ Chat-first approach — the AI Chat interface is the primary value driver and sh
 
 ### Knowledge Base Steering Committee
 
-A cross-branch committee of professional wing representatives who own and contribute domain-specific guidance materials to the Glow CI knowledge base. Each branch is responsible for their domain's content quality and currency.
+A cross-branch committee of professional wing representatives who own and contribute domain-specific guidance materials to the CI knowledge base. Each branch is responsible for their domain's content quality and currency.
 
 | Organisation | Domain | Role |
 |-------------|--------|------|

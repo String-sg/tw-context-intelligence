@@ -248,6 +248,15 @@ CI is delivered across 4 epics. Each epic maps to one or more product parts belo
 - Guidance materials from Student Intervention and Student Wellbeing domains, stored in a **Google Cloud Storage (GCS) bucket** and managed via the Management Portal (deferred to post-pilot — see Out of Scope)
 - Chunking and embedding pipeline to convert documents into a searchable vector store, using **Vertex AI** (embeddings + Vector Search)
 - Document refresh cadence: re-ingestion process triggered when domain owners upload or update materials via the portal
+- **Metadata tagging schema** — every content piece carries mandatory tags to enable use-case-scoped retrieval:
+
+| Tag | Description |
+|-----|-------------|
+| `use_case` | Which CI use case(s) this content addresses (supports multi-tag for cross-use-case content) |
+| `signal_match` | Which specific student signals this content addresses |
+| `content_owner` | Team responsible for maintaining this content |
+
+Content owners tag their own material. Schema is shared and enforced centrally.
 
 **AI Model + Model Service API** — retrieval, synthesis, and serving layer
 
@@ -434,10 +443,21 @@ The "Recommended action" card surfaces above the student's stats (Attendance, Ac
 
 ![Prototype: Recommendation card on student profile](./prd-assets/prototype-student-profile.png)
 
+**Card state logic:**
+
+| State | Condition |
+|-------|-----------|
+| **Show** | Signal is first detected for a student |
+| **Suppress** | Teacher actively dismisses the card ("Not relevant?") |
+| **Resurface** | Signal changes state — new flag added, flag updated or escalated, or score dips again after recovery |
+
+No time-based expiry. A dismissed card does not resurface after X days — only a genuine signal change brings it back. This prevents the card from becoming background noise.
+
 **Design requirements:**
 
 - Cards must be lightweight and glanceable — teachers are time-poor
 - Visual hierarchy: headline > summary > source > CTA
+- Include a "Not relevant?" dismiss action on each card
 - Integrate naturally into TW's existing student page layout (coordinate with TW team)
 - Handle loading, empty state (no relevant guidance to surface), and error states gracefully
 - Cards should feel proactive but not intrusive — they are suggestions, not mandates
@@ -450,7 +470,9 @@ The "Recommended action" card surfaces above the student's stats (Attendance, Ac
 | 3.2 | Teacher | see a concise summary on each card with a link to the source | I can quickly assess relevance and trust the recommendation |
 | 3.3 | Teacher | tap a card to explore deeper via AI Chat | I can get more detailed, tailored guidance when I need it |
 | 3.4 | Teacher | rate whether a recommendation card was useful | I can give feedback on whether the guidance surfaced was relevant to my situation |
-| 3.5 | System | evaluate student context signals when a teacher opens a student's page and surface recommendation cards only when trigger conditions are met | guidance is proactively surfaced at the right moment without teacher action |
+| 3.5 | Teacher | dismiss a card as "Not relevant" | it stops appearing for this student unless their situation genuinely changes |
+| 3.6 | System | evaluate student context signals when a teacher opens a student's page and surface recommendation cards only when trigger conditions are met | guidance is proactively surfaced at the right moment without teacher action |
+| 3.7 | System | suppress a dismissed card and only resurface it when the triggering signal changes state | teachers are not shown the same card repeatedly if nothing about the student's situation has changed |
 
 ---
 
@@ -519,6 +541,7 @@ The "Recommended action" card surfaces above the student's stats (Attendance, Ac
 
 1. **Teacher role source** — evaluate whether to pull teacher role from SDT (simpler, existing integration) or EduPass/HR (more authoritative but new integration); clarify auth method via MIMS roles documentation
 2. **SDT API field mapping** — confirm with SDT PM which API fields correspond to each pilot signal and which field indicates the teacher's data access tier
+3. **Signal change tracking** — do SDT and wellbeing systems log signal changes as discrete events, or do they only expose current state (snapshot)? This is blocking for resurface logic: if only current state is available, CI must maintain its own signal history and diff on each poll to detect changes
 
 **User stories:**
 

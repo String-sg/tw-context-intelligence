@@ -1,4 +1,4 @@
-# Glow Contextual Intelligence (Glow CI) — Product Requirements Document
+# TW Contextual Intelligence v1.0: Capability Layer + Knowledge Retrieval JTBD
 
 **Status:** Draft v3.5 | **Last updated:** 2026-06-22 | **Authors:** Jasmine Tay, PM; Ralph Santos, Engineer
 
@@ -6,7 +6,7 @@
 
 ## Table of Contents
 
-- [What is Glow CI](#what-is-glow-ci)
+- [What is CI](#what-is-ci)
 - [Background](#background)
   - [Problem Statement](#problem-statement)
   - [Evidence of Problem](#evidence-of-problem)
@@ -83,7 +83,7 @@
 
 ---
 
-## What is Glow CI
+## What is CI
 
 ![CI Overview](https://raw.githubusercontent.com/jasminetay-moe/product-strategy/main/assets/ci-overview.svg)
 

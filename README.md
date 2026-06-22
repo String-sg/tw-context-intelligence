@@ -2,7 +2,7 @@
 
 ## How CI fits into the educator ecosystem
 
-![MOE Educator Platform Ecosystem](https://raw.githubusercontent.com/jasminetay-moe/product-strategy/main/assets/moe-educator-platform-ecosystem.svg)
+![The Educator Ecosystem](./assets/educator-ecosystem.svg)
 
 CI sits in the **Intelligence** layer of the educator platform — the Educator Productivity Intelligence Gateway. It routes requests, evaluates data triggers, runs AI Assist, retrieves contextual guidance via RAG, and composes multi-system responses. Guardrails (data classification, Sensitive-High masking, output grounding, audit) are embedded, not external.
 
@@ -24,4 +24,4 @@ Anchored in the learning north star, knowledge retrieval directly addresses two 
 
 ## Documentation
 
-- [Product Requirements Document](./TW%20Contextual%20Intelligence%20v1.0%20%E2%80%94%20Capability%20Layer%20+%20Knowledge%20Retrieval%20JTBD.md)
+- [Product Requirements Document](./prd/TW%20Contextual%20Intelligence%20v1.0%20%E2%80%94%20Capability%20Layer%20+%20Knowledge%20Retrieval%20JTBD.md)

@@ -382,9 +382,9 @@ A three-column panel (Student context · Chat · Learn more) opens as a slide-ov
 
 ![Prototype: CI chat panel](./prd-assets/prototype-chat-panel.png)
 
-**3. Learn tab — OPAL course recommendations**
+**3. Learn tab — OPAL/Glow learning recommendations**
 
-The "Learn" tab within the CI panel surfaces OPAL learning modules contextually relevant to the student situation (e.g. "Understanding SwAN Profiles", "Tier 2 Intervention Playbook").
+The "Learn" tab within the CI panel surfaces curated OPAL/Glow learning modules relevant to the student situation (e.g. "Understanding SwAN Profiles", "Tier 2 Intervention Playbook"). **No recommendation system is involved** — the links shown are manually curated for this pilot and statically configured. Dynamic learning recommendations are out of scope for this phase.
 
 ![Prototype: Learn tab](./prd-assets/prototype-learn-tab.png)
 

@@ -520,6 +520,13 @@ The "Recommended action" card surfaces above the student's stats (Attendance, Ac
 1. **SDT API fields** — confirm with SDT PM which API fields/metadata indicate the teacher's data access tier, so it can be correctly parsed in context assembly
 2. **EduPass integration approach** — confirm whether teacher role is pulled from EduPass or SDT; clarify the auth method (MIMS roles documentation)
 
+**User stories:**
+
+| # | As a... | I want to... | So that... |
+|---|---------|-------------|-----------|
+| 3.1.1 | Teacher | see CI guidance based on my student's real-time signals (attendance, wellbeing, behaviour incidents) | recommendations reflect what's actually happening with my student, not generic advice |
+| 3.1.2 | Teacher | only see CI guidance for student data I'm authorised to access | data classification is enforced and I cannot inadvertently view information above my clearance level |
+| 3.1.3 | Teacher | receive CI recommendations scoped to my role and school context | guidance is relevant to my specific teaching situation and not surfaced out of context |
 
 ---
 
@@ -552,6 +559,12 @@ These cannot be tracked in GA and require server/API-level logging:
 - **Hallucination incidents** — flagged via teacher feedback + manual review process
 - **Data classification breach** — logged at SDT API integration layer
 
+**User stories:**
+
+| # | As a... | I want to... | So that... |
+|---|---------|-------------|-----------|
+| 3.2.1 | System | log CI card impressions, interactions, and chat sessions to GA4 | product engagement metrics (card engagement, recommendations CTR, chat sessions per teacher) can be measured accurately |
+| 3.2.2 | System | log response latency, citation coverage, and data classification events server-side | guardrail metrics are captured and traceable independently of frontend analytics |
 
 ---
 
@@ -580,6 +593,11 @@ These cannot be tracked in GA and require server/API-level logging:
 
 1. Is the analytics view a standalone web app or a restricted-access admin section within an existing platform?
 
+**User stories:**
+
+| # | As a... | I want to... | So that... |
+|---|---------|-------------|-----------|
+| 3.3.1 | System | log every teacher query and AI response server-side within GCC data residency | domain owners and West Zone Sups can review query patterns and identify gaps in the knowledge base |
 
 ---
 
@@ -602,6 +620,13 @@ LLM guardrails testing, end-to-end QA, UX polish, and TRA sign-off required befo
 
 1. **MOE AI Evals platform onboarding** — confirm eval service access and onboarding process with AI team; define eval criteria (hallucination = 0, citation coverage = 100%, response relevance)
 2. **Eval scope for pilot** — which criteria must pass before pilot launch vs post-pilot iteration?
+
+**User stories:**
+
+| # | As a... | I want to... | So that... |
+|---|---------|-------------|-----------|
+| 4.1.1 | System | pass automated AI evaluation checks (zero hallucinations, 100% citation coverage, threshold response relevance) on the MOE AI Evals platform before pilot deployment | output quality meets defined thresholds before any teacher uses the system |
+| 4.1.2 | System | emit LLM trace data (query, response, latency, token usage) to Langfuse in production | AI costs and behaviour are observable and monitorable post-deployment |
 
 
 ## Priority & Timeline

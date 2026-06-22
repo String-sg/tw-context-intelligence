@@ -97,7 +97,7 @@ CI is a **platform capability layer within Teacher's Workspace** — not a singl
 | Insights summary | Synthesise student or cohort patterns into an actionable brief | Planned |
 | Drafting assistance | Generate first drafts of communications, case notes, or reports | Planned |
 
-CI represents the **knowledge retrieval** learning trigger — learning woven into the natural workflow of teachers, surfaced at the point of need rather than sought out. This is distinct from compliance-driven learning (Glow) and self-directed learning, and is the highest-potential trigger for meaningful professional development.
+**Knowledge retrieval** represents the **contextual (push)** learning trigger — learning woven into the natural workflow of teachers, surfaced at the point of need rather than sought out. This is distinct from compliance-driven learning (Glow) and self-directed learning, and is the highest-potential trigger for meaningful professional development.
 
 **This PRD covers knowledge retrieval only.** Subsequent JTBDs will be scoped separately as CI matures.
 

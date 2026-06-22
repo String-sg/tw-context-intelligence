@@ -34,7 +34,6 @@
     - [Part 3.1: Data Connection Layer](#part-31-data-connection-layer)
     - [Part 3.2: Context Assembly Layer](#part-32-context-assembly-layer)
     - [Part 3.3: Analytics & Tracking](#part-33-analytics--tracking)
-    - [Part 3.4: Conversation Analytics](#part-34-conversation-analytics)
   - [E4: Testing + Polishing + TRA](#e4-testing--polishing--tra)
     - [Part 4.1: AI Evaluations](#part-41-ai-evaluations)
 - [Priority & Timeline](#priority--timeline)
@@ -225,7 +224,7 @@ CI is delivered across 4 epics. Each epic maps to one or more product parts belo
 |------|-------|---------|
 | **E1: TW RAG + Model Service** | Part 1.1 | Reusable TW platform capability for RAG + LLM. **Knowledge base** — GCS bucket, Vertex AI embeddings + Vector Search, chunking + document refresh pipeline. **AI model + model service API** — RAG orchestration via Vertex AI; Gemini synthesis with strict source grounding; model service API endpoint for TW apps. Context assembly lives in E3. |
 | **E2: MicroFE for CI** | Parts 2.1, 2.2, 2.3 | CI frontend as a micro-frontend pluggable into any TW app. **Recommendation cards** — surfaced on SDT student profile, triggered by student signals. **AI Chat interface** — pre-loaded context, follow-up Q&A, inline citations. **Native resource viewer** — inline document viewer deep-linked from citations. UX design for all components. |
-| **E3: Data integrations** | Parts 3.1, 3.2, 3.3, 3.4 | **Data connection layer** — SDT connector for student signals (absenteeism, SEN, offence data); teacher role connector (SDT or EduPass TBD); data classification enforcement at connection point. **Context assembly layer** — combines student signals, teacher role, and situational context (which TW page/student) into a structured retrieval query for E1. **Analytics & tracking** — dedicated GA4 property; custom events for cards/chat/citations; server-side guardrail logging. **Conversation analytics** — query logs, usefulness ratings, query volume trends; domain-scoped access for West Zone Sups. |
+| **E3: Data integrations** | Parts 3.1, 3.2, 3.3 | **Data connection layer** — SDT connector for student signals (absenteeism, SEN, offence data); teacher role connector (SDT or EduPass TBD); data classification enforcement at connection point. **Context assembly layer** — combines student signals, teacher role, and situational context (which TW page/student) into a structured retrieval query for E1. **Analytics & tracking** — dedicated GA4 property; custom events for cards/chat/citations; server-side guardrail logging. |
 | **E4: Testing + Polishing + TRA** | Part 4.1 | **AI evaluations** — pre-deployment quality gates via MOE AI Evals platform (hallucination, citation coverage, response relevance); post-deployment monitoring via Langfuse. LLM guardrails testing, end-to-end QA, UX polish, TRA sign-off for pilot launch. |
 
 > **Knowledge base management portal** (domain owner upload/tag/delete UI, story 6.5) is deferred to post-pilot. Initial knowledge base population is handled directly by the engineering team. See [Out of Scope](#out-of-scope-this-phase).
@@ -246,7 +245,7 @@ CI is delivered across 4 epics. Each epic maps to one or more product parts belo
 
 **Knowledge Base** — guidance content that the AI retrieves from; managed by domain owners
 
-- Guidance materials from Student Intervention and Student Wellbeing domains, stored in a **Google Cloud Storage (GCS) bucket** and managed via the Management Portal (Part 3.4)
+- Guidance materials from Student Intervention and Student Wellbeing domains, stored in a **Google Cloud Storage (GCS) bucket** and managed via the Management Portal (deferred to post-pilot — see Out of Scope)
 - Chunking and embedding pipeline to convert documents into a searchable vector store, using **Vertex AI** (embeddings + Vector Search)
 - Document refresh cadence: re-ingestion process triggered when domain owners upload or update materials via the portal
 
@@ -604,39 +603,6 @@ These cannot be tracked in GA and require server/API-level logging:
 
 ---
 
-#### Part 3.4: Conversation Analytics
-
-**What it is:** Server-side conversation logging and an analytics view for West Zone Sups and domain owners to monitor teacher query patterns. Provides the data feedback loop from teacher usage back to knowledge base maintenance.
-
-> **Knowledge base management UI (story 6.5) is deferred to post-pilot.** Initial knowledge base population is handled directly by the engineering team. Domain owner self-service upload/tag/delete will be scoped and built after the pilot based on observed usage patterns.
-
-**How it works:**
-
-1. Every teacher query and AI response is logged server-side (within GCC data residency)
-2. West Zone Sups and domain owners view conversation logs filtered by domain, date, or school to understand what teachers are asking
-3. Query patterns surface knowledge gaps (e.g. recurring questions with no strong source match), informing what new materials to add
-
-**Key capabilities (pilot scope):**
-
-- **Conversation analytics** — view teacher query logs and AI responses; track usefulness ratings (thumbs up/down), query volume trends, and citation engagement to understand how teachers are using the system
-- **Query insights** — surface frequent query patterns to identify knowledge gaps
-- **Domain-scoped access** — each domain owner sees only their domain's materials and analytics
-
-**Post-pilot (out of scope now):**
-- Knowledge base management UI — upload, tag, and delete guidance materials per domain
-
-**Open questions:**
-
-1. Is the analytics view a standalone web app or a restricted-access admin section within an existing platform?
-
-**User stories:**
-
-| # | As a... | I want to... | So that... |
-|---|---------|-------------|-----------|
-| 3.4.1 | System | log every teacher query and AI response server-side within GCC data residency | domain owners and West Zone Sups can review query patterns and identify gaps in the knowledge base |
-
----
-
 ### E4: Testing + Polishing + TRA
 
 LLM guardrails testing, end-to-end QA, UX polish, and TRA sign-off required before pilot launch.
@@ -677,7 +643,7 @@ Chat-first approach — the AI Chat interface is the primary value driver and sh
 |----------|------|-------|-----------|
 | **P0** | E1: TW RAG + Model Service | Part 1.1 | Foundation — everything depends on the retrieval and AI backend |
 | **P0** | E2: MicroFE for CI | Parts 2.1, 2.2, 2.3 | Primary teacher-facing surface; chat first, then cards and resource viewer |
-| **P1** | E3: Data integrations | Parts 3.1, 3.2, 3.3, 3.4 | Required for pilot — data connectors + context assembly must be live for CI to trigger; GA4 + guardrail logging before 31 Aug; West Zone Sups need conversation analytics from day 1 |
+| **P1** | E3: Data integrations | Parts 3.1, 3.2, 3.3 | Required for pilot — data connectors + context assembly must be live for CI to trigger; GA4 + guardrail logging before 31 Aug |
 | **P1** | E4: Testing + Polishing + TRA | Part 4.1 | Required before pilot — AI evals, LLM guardrails, UX polish, and TRA must clear before launch |
 ### Timeline
 
@@ -695,7 +661,7 @@ Chat-first approach — the AI Chat interface is the primary value driver and sh
 - Google Cloud access — Vertex AI project setup, service account provisioning, and Gemini model access
 - **Cloud storage provisioning** — GCS bucket provisioned and confirmed cleared to Official Closed (Sensitive Normal) in GCC environment before document ingestion begins; initiate early as a Phase 1 prerequisite
 - TW API contracts — agreed integration points for embedding chat, cards, and viewer
-- **Conversation log access controls** — define who can access query logs in the portal before Part 3.4 logging is enabled
+
 
 ---
 

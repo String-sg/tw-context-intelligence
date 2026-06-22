@@ -183,15 +183,7 @@ Teachers face high cognitive load daily. MOE has extensive domain-scoped learnin
 
 > **Note:** For the pilot, CI surfaces guidance based on 5 fixed student signals. Before surfacing CI, the system must verify that the accessing teacher's role has permission to view each signal. If a teacher does not have access to a signal, CI must not be surfaced for that context.
 
-**Scope 1: Holistic Development Growth Conversations** *(GB data)*
-
-| Signal | Trigger | Status |
-|--------|---------|--------|
-| SE Skills Intent 1, 2 or 3 | Average MySEI Intent Score < 2 | TBC — pending additional technical evaluation |
-| Social Links | Social Links < 2 | TBC |
-| TCI Low Mood | Low Mood > 2 terms | TBC |
-
-**Scope 2: SwAN Support** *(SDT data)*
+**SwAN Support** *(SDT data)*
 
 | Signal | Trigger | Status |
 |--------|---------|--------|

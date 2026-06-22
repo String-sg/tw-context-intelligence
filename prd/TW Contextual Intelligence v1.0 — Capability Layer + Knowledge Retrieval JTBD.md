@@ -24,14 +24,15 @@
 - [Epic Structure](#epic-structure)
 - [Product Requirements](#product-requirements)
   - [E1: TW RAG + Model Service](#e1-tw-rag--model-service)
-    - [Part 1: Technical Integration — Contextual Data + RAG + LLM](#part-1-technical-integration--contextual-data--rag--llm)
+    - [Part 1: Knowledge Base + RAG + Model Service](#part-1-knowledge-base--rag--model-service)
   - [E2: MicroFE for CI](#e2-microfe-for-ci)
     - [Part 2: AI Chat Interface](#part-2-ai-chat-interface)
     - [Part 3: Recommendation Cards](#part-3-recommendation-card-surfacing-in-tw-student-page)
     - [Part 5: Native Resource Viewer](#part-5-knowledge-storage--retrieval--native-resource-viewer-in-tw)
   - [E3: Data integrations](#e3-data-integrations)
+    - [Data Integration — Student + Teacher Context](#data-integration--student--teacher-context)
     - [Part 4: Analytics & Tracking](#part-4-analytics--tracking)
-    - [Part 6: Data integrations + Conversation Analytics](#part-6-data-integrations--conversation-analytics)
+    - [Part 6: Conversation Analytics](#part-6-data-integrations--conversation-analytics)
   - [E4: Testing + Polishing + TRA](#e4-testing--polishing--tra)
     - [Part 7: AI Evaluations](#part-7-ai-evaluations)
 - [Priority & Timeline](#priority--timeline)
@@ -219,10 +220,10 @@ CI is delivered across 4 epics. Each epic maps to one or more product parts belo
 
 | Epic | Parts | Features |
 |------|-------|---------|
-| **E1: TW RAG + Model Service** | Part 1 | **Contextual data ingestion** — EduPass/HR teacher context (role, school); GB student signals (Scope 1: MySEI Intent Score, Social Links, TCI Low Mood) and SDT student signals (Scope 2: LTA, offence type, SEN type); data classification enforcement per teacher access tier<br><br>**Knowledge base** — GCS bucket for MOE guidance materials; Vertex AI embeddings + Vector Search; chunking and document refresh pipeline<br><br>**AI model** — context assembly layer; RAG orchestration via Vertex AI; Gemini synthesis with strict source grounding |
-| **E2: MicroFE for CI** | Parts 2, 3, 5 | **AI Chat interface** — conversational Q&A pre-loaded with context from the triggering card; natural-language follow-up questions; teacher-added situational context; inline source citations on every response; suggested follow-up prompts<br><br>**Recommendation cards** — contextual cards surfaced on the TW student page, triggered by student signals; card anatomy: headline, 2–3 sentence summary, source citation, CTA to open chat; loading, empty-state, and error-state handling<br><br>**Native resource viewer** — inline document viewer within TW (PDF, Word, HTML); deep-linked from card citations and AI Chat citations; section-level anchoring to land at the referenced passage; shared storage with RAG pipeline (ingest once, serve both) |
-| **E3: Data integrations** | Parts 4, 6 | **Analytics & tracking** — dedicated GA4 property (isolated from TW); custom events for card impressions, card clicks, CTA clicks, usefulness ratings, chat sessions, chat messages, citation clicks, resource viewer opens; server-side guardrail logging for response latency, citation coverage, hallucination incidents, and data classification breaches<br><br>**Conversation analytics** — server-side conversation log storage (query + AI response per session); analytics view for West Zone Sups and domain owners showing query logs, usefulness ratings, query volume trends, and citation engagement; domain-scoped access control |
-| **E4: Testing + Polishing + TRA** | Part 7 | LLM guardrails testing, end-to-end QA, UX polish, and TRA sign-off for pilot launch<br><br>**AI evaluations** — pre-deployment quality gates via MOE AI Evals platform (hallucination, citation coverage, response relevance); post-deployment production monitoring via Langfuse (LLM cost, query/response/latency) |
+| **E1: TW RAG + Model Service** | Part 1 | Reusable TW platform capability for RAG + LLM. **Knowledge base** — GCS bucket, Vertex AI embeddings + Vector Search, chunking + document refresh pipeline. **AI model + model service API** — RAG orchestration via Vertex AI; Gemini synthesis with strict source grounding; model service API endpoint for TW apps. Context assembly lives in E3. |
+| **E2: MicroFE for CI** | Parts 2, 3, 5 | CI frontend as a micro-frontend pluggable into any TW app. **Recommendation cards** — surfaced on SDT student profile, triggered by student signals. **AI Chat interface** — pre-loaded context, follow-up Q&A, inline citations. **Native resource viewer** — inline document viewer deep-linked from citations. UX design for all components. |
+| **E3: Data integrations** | Parts 4, 6 | **Data integration** — EduPass/SDT teacher role + student signals (5 pilot signals); data classification enforcement; context assembly layer → structured retrieval query for E1. **Analytics & tracking** — dedicated GA4 property; custom events for cards/chat/citations; server-side guardrail logging. **Conversation analytics** — query logs, usefulness ratings, query volume trends; domain-scoped access for West Zone Sups. |
+| **E4: Testing + Polishing + TRA** | Part 7 | **AI evaluations** — pre-deployment quality gates via MOE AI Evals platform (hallucination, citation coverage, response relevance); post-deployment monitoring via Langfuse. LLM guardrails testing, end-to-end QA, UX polish, TRA sign-off for pilot launch. |
 
 > **Knowledge base management portal** (domain owner upload/tag/delete UI, story 6.5) is deferred to post-pilot. Initial knowledge base population is handled directly by the engineering team. See [Out of Scope](#out-of-scope-this-phase).
 
@@ -234,20 +235,11 @@ CI is delivered across 4 epics. Each epic maps to one or more product parts belo
 
 ### E1: TW RAG + Model Service
 
-#### Part 1: Technical Integration — Contextual Data + RAG + LLM
+#### Part 1: Knowledge Base + RAG + Model Service
 
-**What it is:** A backend service with three integrated layers: (1) contextual data ingestion from teacher and student signals, (2) a knowledge base of MOE guidance materials indexed for semantic retrieval, and (3) a RAG + LLM layer that synthesises relevant guidance grounded in official materials.
+**What it is:** A reusable TW platform capability for RAG + LLM — any TW app can call the model service API to get grounded, cited AI responses. CI is the first consumer. Covers: (1) a knowledge base of MOE guidance materials indexed for semantic retrieval, (2) a RAG + LLM layer that synthesises grounded guidance, and (3) a model service API that TW apps call to retrieve AI responses. Student and teacher data integrations live in E3.
 
 **Key capabilities:**
-
-**Contextual Data** — dynamic, per-session signals that shape what gets retrieved
-
-- **Teacher context** (from EduPass/HR) — teacher role, school; used to scope relevant guidance
-- **Student context** — student signals used as the primary trigger for retrieval; sourced from two systems:
-  - **GB** (Scope 1 — Holistic Development): MySEI Intent Score, Social Links, TCI Low Mood
-  - **SDT API** (Scope 2 — SwAN Support): Long-term Absenteeism, offence type, SEN type
-
-*SDT API handles role-based filtering — only data the accessing teacher is authorised to view is returned. Data classification level (Sensitive High vs Sensitive Normal) must be respected in context assembly.*
 
 **Knowledge Base** — guidance content that the AI retrieves from; managed by domain owners
 
@@ -255,12 +247,12 @@ CI is delivered across 4 epics. Each epic maps to one or more product parts belo
 - Chunking and embedding pipeline to convert documents into a searchable vector store, using **Vertex AI** (embeddings + Vector Search)
 - Document refresh cadence: re-ingestion process triggered when domain owners upload or update materials via the portal
 
-**AI Model** — retrieval and synthesis layer that turns contextual signals + knowledge base content into grounded guidance
+**AI Model + Model Service API** — retrieval, synthesis, and serving layer
 
-- **Context assembly** — combines teacher + student context signals into a structured retrieval query; system prompt design owned by CI/DXD
-- **RAG orchestration** via Vertex AI — retrieves relevant document chunks based on assembled context
+- **RAG orchestration** via Vertex AI — retrieves relevant document chunks based on the assembled context query (context assembly lives in E3)
 - **LLM synthesis** via Gemini — synthesises retrieved chunks into digestible guidance
 - **Strict grounding** — all outputs must cite source documents; no unsupported claims
+- **Model service API** — endpoint serving grounded, cited AI responses to TW apps; API contract agreed with TW team
 
 **Technical options evaluation:**
 
@@ -323,31 +315,24 @@ Google's official Node SDKs, called directly. Two packages cover the stack:
 **Open questions:**
 
 1. ✅ **Vertex AI data residency** — resolved: hosting in GCC satisfies MOE IT data residency requirements
-2. **SDT API fields** — confirm with SDT PM which API fields/metadata indicate the teacher's data access tier, so it can be correctly parsed in context assembly
-3. **Document refresh cadence** — define how often guidance materials are re-ingested from cloud storage; whether ingestion is triggered automatically on upload or run on a schedule
-4. **TW API contract** — agree integration points with TW for serving recommendation cards and chat responses
-5. **GCS clearance** — confirm GCS bucket is cleared to Official Closed (Sensitive Normal) in the GCC environment
-6. **Retrieval quality** — define testing approach to ensure relevant chunks are retrieved for given student/teacher contexts
-7. **Conversation log access controls** — define who can access teacher query logs in the management portal and at what classification level (data governance and retention handled on the cloud infrastructure side)
+2. **Document refresh cadence** — define how often guidance materials are re-ingested from cloud storage; whether ingestion is triggered automatically on upload or run on a schedule
+3. **GCS clearance** — confirm GCS bucket is cleared to Official Closed (Sensitive Normal) in the GCC environment
+4. **Retrieval quality** — define testing approach to ensure relevant chunks are retrieved for given student/teacher contexts
 
 **User stories:**
 
 | # | As a... | I want to... | So that... |
 |---|---------|-------------|-----------|
-| **Contextual Data** | | | |
-| 1.1 | PM | align with SDT PM to confirm which API fields indicate the teacher's data access tier and agree the data contract | engineers have a clear spec before building the SDT integration |
-| 1.2 | Engineer | integrate with EduPass/HR to pull teacher context (role, school) via existing MIMS roles documentation | we can scope guidance recommendations to the teacher's role and school |
-| 1.3 | Engineer | integrate with GB and SDT APIs to pull student context signals (Scope 1 — MySEI Intent Score, Social Links, TCI Low Mood; Scope 2 — LTA, offence type, SEN type) | student signals can trigger contextually relevant guidance retrieval |
-| 1.4 | Engineer | read and enforce the SDT data classification tier returned per teacher | CI only surfaces data the accessing teacher is authorised to view |
 | **Knowledge Base** | | | |
 | 1.5 | PM | provision GCS bucket and confirm classification clearance to Official Closed (Sensitive Normal) in the GCC environment | engineers can connect to storage and ingest guidance materials in a compliant environment |
 | 1.6 | PM | set up cloud storage and onboard steering committee representatives to populate guidance materials via the Management Portal (Part 6) | there is a managed, populated knowledge base ready for ingestion |
 | 1.7 | Engineer | connect to the designated cloud storage bucket to ingest guidance materials | domain owners have a managed source-of-truth for CI content |
 | 1.8 | Engineer | build a chunking and embedding pipeline using Vertex AI | guidance documents are indexed in Vector Search for semantic retrieval |
 | 1.9 | Engineer | set up a document refresh process | the knowledge base stays current when domain owners update source materials |
-| **AI Model** | | | |
+| **AI Model + Model Service API** | | | |
 | 1.10 | Engineer | set up and validate Vertex AI through GCC for RAG orchestration and Gemini for LLM synthesis | we confirm the AI stack meets our retrieval and synthesis requirements before building on it |
-| 1.11 | Engineer | build the context assembly layer that combines teacher and student context into a structured retrieval query | the RAG system receives well-formed, contextually relevant inputs |
+| 2.6 | PM | align with TW team to define and agree the API contract for serving chat responses and recommendation cards | engineers on both sides have a clear integration spec |
+| 2.7 | Engineer | implement the TW API contract to serve AI chat responses within Teacher's Workspace | CI output is correctly rendered in TW |
 | **Technical Stack Selection** | | | |
 | 1.12 | PM + Engineer | evaluate AI stack options (open-source self-host, Vertex AI in GCC, Platform.gov AI), validate GCC compliance and run a retrieval quality spike, and document the selected approach | the team has a clear, evidence-backed technical direction before build begins |
 
@@ -392,8 +377,6 @@ Google's official Node SDKs, called directly. Two packages cover the stack:
 | 2.3 | Teacher | add my own context (e.g., family situation, past interventions tried) | the AI can tailor its recommendations beyond what's in the standard materials |
 | 2.4 | Teacher | see source citations on every AI response | I can verify the guidance and refer to the original document if needed |
 | 2.5 | Designer | design a chat experience embedded in TW that feels native | teachers adopt it as part of their natural workflow |
-| 2.6 | PM | align with TW team to define and agree the API contract for serving chat responses and recommendation cards | engineers on both sides have a clear integration spec |
-| 2.7 | Engineer | implement the TW API contract to serve AI chat responses within Teacher's Workspace | CI output is correctly rendered in TW |
 | 2.8 | Engineer | build the chat UI in TW (slide-over or embedded panel) pre-loaded with card context | teachers can begin exploring guidance immediately without re-stating their situation |
 
 ---
@@ -490,6 +473,36 @@ Google's official Node SDKs, called directly. Two packages cover the stack:
 ---
 
 ### E3: Data integrations
+
+#### Data Integration — Student + Teacher Context
+
+**What it covers:** Connect CI to live student and teacher data from SDT and EduPass, enforce data classification per teacher role, and assemble the context that gets passed to E1's model service as a structured retrieval query.
+
+**Key capabilities:**
+
+- **Teacher context** (from EduPass/HR) — teacher role, school; controls CI visibility and scopes guidance per role
+- **Student signals** — sourced from two systems:
+  - **GB** (Scope 1 — Holistic Development): MySEI Intent Score, Social Links, TCI Low Mood
+  - **SDT API** (Scope 2 — SwAN Support): Long-term Absenteeism, offence type, SEN type
+- **Data classification enforcement** — SDT API returns classification tier per teacher; CI is not surfaced if the teacher is not authorised to view a signal
+- **Context assembly layer** — maps student + teacher signals into a structured retrieval query for E1's RAG model service
+
+**Open questions:**
+
+1. **SDT API fields** — confirm with SDT PM which API fields/metadata indicate the teacher's data access tier, so it can be correctly parsed in context assembly
+2. **EduPass integration approach** — confirm whether teacher role is pulled from EduPass or SDT; clarify the auth method (MIMS roles documentation)
+
+**User stories:**
+
+| # | As a... | I want to... | So that... |
+|---|---------|-------------|-----------|
+| 1.1 | PM | align with SDT PM to confirm which API fields indicate the teacher's data access tier and agree the data contract | engineers have a clear spec before building the SDT integration |
+| 1.2 | Engineer | integrate with EduPass/HR to pull teacher context (role, school) via existing MIMS roles documentation | we can scope guidance recommendations to the teacher's role and school |
+| 1.3 | Engineer | integrate with GB and SDT APIs to pull student context signals (Scope 1 — MySEI Intent Score, Social Links, TCI Low Mood; Scope 2 — LTA, offence type, SEN type) | student signals can trigger contextually relevant guidance retrieval |
+| 1.4 | Engineer | read and enforce the SDT data classification tier returned per teacher | CI only surfaces data the accessing teacher is authorised to view |
+| 1.11 | Engineer | build the context assembly layer that combines teacher and student context into a structured retrieval query | the RAG system receives well-formed, contextually relevant inputs |
+
+---
 
 #### Part 4: Analytics & Tracking
 

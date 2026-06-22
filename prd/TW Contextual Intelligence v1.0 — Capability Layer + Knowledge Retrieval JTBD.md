@@ -213,12 +213,12 @@ Teachers face high cognitive load daily. MOE has extensive domain-scoped learnin
 
 CI is delivered across 4 epics. Each epic maps to one or more product parts below.
 
-| Epic | Parts | What it covers |
-|------|-------|---------------|
-| **E1: TW RAG + Model Service** | Parts 1, 7 | Backend AI infrastructure: contextual data ingestion (SDT/EduPass), knowledge base (GCS + Vertex AI Vector Search), RAG + Gemini synthesis, AI evaluations (MOE AI Evals + Langfuse) |
-| **E2: MicroFE for CI** | Parts 2, 3, 5 | Micro-frontend embedded in Teacher's Workspace: AI chat interface, recommendation cards, native resource viewer |
-| **E3: Data integrations** | Parts 4, 6 | Analytics & tracking (GA4, custom events, server-side logging) and conversation analytics for West Zone Sups |
-| **E4: Testing + Polishing + TRA** | — | LLM guardrails testing, UX polish, technical risk assessment for pilot launch |
+| Epic | Parts | Features |
+|------|-------|---------|
+| **E1: TW RAG + Model Service** | Parts 1, 7 | **Contextual data ingestion** — EduPass/HR teacher context (role, school); GB student signals (Scope 1: MySEI Intent Score, Social Links, TCI Low Mood) and SDT student signals (Scope 2: LTA, offence type, SEN type); data classification enforcement per teacher access tier<br><br>**Knowledge base** — GCS bucket for MOE guidance materials; Vertex AI embeddings + Vector Search; chunking and document refresh pipeline<br><br>**AI model** — context assembly layer; RAG orchestration via Vertex AI; Gemini synthesis with strict source grounding<br><br>**AI evaluations** — pre-deployment quality gates via MOE AI Evals platform (hallucination, citation coverage, response relevance); post-deployment production monitoring via Langfuse (LLM cost, query/response/latency) |
+| **E2: MicroFE for CI** | Parts 2, 3, 5 | **AI Chat interface** — conversational Q&A pre-loaded with context from the triggering card; natural-language follow-up questions; teacher-added situational context; inline source citations on every response; suggested follow-up prompts<br><br>**Recommendation cards** — contextual cards surfaced on the TW student page, triggered by student signals; card anatomy: headline, 2–3 sentence summary, source citation, CTA to open chat; loading, empty-state, and error-state handling<br><br>**Native resource viewer** — inline document viewer within TW (PDF, Word, HTML); deep-linked from card citations and AI Chat citations; section-level anchoring to land at the referenced passage; shared storage with RAG pipeline (ingest once, serve both) |
+| **E3: Data integrations** | Parts 4, 6 | **Analytics & tracking** — dedicated GA4 property (isolated from TW); custom events for card impressions, card clicks, CTA clicks, usefulness ratings, chat sessions, chat messages, citation clicks, resource viewer opens; server-side guardrail logging for response latency, citation coverage, hallucination incidents, and data classification breaches<br><br>**Conversation analytics** — server-side conversation log storage (query + AI response per session); analytics view for West Zone Sups and domain owners showing query logs, usefulness ratings, query volume trends, and citation engagement; domain-scoped access control |
+| **E4: Testing + Polishing + TRA** | — | LLM guardrails testing, end-to-end QA, UX polish, and TRA sign-off for pilot launch |
 
 > **Knowledge base management portal** (domain owner upload/tag/delete UI, story 6.5) is deferred to post-pilot. Initial knowledge base population is handled directly by the engineering team. See [Out of Scope](#out-of-scope-this-phase).
 

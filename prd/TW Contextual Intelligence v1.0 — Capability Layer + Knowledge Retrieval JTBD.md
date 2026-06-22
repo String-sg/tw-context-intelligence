@@ -24,18 +24,18 @@
 - [Epic Structure](#epic-structure)
 - [Product Requirements](#product-requirements)
   - [E1: TW RAG + Model Service](#e1-tw-rag--model-service)
-    - [Part 1: Knowledge Base + RAG + Model Service](#part-1-knowledge-base--rag--model-service)
+    - [Part 1.1: Knowledge Base + RAG + Model Service](#part-11-knowledge-base--rag--model-service)
   - [E2: MicroFE for CI](#e2-microfe-for-ci)
     - [MicroFE Integration Approach](#microfe-integration-approach)
-    - [Part 2: AI Chat Interface](#part-2-ai-chat-interface)
-    - [Part 3: Recommendation Cards](#part-3-recommendation-card-surfacing-in-tw-student-page)
-    - [Part 5: Native Resource Viewer](#part-5-knowledge-storage--retrieval--native-resource-viewer-in-tw)
+    - [Part 2.1: AI Chat Interface](#part-21-ai-chat-interface)
+    - [Part 2.2: Recommendation Cards](#part-22-recommendation-card-surfacing-in-tw-student-page)
+    - [Part 2.3: Native Resource Viewer](#part-23-knowledge-storage--retrieval--native-resource-viewer-in-tw)
   - [E3: Data integrations](#e3-data-integrations)
-    - [Data Integration — Student + Teacher Context](#data-integration--student--teacher-context)
-    - [Part 4: Analytics & Tracking](#part-4-analytics--tracking)
-    - [Part 6: Conversation Analytics](#part-6-data-integrations--conversation-analytics)
+    - [Part 3.1: Data Integration — Student + Teacher Context](#part-31-data-integration--student--teacher-context)
+    - [Part 3.2: Analytics & Tracking](#part-32-analytics--tracking)
+    - [Part 3.3: Conversation Analytics](#part-33-conversation-analytics)
   - [E4: Testing + Polishing + TRA](#e4-testing--polishing--tra)
-    - [Part 7: AI Evaluations](#part-7-ai-evaluations)
+    - [Part 4.1: AI Evaluations](#part-41-ai-evaluations)
 - [Priority & Timeline](#priority--timeline)
   - [Delivery Priority](#delivery-priority)
   - [Timeline](#timeline)
@@ -204,7 +204,7 @@ Teachers face high cognitive load daily. MOE has extensive domain-scoped learnin
 | Has an offence | Type of offence = [TBD] | TBC |
 | SEN | SEN type = [TBD] | TBC |
 
-> **Knowledge base storage classification:** Guidance materials stored for RAG ingestion must be classified at **Official Closed (Sensitive Normal)** or above. Google Cloud Storage (GCS) must be confirmed as cleared to this level in the GCC environment before document ingestion begins. See Part 1 open questions.
+> **Knowledge base storage classification:** Guidance materials stored for RAG ingestion must be classified at **Official Closed (Sensitive Normal)** or above. Google Cloud Storage (GCS) must be confirmed as cleared to this level in the GCC environment before document ingestion begins. See Part 1.1 open questions.
 
 ### Out of Scope (this phase)
 
@@ -222,10 +222,10 @@ CI is delivered across 4 epics. Each epic maps to one or more product parts belo
 
 | Epic | Parts | Features |
 |------|-------|---------|
-| **E1: TW RAG + Model Service** | Part 1 | Reusable TW platform capability for RAG + LLM. **Knowledge base** — GCS bucket, Vertex AI embeddings + Vector Search, chunking + document refresh pipeline. **AI model + model service API** — RAG orchestration via Vertex AI; Gemini synthesis with strict source grounding; model service API endpoint for TW apps. Context assembly lives in E3. |
-| **E2: MicroFE for CI** | Parts 2, 3, 5 | CI frontend as a micro-frontend pluggable into any TW app. **Recommendation cards** — surfaced on SDT student profile, triggered by student signals. **AI Chat interface** — pre-loaded context, follow-up Q&A, inline citations. **Native resource viewer** — inline document viewer deep-linked from citations. UX design for all components. |
-| **E3: Data integrations** | Parts 4, 6 | **Data integration** — EduPass/SDT teacher role + student signals (5 pilot signals); data classification enforcement; context assembly layer → structured retrieval query for E1. **Analytics & tracking** — dedicated GA4 property; custom events for cards/chat/citations; server-side guardrail logging. **Conversation analytics** — query logs, usefulness ratings, query volume trends; domain-scoped access for West Zone Sups. |
-| **E4: Testing + Polishing + TRA** | Part 7 | **AI evaluations** — pre-deployment quality gates via MOE AI Evals platform (hallucination, citation coverage, response relevance); post-deployment monitoring via Langfuse. LLM guardrails testing, end-to-end QA, UX polish, TRA sign-off for pilot launch. |
+| **E1: TW RAG + Model Service** | Part 1.1 | Reusable TW platform capability for RAG + LLM. **Knowledge base** — GCS bucket, Vertex AI embeddings + Vector Search, chunking + document refresh pipeline. **AI model + model service API** — RAG orchestration via Vertex AI; Gemini synthesis with strict source grounding; model service API endpoint for TW apps. Context assembly lives in E3. |
+| **E2: MicroFE for CI** | Parts 2.1, 2.2, 2.3 | CI frontend as a micro-frontend pluggable into any TW app. **Recommendation cards** — surfaced on SDT student profile, triggered by student signals. **AI Chat interface** — pre-loaded context, follow-up Q&A, inline citations. **Native resource viewer** — inline document viewer deep-linked from citations. UX design for all components. |
+| **E3: Data integrations** | Parts 3.1, 3.2, 3.3 | **Data integration** — EduPass/SDT teacher role + student signals (5 pilot signals); data classification enforcement; context assembly layer → structured retrieval query for E1. **Analytics & tracking** — dedicated GA4 property; custom events for cards/chat/citations; server-side guardrail logging. **Conversation analytics** — query logs, usefulness ratings, query volume trends; domain-scoped access for West Zone Sups. |
+| **E4: Testing + Polishing + TRA** | Part 4.1 | **AI evaluations** — pre-deployment quality gates via MOE AI Evals platform (hallucination, citation coverage, response relevance); post-deployment monitoring via Langfuse. LLM guardrails testing, end-to-end QA, UX polish, TRA sign-off for pilot launch. |
 
 > **Knowledge base management portal** (domain owner upload/tag/delete UI, story 6.5) is deferred to post-pilot. Initial knowledge base population is handled directly by the engineering team. See [Out of Scope](#out-of-scope-this-phase).
 
@@ -237,7 +237,7 @@ CI is delivered across 4 epics. Each epic maps to one or more product parts belo
 
 ### E1: TW RAG + Model Service
 
-#### Part 1: Knowledge Base + RAG + Model Service
+#### Part 1.1: Knowledge Base + RAG + Model Service
 
 **What it is:** A reusable TW platform capability for RAG + LLM — any TW app can call the model service API to get grounded, cited AI responses. CI is the first consumer. Covers: (1) a knowledge base of MOE guidance materials indexed for semantic retrieval, (2) a RAG + LLM layer that synthesises grounded guidance, and (3) a model service API that TW apps call to retrieve AI responses. Student and teacher data integrations live in E3.
 
@@ -245,7 +245,7 @@ CI is delivered across 4 epics. Each epic maps to one or more product parts belo
 
 **Knowledge Base** — guidance content that the AI retrieves from; managed by domain owners
 
-- Guidance materials from Student Intervention and Student Wellbeing domains, stored in a **Google Cloud Storage (GCS) bucket** and managed via the Management Portal (Part 6)
+- Guidance materials from Student Intervention and Student Wellbeing domains, stored in a **Google Cloud Storage (GCS) bucket** and managed via the Management Portal (Part 3.3)
 - Chunking and embedding pipeline to convert documents into a searchable vector store, using **Vertex AI** (embeddings + Vector Search)
 - Document refresh cadence: re-ingestion process triggered when domain owners upload or update materials via the portal
 
@@ -359,7 +359,7 @@ The key question is whether CI's components should exist as a **standalone app**
 
 ---
 
-#### Part 2: AI Chat Interface
+#### Part 2.1: AI Chat Interface
 
 **What it is:** A conversational interface within TW that allows teachers to ask natural-language questions and receive AI-synthesised responses grounded in MOE guidance materials. Opened from recommendation cards with first-cut recommendations pre-loaded.
 
@@ -405,10 +405,12 @@ The **Learn tab** surfaces manually curated OPAL/Glow learning modules relevant 
 | 2.2 | Teacher | ask follow-up questions in natural language | I can explore guidance relevant to my specific situation |
 | 2.3 | Teacher | add my own context (e.g., family situation, past interventions tried) | the AI can tailor its recommendations beyond what's in the standard materials |
 | 2.4 | Teacher | see source citations on every AI response | I can verify the guidance and refer to the original document if needed |
+| 2.5 | Teacher | see suggested follow-up questions after each AI response | I know what I can ask next without having to think of questions myself |
+| 2.6 | Teacher | rate whether a chat response was useful | I can give feedback on the quality of guidance I received |
 
 ---
 
-#### Part 3: Recommendation Card Surfacing in TW Student Page
+#### Part 2.2: Recommendation Card Surfacing in TW Student Page
 
 **What it is:** Contextual recommendation cards that appear on a student's page in Teacher's Workspace, proactively surfacing just-in-time (JIT) learning and intervention guidance based on the teacher's current context.
 
@@ -417,7 +419,7 @@ The **Learn tab** surfaces manually curated OPAL/Glow learning modules relevant 
 1. Teacher navigates to a student's page in TW
 2. Context signals (e.g., student profile data, case notes, flags) trigger CI to retrieve relevant guidance
 3. 2–4 recommendation cards are surfaced, each containing a concise, digestible summary of relevant guidance
-4. Tapping a card opens the AI Chat Interface (Part 2) with first-cut recommendations already presented
+4. Tapping a card opens the AI Chat Interface (Part 2.1) with first-cut recommendations already presented
 
 **Card anatomy:**
 
@@ -447,12 +449,14 @@ The "Recommended action" card surfaces above the student's stats (Attendance, Ac
 | 3.1 | Teacher | see contextually relevant recommendation cards when I view a student's page | I get just-in-time guidance without searching for it myself |
 | 3.2 | Teacher | see a concise summary on each card with a link to the source | I can quickly assess relevance and trust the recommendation |
 | 3.3 | Teacher | tap a card to explore deeper via AI Chat | I can get more detailed, tailored guidance when I need it |
+| 3.4 | Teacher | rate whether a recommendation card was useful | I can give feedback on whether the guidance surfaced was relevant to my situation |
+| 3.5 | System | evaluate student context signals when a teacher opens a student's page and surface recommendation cards only when trigger conditions are met | guidance is proactively surfaced at the right moment without teacher action |
 
 ---
 
-#### Part 5: Knowledge Storage & Retrieval — Native Resource Viewer in TW
+#### Part 2.3: Knowledge Storage & Retrieval — Native Resource Viewer in TW
 
-**What it is:** A view-only inline document viewer within Teacher's Workspace that lets teachers open and read MOE guidance materials natively — without being redirected to external sites (MOE Intranet, SharePoint, etc.). In this phase, resources are accessed via recommendation cards (Part 3) and AI Chat citations (Part 2), not through standalone browsing or search.
+**What it is:** A view-only inline document viewer within Teacher's Workspace that lets teachers open and read MOE guidance materials natively — without being redirected to external sites (MOE Intranet, SharePoint, etc.). In this phase, resources are accessed via recommendation cards (Part 2.2) and AI Chat citations (Part 2.1), not through standalone browsing or search.
 
 **How it works:**
 
@@ -464,9 +468,9 @@ The "Recommended action" card surfaces above the student's stats (Attendance, Ac
 **Key capabilities:**
 
 - Native document viewer within TW (PDFs, Word docs, web content) — teachers never leave the platform
-- Deep-linking from recommendation cards (Part 3) and AI Chat citations (Part 2) directly into the viewer
+- Deep-linking from recommendation cards (Part 2.2) and AI Chat citations (Part 2.1) directly into the viewer
 - Section-level anchoring: viewer opens at the relevant section where possible
-- Shared storage with RAG pipeline (Part 1) — materials are ingested once, served for both AI retrieval and native viewing
+- Shared storage with RAG pipeline (Part 1.1) — materials are ingested once, served for both AI retrieval and native viewing
 
 **Design requirements:**
 
@@ -481,7 +485,7 @@ The "Recommended action" card surfaces above the student's stats (Attendance, Ac
 - Document storage: materials are stored in a Google Cloud Storage (GCS) bucket (cleared to Official Closed — see Data Classification Constraints)
 - Format handling: rendering pipeline for PDF, Word, and HTML content
 - Deep-linking / anchor support: ability to link to specific sections within a document
-- Sync with RAG pipeline (Part 1): the same ingested materials serve both the native viewer and the RAG vector store
+- Sync with RAG pipeline (Part 1.1): the same ingested materials serve both the native viewer and the RAG vector store
 - Access control: ensure only authorised teachers can access domain-specific materials
 - **Open question — viewer approach:** Evaluate whether a cloud storage–backed document preview (e.g. GCS signed URL + PDF.js) can serve as the inline viewer within TW, vs. building a fully custom TW-native viewer. Decision needed before Phase 2.
 
@@ -498,7 +502,7 @@ The "Recommended action" card surfaces above the student's stats (Attendance, Ac
 
 ### E3: Data integrations
 
-#### Data Integration — Student + Teacher Context
+#### Part 3.1: Data Integration — Student + Teacher Context
 
 **What it covers:** Connect CI to live student and teacher data from SDT and EduPass, enforce data classification per teacher role, and assemble the context that gets passed to E1's model service as a structured retrieval query.
 
@@ -519,7 +523,7 @@ The "Recommended action" card surfaces above the student's stats (Attendance, Ac
 
 ---
 
-#### Part 4: Analytics & Tracking
+#### Part 3.2: Analytics & Tracking
 
 **What it is:** The instrumentation layer that enables measurement of product metrics and guardrail metrics. CI uses a dedicated GA4 property (separate from TW), supplemented with custom events and server-side logging.
 
@@ -551,7 +555,7 @@ These cannot be tracked in GA and require server/API-level logging:
 
 ---
 
-#### Part 6: Data integrations + Conversation Analytics
+#### Part 3.3: Conversation Analytics
 
 **What it is:** Server-side conversation logging and an analytics view for West Zone Sups and domain owners to monitor teacher query patterns. Provides the data feedback loop from teacher usage back to knowledge base maintenance.
 
@@ -583,7 +587,7 @@ These cannot be tracked in GA and require server/API-level logging:
 
 LLM guardrails testing, end-to-end QA, UX polish, and TRA sign-off required before pilot launch.
 
-#### Part 7: AI Evaluations
+#### Part 4.1: AI Evaluations
 
 **What it is:** Two-stage evaluation approach — pre-deployment quality gates via MOE's AI Evals platform, and post-deployment production monitoring via Langfuse. Ensures output quality is validated before teachers use the system, and cost and behaviour are observable in production.
 
@@ -610,10 +614,10 @@ Chat-first approach — the AI Chat interface is the primary value driver and sh
 
 | Priority | Epic | Parts | Rationale |
 |----------|------|-------|-----------|
-| **P0** | E1: TW RAG + Model Service | Part 1 | Foundation — everything depends on the retrieval and AI backend |
-| **P0** | E2: MicroFE for CI | Parts 2, 3, 5 | Primary teacher-facing surface; chat first, then cards and resource viewer |
-| **P1** | E3: Data integrations | Parts 4, 6 | Required for pilot — GA4 + guardrail logging must be live before 31 Aug; West Zone Sups need conversation analytics from day 1 |
-| **P1** | E4: Testing + Polishing + TRA | Part 7 | Required before pilot — AI evals, LLM guardrails, UX polish, and TRA must clear before launch |
+| **P0** | E1: TW RAG + Model Service | Part 1.1 | Foundation — everything depends on the retrieval and AI backend |
+| **P0** | E2: MicroFE for CI | Parts 2.1, 2.2, 2.3 | Primary teacher-facing surface; chat first, then cards and resource viewer |
+| **P1** | E3: Data integrations | Parts 3.1, 3.2, 3.3 | Required for pilot — GA4 + guardrail logging must be live before 31 Aug; West Zone Sups need conversation analytics from day 1 |
+| **P1** | E4: Testing + Polishing + TRA | Part 4.1 | Required before pilot — AI evals, LLM guardrails, UX polish, and TRA must clear before launch |
 ### Timeline
 
 | Phase | Dates | Milestone | What ships |
@@ -630,7 +634,7 @@ Chat-first approach — the AI Chat interface is the primary value driver and sh
 - Google Cloud access — Vertex AI project setup, service account provisioning, and Gemini model access
 - **Cloud storage provisioning** — GCS bucket provisioned and confirmed cleared to Official Closed (Sensitive Normal) in GCC environment before document ingestion begins; initiate early as a Phase 1 prerequisite
 - TW API contracts — agreed integration points for embedding chat, cards, and viewer
-- **Conversation log access controls** — define who can access query logs in the portal before Part 6 logging is enabled
+- **Conversation log access controls** — define who can access query logs in the portal before Part 3.3 logging is enabled
 
 ---
 

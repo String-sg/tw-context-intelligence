@@ -1,11 +1,12 @@
 # Glow Contextual Intelligence (Glow CI) — Product Requirements Document
 
-**Status:** Draft v3.2 | **Last updated:** 2026-06-10 | **Authors:** Jasmine Tay, PM; Ralph Santos, Engineer
+**Status:** Draft v3.4 | **Last updated:** 2026-06-22 | **Authors:** Jasmine Tay, PM; Ralph Santos, Engineer
 
 ---
 
 ## Table of Contents
 
+- [What is Glow CI](#what-is-glow-ci)
 - [Background](#background)
   - [Problem Statement](#problem-statement)
   - [Evidence of Problem](#evidence-of-problem)
@@ -43,7 +44,9 @@
 
 | Version | Date | Author | Summary |
 |---------|------|--------|---------|
-| v3.2 | 2026-06-10 | Jasmine Tay | Restructure delivery into 4 epics: E1 TW RAG + Model Service, E2 MicroFE for CI, E3 Data integrations, E4 Testing + Polishing + TRA; defer knowledge base management portal (story 6.5) to post-pilot |
+| v3.4 | 2026-06-22 | Jasmine Tay | Merge v3.2 (Ralph) + v3.3 (Jasmine); epic structure and timeline to be aligned with Ralph |
+| v3.3 | 2026-05-13 | Jasmine Tay | Add CI Overview section: CI as platform capability layer with multiple JTBDs; knowledge retrieval = first JTBD; align timeline to strategy doc (Jul 2026 dev start, Nov 2026 pilot) |
+| v3.2 | 2026-06-10 | Ralph Santos | Restructure delivery into 4 epics: E1 TW RAG + Model Service, E2 MicroFE for CI, E3 Data integrations, E4 Testing + Polishing + TRA; defer knowledge base management portal (story 6.5) to post-pilot |
 | v3.1 | 2026-05-07 | Jasmine Tay | Reframe addressable market: Phase 1 pilot is TW GA (all 33,000 teachers) scoped to 5 student signals; Phases 2–3 now reflect feature/domain expansion rather than audience rollout |
 | v3.0 | 2026-05-07 | Jasmine Tay | Tech stack finalised: `@google-cloud/aiplatform` (Vertex RAG Engine) + `@google/genai` (Gemini); resolve storage to GCS; update Part 7 AI Evaluations from Langfuse to Vertex AI Evaluation Service + Cloud Logging |
 | v2.10 | 2026-04-29 | Ralph Santos | Part 1 — add unified SDK evaluation: Vercel AI SDK not adopted (RAG Engine unsupported, no portability or UI-hook benefit); selected first-party `@google-cloud/aiplatform` (Vertex RAG Engine) + `@google/genai` (Gemini synthesis) with pros/cons documented |
@@ -76,6 +79,24 @@
 | v0.1 | 2026-03-17 | Jasmine Tay | Initial draft |
 
 </details>
+
+---
+
+## What is Glow CI
+
+![CI Overview](https://raw.githubusercontent.com/jasminetay-moe/product-strategy/main/assets/ci-overview.svg)
+
+Glow CI is a **platform capability layer within Teacher's Workspace** — not a single feature, but a foundation for surfacing AI-assisted support at the moments teachers need it most. It is designed to serve multiple teacher jobs-to-be-done over time:
+
+| JTBD | Description | Status |
+|------|-------------|--------|
+| **Knowledge retrieval** | Surface the right guidance at the moment of need — in the flow of work, grounded in official MOE materials | **In scope — this PRD** |
+| Insights summary | Synthesise student or cohort patterns into an actionable brief | Planned |
+| Drafting assistance | Generate first drafts of communications, case notes, or reports | Planned |
+
+CI represents the **contextual (push)** learning trigger — learning woven into the natural workflow of teachers, surfaced at the point of need rather than sought out. This is distinct from compliance-driven learning (Glow) and self-directed learning, and is the highest-potential trigger for meaningful professional development.
+
+**This PRD covers knowledge retrieval only.** Subsequent JTBDs will be scoped separately as CI matures.
 
 ---
 
@@ -144,7 +165,7 @@ Teachers face high cognitive load daily. MOE has extensive domain-scoped learnin
 ### SDT Pilot within TW
 
 - **Pilot domains:** Tier 2/3 Student Intervention and Student Wellbeing
-- **Pilot audience:** All teachers on Teacher's Workspace — CI ships GA from TW launch; pilot scope is limited to 5 student context signals
+- **Pilot audience:** All teachers on Teacher's Workspace — CI ships GA from TW launch; pilot scope is limited to up to 6 student context signals across 2 scopes (see Data Classification Constraints)
 - **Domain owners:** Knowledge Base Steering Committee (GB, CCE, and other profwing branches — see Team Roles)
 - **Addressable market:** All 33,000 General Education Officers (EOs) in MOE
 
@@ -152,12 +173,28 @@ Teachers face high cognitive load daily. MOE has extensive domain-scoped learnin
 
 | Phase | CI scope | Audience | Reach |
 |-------|---------|----------|-------|
-| Phase 1 (Pilot — Aug 2026) | Chat interface, 5 student signals, SDT domains | All TW users | Up to 33,000 |
+| Phase 1 (Pilot — Aug 2026) | Chat interface, up to 6 student signals (2 scopes), SDT + GB domains | All TW users | Up to 33,000 |
 | Phase 2 (Expansion — post-pilot) | Expanded student signals, additional knowledge base domains | All TW users | Up to 33,000 |
 
 ### Data Classification Constraints
 
-> **Note:** For the pilot, Glow CI surfaces guidance based on 5 fixed student signals. Before surfacing CI, the system must verify that the accessing teacher's role has permission to view each of these signals via the SDT API. If a teacher does not have access to a signal, CI must not be surfaced for that context.
+> **Note:** For the pilot, Glow CI surfaces guidance based on up to 6 fixed student signals across 2 scopes. Before surfacing CI, the system must verify that the accessing teacher's role has permission to view each signal. If a teacher does not have access to a signal, CI must not be surfaced for that context.
+
+**Scope 1: Holistic Development Growth Conversations** *(GB data)*
+
+| Signal | Trigger | Status |
+|--------|---------|--------|
+| SE Skills Intent 1, 2 or 3 | Average MySEI Intent Score < 2 | TBC — pending additional technical evaluation |
+| Social Links | Social Links < 2 | TBC |
+| TCI Low Mood | Low Mood > 2 terms | TBC |
+
+**Scope 2: SwAN Support** *(SDT data)*
+
+| Signal | Trigger | Status |
+|--------|---------|--------|
+| Long-term Absenteeism (LTA) | Late-coming count > n | TBC |
+| Has an offence | Type of offence = [TBD] | TBC |
+| SEN | SEN type = [TBD] | TBC |
 
 > **Knowledge base storage classification:** Guidance materials stored for RAG ingestion must be classified at **Official Closed (Sensitive Normal)** or above. Amazon S3 must be confirmed as cleared to this level in the GCC environment before document ingestion begins. See Part 1 open questions.
 
@@ -201,7 +238,9 @@ Glow CI consists of seven interconnected parts:
 **Contextual Data** — dynamic, per-session signals that shape what gets retrieved
 
 - **Teacher context** (from EduPass/HR) — teacher role, school; used to scope relevant guidance
-- **Student context** (from SDT API) — student data such as late-coming %, bullying offences count, low-mood count; used as the primary trigger for retrieval
+- **Student context** — student signals used as the primary trigger for retrieval; sourced from two systems:
+  - **GB** (Scope 1 — Holistic Development): MySEI Intent Score, Social Links, TCI Low Mood
+  - **SDT API** (Scope 2 — SwAN Support): Long-term Absenteeism, offence type, SEN type
 
 *SDT API handles role-based filtering — only data the accessing teacher is authorised to view is returned. Data classification level (Sensitive High vs Sensitive Normal) must be respected in context assembly.*
 
@@ -293,7 +332,7 @@ Google's official Node SDKs, called directly. Two packages cover the stack:
 | **Contextual Data** | | | |
 | 1.1 | PM | align with SDT PM to confirm which API fields indicate the teacher's data access tier and agree the data contract | engineers have a clear spec before building the SDT integration |
 | 1.2 | Engineer | integrate with EduPass/HR to pull teacher context (role, school) via existing MIMS roles documentation | we can scope guidance recommendations to the teacher's role and school |
-| 1.3 | Engineer | integrate with SDT API to pull student context (late-coming %, bullying offences count, low-mood count) | student signals can trigger contextually relevant guidance retrieval |
+| 1.3 | Engineer | integrate with GB and SDT APIs to pull student context signals (Scope 1 — MySEI Intent Score, Social Links, TCI Low Mood; Scope 2 — LTA, offence type, SEN type) | student signals can trigger contextually relevant guidance retrieval |
 | 1.4 | Engineer | read and enforce the SDT data classification tier returned per teacher | Glow CI only surfaces data the accessing teacher is authorised to view |
 | **Knowledge Base** | | | |
 | 1.5 | PM | provision S3 bucket and confirm classification clearance to Official Closed (Sensitive Normal) in the GCC environment | engineers can connect to storage and ingest guidance materials in a compliant environment |
@@ -546,7 +585,7 @@ These cannot be tracked in GA and require server/API-level logging:
 
 ## Priority & Timeline
 
-**Pilot launch target:** 31 Aug 2026 | **GA target:** Oct 2026
+**Development start:** Jul 2026 | **Pilot launch target:** Nov 2026
 
 ### Delivery priority
 
@@ -562,10 +601,9 @@ Chat-first approach — the AI Chat interface is the primary value driver and sh
 
 | Phase | Dates | Milestone | What ships |
 |-------|-------|-----------|-----------|
-| **Phase 1 — Foundation** | Apr – May 2026 | RAG pipeline operational | **E1:** Document ingestion, vector store, RAG orchestration, LLM integration. End-to-end pipeline tested with pilot domain materials |
-| **Phase 2 — Chat MVP** | May – Jul 2026 | Internal dogfood ready | **E2:** AI Chat interface integrated in TW. Teachers can ask questions and receive cited, grounded responses. Resource viewer for source citations |
-| **Phase 3 — Pilot launch** | Aug 2026 | **Pilot launch (31 Aug)** | **E1 + E2 + E3 + E4** live. GA4 custom events instrumented. Baseline metrics collection begins. West Zone Sups onboarded to conversation analytics. Evals running on live LLM outputs. TRA cleared |
-| **Phase 4 — Cards + iteration** | Sep 2026 | GA readiness | **E2:** Recommendation cards surfaced on student page. Iteration based on pilot feedback. GA launch (Oct 2026). Post-pilot: knowledge base management portal scoped |
+| **Epic 1 — AI Foundation** | Jul – Aug 2026 | Standalone RAG + chat working on mock data | RAG pipeline (S3 + Vertex RAG), context assembly, Gemini synthesis, standalone chat UI |
+| **Epic 2 — Integrations + Portal** | Aug – Sep 2026 | TW-integrated chat with live data | SDT + GB data integrations, chat embedded in TW with live student signals, knowledge base management portal |
+| **Epic 3 — TW Entrypoints + Polishing + TRA** | Oct – Nov 2026 | **Pilot launch (Nov 2026)** | Recommendation cards on TW student page, LLM guardrails validated, analytics instrumented, TRA signed off |
 
 ### Key dependencies
 

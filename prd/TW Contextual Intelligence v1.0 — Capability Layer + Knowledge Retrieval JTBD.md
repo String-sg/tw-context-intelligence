@@ -23,13 +23,17 @@
   - [Out of Scope](#out-of-scope-this-phase)
 - [Epic Structure](#epic-structure)
 - [Product Requirements](#product-requirements)
-  - [Part 1: Technical Integration — Contextual Data + RAG + LLM](#part-1-technical-integration--contextual-data--rag--llm)
-  - [Part 2: AI Chat Interface](#part-2-ai-chat-interface)
-  - [Part 3: Recommendation Cards](#part-3-recommendation-card-surfacing-in-tw-student-page)
-  - [Part 4: Analytics & Tracking](#part-4-analytics--tracking)
-  - [Part 5: Native Resource Viewer](#part-5-knowledge-storage--retrieval--native-resource-viewer-in-tw)
-  - [Part 6: Data integrations + Conversation Analytics](#part-6-data-integrations--conversation-analytics)
-  - [Part 7: AI Evaluations](#part-7-ai-evaluations)
+  - [E1: TW RAG + Model Service](#e1-tw-rag--model-service)
+    - [Part 1: Technical Integration — Contextual Data + RAG + LLM](#part-1-technical-integration--contextual-data--rag--llm)
+    - [Part 7: AI Evaluations](#part-7-ai-evaluations)
+  - [E2: MicroFE for CI](#e2-microfe-for-ci)
+    - [Part 2: AI Chat Interface](#part-2-ai-chat-interface)
+    - [Part 3: Recommendation Cards](#part-3-recommendation-card-surfacing-in-tw-student-page)
+    - [Part 5: Native Resource Viewer](#part-5-knowledge-storage--retrieval--native-resource-viewer-in-tw)
+  - [E3: Data integrations](#e3-data-integrations)
+    - [Part 4: Analytics & Tracking](#part-4-analytics--tracking)
+    - [Part 6: Data integrations + Conversation Analytics](#part-6-data-integrations--conversation-analytics)
+  - [E4: Testing + Polishing + TRA](#e4-testing--polishing--tra)
 - [Priority & Timeline](#priority--timeline)
   - [Delivery Priority](#delivery-priority)
   - [Timeline](#timeline)
@@ -226,11 +230,11 @@ CI is delivered across 4 epics. Each epic maps to one or more product parts belo
 
 ## Product Requirements
 
-CI consists of seven interconnected parts:
-
 ---
 
-### Part 1: Technical Integration — Contextual Data + RAG + LLM
+### E1: TW RAG + Model Service
+
+#### Part 1: Technical Integration — Contextual Data + RAG + LLM
 
 **What it is:** A backend service with three integrated layers: (1) contextual data ingestion from teacher and student signals, (2) a knowledge base of MOE guidance materials indexed for semantic retrieval, and (3) a RAG + LLM layer that synthesises relevant guidance grounded in official materials.
 
@@ -349,7 +353,34 @@ Google's official Node SDKs, called directly. Two packages cover the stack:
 
 ---
 
-### Part 2: AI Chat Interface
+#### Part 7: AI Evaluations
+
+**What it is:** Two-stage evaluation approach — pre-deployment quality gates via MOE's AI Evals platform, and post-deployment production monitoring via Langfuse. Ensures output quality is validated before teachers use the system, and cost and behaviour are observable in production.
+
+**Key capabilities:**
+
+- **MOE AI Evals platform (pre-deployment)** — connect CI LLM outputs to [eval.ai-platform.string.sg](https://eval.ai-platform.string.sg/); run automated eval suite (hallucination, citation coverage, response relevance) before pilot launch
+- **Langfuse (post-deployment)** — instrument CI LLM calls for production monitoring; track LLM cost (token usage, cost per session) and user chat sessions (query, response, latency)
+- **Stakeholder-defined criteria** — business teams define quality requirements (hallucination, citation coverage, relevance) on the evals platform
+- **Automated eval runs** — pre-deployment test suite must pass before pilot launch
+
+**Open questions:**
+
+1. **MOE AI Evals platform onboarding** — confirm eval service access and onboarding process with AI team; define eval criteria (hallucination = 0, citation coverage = 100%, response relevance)
+2. **Eval scope for pilot** — which criteria must pass before pilot launch vs post-pilot iteration?
+
+**User stories:**
+
+| # | As a... | I want to... | So that... |
+|---|---------|-------------|-----------|
+| 7.1 | PM | align with AI team to define CI eval requirements (hallucination, citation coverage, response relevance) and onboard to MOE AI Evals platform | we have agreed criteria before instrumentation begins |
+| 7.2 | Engineer | connect CI to MOE AI Evals platform (pre-deployment) and instrument LLM calls with Langfuse (post-deployment) | output quality is validated before launch and production costs + behaviour are observable |
+
+---
+
+### E2: MicroFE for CI
+
+#### Part 2: AI Chat Interface
 
 **What it is:** A conversational interface within TW that allows teachers to ask natural-language questions and receive AI-synthesised responses grounded in MOE guidance materials. Opened from recommendation cards with first-cut recommendations pre-loaded.
 
@@ -392,7 +423,7 @@ Google's official Node SDKs, called directly. Two packages cover the stack:
 
 ---
 
-### Part 3: Recommendation Card Surfacing in TW Student Page
+#### Part 3: Recommendation Card Surfacing in TW Student Page
 
 **What it is:** Contextual recommendation cards that appear on a student's page in Teacher's Workspace, proactively surfacing just-in-time (JIT) learning and intervention guidance based on the teacher's current context.
 
@@ -432,47 +463,7 @@ Google's official Node SDKs, called directly. Two packages cover the stack:
 
 ---
 
-### Part 4: Analytics & Tracking
-
-**What it is:** The instrumentation layer that enables measurement of product metrics and guardrail metrics. CI uses a dedicated GA4 property (separate from TW), supplemented with custom events and server-side logging.
-
-**Standard GA4 (no custom instrumentation needed):**
-- Sessions, users, DAU/WAU
-- Traffic sources, device/browser breakdown
-- Page-level engagement time
-
-**Custom events required:**
-
-| Event | Trigger | Maps to metric |
-|-------|---------|----------------|
-| `ci_card_impression` | CI cards rendered on student page | CI card engagement (denominator) |
-| `ci_card_click` | Teacher clicks/expands a card | CI card engagement |
-| `ci_card_cta_click` | Teacher taps "Open chat" CTA on a card | CI recommendations CTR |
-| `ci_usefulness_rating` | Teacher submits thumbs up/down on a card or chat response | Usefulness rating |
-| `ci_chat_session_start` | AI Chat opens (from card or standalone) | AI chat sessions per teacher |
-| `ci_chat_message_sent` | Teacher sends a follow-up message in chat | Chat depth signal |
-| `ci_citation_click` | Teacher taps a source citation link | Citation engagement |
-| `ci_resource_viewer_open` | Document opens in native resource viewer | Resource viewer adoption |
-
-**Server-side logging (outside GA — guardrail metrics):**
-These cannot be tracked in GA and require server/API-level logging:
-- **Response latency** — logged at API level (request → render time)
-- **Source citation coverage** — tracked at LLM response generation level
-- **Hallucination incidents** — flagged via teacher feedback + manual review process
-- **Data classification breach** — logged at SDT API integration layer
-
-**User stories:**
-
-| # | As a... | I want to... | So that... |
-|---|---------|-------------|-----------|
-| 4.1 | Engineer | set up a dedicated GA4 property for CI (separate from TW) | analytics are isolated and attributable to CI specifically |
-| 4.2 | Engineer | implement custom event tracking across cards and chat | product metrics (engagement, CTR, usefulness) can be measured |
-| 4.3 | Engineer | implement server-side logging for guardrail metrics (latency, citation coverage, data classification breaches) | guardrail metrics are captured outside GA where they can't be tracked via frontend events |
-| 4.4 | PM | define the review and escalation process for guardrail metrics, especially hallucination incidents | there is a clear owner and response protocol when a guardrail threshold is breached |
-
----
-
-### Part 5: Knowledge Storage & Retrieval — Native Resource Viewer in TW
+#### Part 5: Knowledge Storage & Retrieval — Native Resource Viewer in TW
 
 **What it is:** A view-only inline document viewer within Teacher's Workspace that lets teachers open and read MOE guidance materials natively — without being redirected to external sites (MOE Intranet, SharePoint, etc.). In this phase, resources are accessed via recommendation cards (Part 3) and AI Chat citations (Part 2), not through standalone browsing or search.
 
@@ -523,7 +514,49 @@ These cannot be tracked in GA and require server/API-level logging:
 
 ---
 
-### Part 6: Data integrations + Conversation Analytics
+### E3: Data integrations
+
+#### Part 4: Analytics & Tracking
+
+**What it is:** The instrumentation layer that enables measurement of product metrics and guardrail metrics. CI uses a dedicated GA4 property (separate from TW), supplemented with custom events and server-side logging.
+
+**Standard GA4 (no custom instrumentation needed):**
+- Sessions, users, DAU/WAU
+- Traffic sources, device/browser breakdown
+- Page-level engagement time
+
+**Custom events required:**
+
+| Event | Trigger | Maps to metric |
+|-------|---------|----------------|
+| `ci_card_impression` | CI cards rendered on student page | CI card engagement (denominator) |
+| `ci_card_click` | Teacher clicks/expands a card | CI card engagement |
+| `ci_card_cta_click` | Teacher taps "Open chat" CTA on a card | CI recommendations CTR |
+| `ci_usefulness_rating` | Teacher submits thumbs up/down on a card or chat response | Usefulness rating |
+| `ci_chat_session_start` | AI Chat opens (from card or standalone) | AI chat sessions per teacher |
+| `ci_chat_message_sent` | Teacher sends a follow-up message in chat | Chat depth signal |
+| `ci_citation_click` | Teacher taps a source citation link | Citation engagement |
+| `ci_resource_viewer_open` | Document opens in native resource viewer | Resource viewer adoption |
+
+**Server-side logging (outside GA — guardrail metrics):**
+These cannot be tracked in GA and require server/API-level logging:
+- **Response latency** — logged at API level (request → render time)
+- **Source citation coverage** — tracked at LLM response generation level
+- **Hallucination incidents** — flagged via teacher feedback + manual review process
+- **Data classification breach** — logged at SDT API integration layer
+
+**User stories:**
+
+| # | As a... | I want to... | So that... |
+|---|---------|-------------|-----------|
+| 4.1 | Engineer | set up a dedicated GA4 property for CI (separate from TW) | analytics are isolated and attributable to CI specifically |
+| 4.2 | Engineer | implement custom event tracking across cards and chat | product metrics (engagement, CTR, usefulness) can be measured |
+| 4.3 | Engineer | implement server-side logging for guardrail metrics (latency, citation coverage, data classification breaches) | guardrail metrics are captured outside GA where they can't be tracked via frontend events |
+| 4.4 | PM | define the review and escalation process for guardrail metrics, especially hallucination incidents | there is a clear owner and response protocol when a guardrail threshold is breached |
+
+---
+
+#### Part 6: Data integrations + Conversation Analytics
 
 **What it is:** Server-side conversation logging and an analytics view for West Zone Sups and domain owners to monitor teacher query patterns. Provides the data feedback loop from teacher usage back to knowledge base maintenance.
 
@@ -560,28 +593,9 @@ These cannot be tracked in GA and require server/API-level logging:
 
 ---
 
-### Part 7: AI Evaluations
+### E4: Testing + Polishing + TRA
 
-**What it is:** Two-stage evaluation approach — pre-deployment quality gates via MOE's AI Evals platform, and post-deployment production monitoring via Langfuse. Ensures output quality is validated before teachers use the system, and cost and behaviour are observable in production.
-
-**Key capabilities:**
-
-- **MOE AI Evals platform (pre-deployment)** — connect CI LLM outputs to [eval.ai-platform.string.sg](https://eval.ai-platform.string.sg/); run automated eval suite (hallucination, citation coverage, response relevance) before pilot launch
-- **Langfuse (post-deployment)** — instrument CI LLM calls for production monitoring; track LLM cost (token usage, cost per session) and user chat sessions (query, response, latency)
-- **Stakeholder-defined criteria** — business teams define quality requirements (hallucination, citation coverage, relevance) on the evals platform
-- **Automated eval runs** — pre-deployment test suite must pass before pilot launch
-
-**Open questions:**
-
-1. **MOE AI Evals platform onboarding** — confirm eval service access and onboarding process with AI team; define eval criteria (hallucination = 0, citation coverage = 100%, response relevance)
-2. **Eval scope for pilot** — which criteria must pass before pilot launch vs post-pilot iteration?
-
-**User stories:**
-
-| # | As a... | I want to... | So that... |
-|---|---------|-------------|-----------|
-| 7.1 | PM | align with AI team to define CI eval requirements (hallucination, citation coverage, response relevance) and onboard to MOE AI Evals platform | we have agreed criteria before instrumentation begins |
-| 7.2 | Engineer | connect CI to MOE AI Evals platform (pre-deployment) and instrument LLM calls with Langfuse (post-deployment) | output quality is validated before launch and production costs + behaviour are observable |
+LLM guardrails testing, end-to-end QA, UX polish, and TRA sign-off required before pilot launch. No dedicated product parts — this epic spans the full system.
 
 ## Priority & Timeline
 

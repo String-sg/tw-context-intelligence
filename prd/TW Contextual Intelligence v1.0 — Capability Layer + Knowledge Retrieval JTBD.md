@@ -467,8 +467,8 @@ No time-based expiry. A dismissed card does not resurface after X days — only 
 | 3.3 | Teacher | tap a card to explore deeper via AI Chat | I can get more detailed, tailored guidance when I need it |
 | 3.4 | Teacher | rate whether a recommendation card was useful | I can give feedback on whether the guidance surfaced was relevant to my situation |
 | 3.5 | Teacher | dismiss a card as "Not relevant" | it stops appearing for this student unless their situation genuinely changes |
-| 3.6 | System | evaluate student context signals when a teacher opens a student's page and surface recommendation cards only when trigger conditions are met | guidance is proactively surfaced at the right moment without teacher action |
-| 3.7 | System | suppress a dismissed card and only resurface it when the triggering signal changes state | teachers are not shown the same card repeatedly if nothing about the student's situation has changed |
+| 3.6 | Teacher | have recommendation cards appear automatically when I open a student page where trigger conditions are met | relevant guidance surfaces at the right moment without me having to search for it |
+| 3.7 | Teacher | have a card I dismissed stay gone unless my student's situation genuinely changes | I'm not repeatedly shown guidance I've already decided isn't relevant |
 
 ---
 
@@ -649,7 +649,7 @@ LLM guardrails testing, end-to-end QA, UX polish, TRA sign-off, and AI evaluatio
 
 | # | As a... | I want to... | So that... |
 |---|---------|-------------|-----------|
-| 4.1.1 | System | pass automated AI evaluation checks (zero hallucinations, 100% citation coverage, threshold response relevance) on Kaleidoscope before pilot deployment | output quality meets defined thresholds before any teacher uses the system |
+| 4.1.1 | SME | validate that CI's AI outputs meet domain quality thresholds (zero hallucinations, 100% citation coverage, minimum response relevance) on Kaleidoscope before pilot deployment | I can be confident the guidance meets domain standards before any teacher uses the system |
 | 4.1.2 | System | emit LLM trace data (query, response, latency, token usage) to Langfuse in production | AI costs and behaviour are observable and monitorable post-deployment |
 
 ---

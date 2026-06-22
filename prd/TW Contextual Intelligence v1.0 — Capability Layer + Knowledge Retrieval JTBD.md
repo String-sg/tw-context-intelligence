@@ -443,7 +443,7 @@ The "Recommended action" card surfaces above the student's stats (Attendance, Ac
 
 | State | Condition |
 |-------|-----------|
-| **Show** | Signal is first detected for a student |
+| **Show** | CI has not yet surfaced a card for this signal on this student — triggers on first system run at launch (signal was already active) or when a new signal fires post-launch |
 | **Suppress** | Teacher actively dismisses the card ("Not relevant?") |
 | **Resurface** | Signal changes state — new flag added, flag updated or escalated, or score dips again after recovery |
 

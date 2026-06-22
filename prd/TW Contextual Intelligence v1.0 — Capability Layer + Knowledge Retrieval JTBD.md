@@ -25,7 +25,6 @@
 - [Product Requirements](#product-requirements)
   - [E1: TW RAG + Model Service](#e1-tw-rag--model-service)
     - [Part 1: Technical Integration — Contextual Data + RAG + LLM](#part-1-technical-integration--contextual-data--rag--llm)
-    - [Part 7: AI Evaluations](#part-7-ai-evaluations)
   - [E2: MicroFE for CI](#e2-microfe-for-ci)
     - [Part 2: AI Chat Interface](#part-2-ai-chat-interface)
     - [Part 3: Recommendation Cards](#part-3-recommendation-card-surfacing-in-tw-student-page)
@@ -34,6 +33,7 @@
     - [Part 4: Analytics & Tracking](#part-4-analytics--tracking)
     - [Part 6: Data integrations + Conversation Analytics](#part-6-data-integrations--conversation-analytics)
   - [E4: Testing + Polishing + TRA](#e4-testing--polishing--tra)
+    - [Part 7: AI Evaluations](#part-7-ai-evaluations)
 - [Priority & Timeline](#priority--timeline)
   - [Delivery Priority](#delivery-priority)
   - [Timeline](#timeline)
@@ -219,10 +219,10 @@ CI is delivered across 4 epics. Each epic maps to one or more product parts belo
 
 | Epic | Parts | Features |
 |------|-------|---------|
-| **E1: TW RAG + Model Service** | Parts 1, 7 | **Contextual data ingestion** — EduPass/HR teacher context (role, school); GB student signals (Scope 1: MySEI Intent Score, Social Links, TCI Low Mood) and SDT student signals (Scope 2: LTA, offence type, SEN type); data classification enforcement per teacher access tier<br><br>**Knowledge base** — GCS bucket for MOE guidance materials; Vertex AI embeddings + Vector Search; chunking and document refresh pipeline<br><br>**AI model** — context assembly layer; RAG orchestration via Vertex AI; Gemini synthesis with strict source grounding<br><br>**AI evaluations** — pre-deployment quality gates via MOE AI Evals platform (hallucination, citation coverage, response relevance); post-deployment production monitoring via Langfuse (LLM cost, query/response/latency) |
+| **E1: TW RAG + Model Service** | Part 1 | **Contextual data ingestion** — EduPass/HR teacher context (role, school); GB student signals (Scope 1: MySEI Intent Score, Social Links, TCI Low Mood) and SDT student signals (Scope 2: LTA, offence type, SEN type); data classification enforcement per teacher access tier<br><br>**Knowledge base** — GCS bucket for MOE guidance materials; Vertex AI embeddings + Vector Search; chunking and document refresh pipeline<br><br>**AI model** — context assembly layer; RAG orchestration via Vertex AI; Gemini synthesis with strict source grounding |
 | **E2: MicroFE for CI** | Parts 2, 3, 5 | **AI Chat interface** — conversational Q&A pre-loaded with context from the triggering card; natural-language follow-up questions; teacher-added situational context; inline source citations on every response; suggested follow-up prompts<br><br>**Recommendation cards** — contextual cards surfaced on the TW student page, triggered by student signals; card anatomy: headline, 2–3 sentence summary, source citation, CTA to open chat; loading, empty-state, and error-state handling<br><br>**Native resource viewer** — inline document viewer within TW (PDF, Word, HTML); deep-linked from card citations and AI Chat citations; section-level anchoring to land at the referenced passage; shared storage with RAG pipeline (ingest once, serve both) |
 | **E3: Data integrations** | Parts 4, 6 | **Analytics & tracking** — dedicated GA4 property (isolated from TW); custom events for card impressions, card clicks, CTA clicks, usefulness ratings, chat sessions, chat messages, citation clicks, resource viewer opens; server-side guardrail logging for response latency, citation coverage, hallucination incidents, and data classification breaches<br><br>**Conversation analytics** — server-side conversation log storage (query + AI response per session); analytics view for West Zone Sups and domain owners showing query logs, usefulness ratings, query volume trends, and citation engagement; domain-scoped access control |
-| **E4: Testing + Polishing + TRA** | — | LLM guardrails testing, end-to-end QA, UX polish, and TRA sign-off for pilot launch |
+| **E4: Testing + Polishing + TRA** | Part 7 | LLM guardrails testing, end-to-end QA, UX polish, and TRA sign-off for pilot launch<br><br>**AI evaluations** — pre-deployment quality gates via MOE AI Evals platform (hallucination, citation coverage, response relevance); post-deployment production monitoring via Langfuse (LLM cost, query/response/latency) |
 
 > **Knowledge base management portal** (domain owner upload/tag/delete UI, story 6.5) is deferred to post-pilot. Initial knowledge base population is handled directly by the engineering team. See [Out of Scope](#out-of-scope-this-phase).
 
@@ -350,31 +350,6 @@ Google's official Node SDKs, called directly. Two packages cover the stack:
 | 1.11 | Engineer | build the context assembly layer that combines teacher and student context into a structured retrieval query | the RAG system receives well-formed, contextually relevant inputs |
 | **Technical Stack Selection** | | | |
 | 1.12 | PM + Engineer | evaluate AI stack options (open-source self-host, Vertex AI in GCC, Platform.gov AI), validate GCC compliance and run a retrieval quality spike, and document the selected approach | the team has a clear, evidence-backed technical direction before build begins |
-
----
-
-#### Part 7: AI Evaluations
-
-**What it is:** Two-stage evaluation approach — pre-deployment quality gates via MOE's AI Evals platform, and post-deployment production monitoring via Langfuse. Ensures output quality is validated before teachers use the system, and cost and behaviour are observable in production.
-
-**Key capabilities:**
-
-- **MOE AI Evals platform (pre-deployment)** — connect CI LLM outputs to [eval.ai-platform.string.sg](https://eval.ai-platform.string.sg/); run automated eval suite (hallucination, citation coverage, response relevance) before pilot launch
-- **Langfuse (post-deployment)** — instrument CI LLM calls for production monitoring; track LLM cost (token usage, cost per session) and user chat sessions (query, response, latency)
-- **Stakeholder-defined criteria** — business teams define quality requirements (hallucination, citation coverage, relevance) on the evals platform
-- **Automated eval runs** — pre-deployment test suite must pass before pilot launch
-
-**Open questions:**
-
-1. **MOE AI Evals platform onboarding** — confirm eval service access and onboarding process with AI team; define eval criteria (hallucination = 0, citation coverage = 100%, response relevance)
-2. **Eval scope for pilot** — which criteria must pass before pilot launch vs post-pilot iteration?
-
-**User stories:**
-
-| # | As a... | I want to... | So that... |
-|---|---------|-------------|-----------|
-| 7.1 | PM | align with AI team to define CI eval requirements (hallucination, citation coverage, response relevance) and onboard to MOE AI Evals platform | we have agreed criteria before instrumentation begins |
-| 7.2 | Engineer | connect CI to MOE AI Evals platform (pre-deployment) and instrument LLM calls with Langfuse (post-deployment) | output quality is validated before launch and production costs + behaviour are observable |
 
 ---
 
@@ -595,7 +570,30 @@ These cannot be tracked in GA and require server/API-level logging:
 
 ### E4: Testing + Polishing + TRA
 
-LLM guardrails testing, end-to-end QA, UX polish, and TRA sign-off required before pilot launch. No dedicated product parts — this epic spans the full system.
+LLM guardrails testing, end-to-end QA, UX polish, and TRA sign-off required before pilot launch.
+
+#### Part 7: AI Evaluations
+
+**What it is:** Two-stage evaluation approach — pre-deployment quality gates via MOE's AI Evals platform, and post-deployment production monitoring via Langfuse. Ensures output quality is validated before teachers use the system, and cost and behaviour are observable in production.
+
+**Key capabilities:**
+
+- **MOE AI Evals platform (pre-deployment)** — connect CI LLM outputs to [eval.ai-platform.string.sg](https://eval.ai-platform.string.sg/); run automated eval suite (hallucination, citation coverage, response relevance) before pilot launch
+- **Langfuse (post-deployment)** — instrument CI LLM calls for production monitoring; track LLM cost (token usage, cost per session) and user chat sessions (query, response, latency)
+- **Stakeholder-defined criteria** — business teams define quality requirements (hallucination, citation coverage, relevance) on the evals platform
+- **Automated eval runs** — pre-deployment test suite must pass before pilot launch
+
+**Open questions:**
+
+1. **MOE AI Evals platform onboarding** — confirm eval service access and onboarding process with AI team; define eval criteria (hallucination = 0, citation coverage = 100%, response relevance)
+2. **Eval scope for pilot** — which criteria must pass before pilot launch vs post-pilot iteration?
+
+**User stories:**
+
+| # | As a... | I want to... | So that... |
+|---|---------|-------------|-----------|
+| 7.1 | PM | align with AI team to define CI eval requirements (hallucination, citation coverage, response relevance) and onboard to MOE AI Evals platform | we have agreed criteria before instrumentation begins |
+| 7.2 | Engineer | connect CI to MOE AI Evals platform (pre-deployment) and instrument LLM calls with Langfuse (post-deployment) | output quality is validated before launch and production costs + behaviour are observable |
 
 ## Priority & Timeline
 
@@ -607,10 +605,10 @@ Chat-first approach — the AI Chat interface is the primary value driver and sh
 
 | Priority | Epic | Parts | Rationale |
 |----------|------|-------|-----------|
-| **P0** | E1: TW RAG + Model Service | Parts 1, 7 | Foundation — everything depends on the retrieval and AI backend; AI evals must be running before pilot |
+| **P0** | E1: TW RAG + Model Service | Part 1 | Foundation — everything depends on the retrieval and AI backend |
 | **P0** | E2: MicroFE for CI | Parts 2, 3, 5 | Primary teacher-facing surface; chat first, then cards and resource viewer |
 | **P1** | E3: Data integrations | Parts 4, 6 | Required for pilot — GA4 + guardrail logging must be live before 31 Aug; West Zone Sups need conversation analytics from day 1 |
-| **P1** | E4: Testing + Polishing + TRA | — | Required before pilot — LLM guardrails, UX polish, and TRA must clear before launch |
+| **P1** | E4: Testing + Polishing + TRA | Part 7 | Required before pilot — AI evals, LLM guardrails, UX polish, and TRA must clear before launch |
 ### Timeline
 
 | Phase | Dates | Milestone | What ships |

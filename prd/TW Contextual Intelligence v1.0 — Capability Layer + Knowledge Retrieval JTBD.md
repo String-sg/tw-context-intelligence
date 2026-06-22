@@ -27,7 +27,6 @@
     - [Part 1: Knowledge Base + RAG + Model Service](#part-1-knowledge-base--rag--model-service)
   - [E2: MicroFE for CI](#e2-microfe-for-ci)
     - [MicroFE Integration Approach](#microfe-integration-approach)
-    - [Prototype Reference](#prototype-reference)
     - [Part 2: AI Chat Interface](#part-2-ai-chat-interface)
     - [Part 3: Recommendation Cards](#part-3-recommendation-card-surfacing-in-tw-student-page)
     - [Part 5: Native Resource Viewer](#part-5-knowledge-storage--retrieval--native-resource-viewer-in-tw)
@@ -327,11 +326,11 @@ Google's official Node SDKs, called directly. Two packages cover the stack:
 | # | As a... | I want to... | So that... |
 |---|---------|-------------|-----------|
 | **Knowledge Base** | | | |
-| 1.7 | System | ingest guidance materials from the designated GCS bucket | domain owners have a managed source-of-truth and engineers have a retrieval-ready document store |
-| 1.8 | System | chunk and embed ingested documents via Vertex AI | guidance materials are indexed in Vector Search for semantic retrieval |
-| 1.9 | System | detect changes in GCS and re-ingest updated documents on a defined refresh schedule | the knowledge base stays current when domain owners update source materials |
+| 1.7 | System | ingest guidance documents from the GCS bucket | any document added to GCS is chunked, embedded, and retrievable via semantic search |
+| 1.8 | System | chunk and embed each ingested document via Vertex AI | every chunk is indexed in Vector Search with a reference back to its source document |
+| 1.9 | System | detect and re-ingest updated documents from GCS on a defined refresh schedule | within the refresh window, the knowledge base reflects the latest content and stale chunks are removed |
 | **AI Model + Model Service API** | | | |
-| 2.7 | System | serve grounded, cited AI responses to TW apps via the agreed model service API contract | CI output is correctly rendered wherever a TW app embeds the CI MicroFE |
+| 2.7 | System | respond to context queries from TW apps with grounded AI responses | every response includes at least one source citation and is returned within the agreed latency SLA |
 
 ---
 
@@ -360,30 +359,6 @@ The key question is whether CI's components should exist as a **standalone app**
 
 ---
 
-#### Prototype Reference
-
-> ⚠️ **Prototype only** — screenshots below are from a functional prototype and are pending designer iteration. Do not treat as final UX spec. Access the [functional prototype](https://teacherworkspace-alpha.vercel.app/students/3): Profiles → Lam Wei Jie (student #3).
-
-**1. Recommendation card on the student profile page**
-
-The "Recommended action" card surfaces on the student profile, triggered by student signals (bullying incident, missed CCA, low mood). The teacher can tap "View guidance" to open the CI chat panel.
-
-![Prototype: Recommendation card on student profile](./prd-assets/prototype-student-profile.png)
-
-**2. CI chat panel — Student context, Chat, and Resources**
-
-A three-column panel (Student context · Chat · Learn more) opens as a slide-over. Pre-loaded context and active triggers are shown on the left; the chat response is centred; and cited guidance resources are listed on the right under the Resources tab.
-
-![Prototype: CI chat panel](./prd-assets/prototype-chat-panel.png)
-
-**3. Learn tab — OPAL/Glow learning recommendations**
-
-The "Learn" tab within the CI panel surfaces curated OPAL/Glow learning modules relevant to the student situation (e.g. "Understanding SwAN Profiles", "Tier 2 Intervention Playbook"). **No recommendation system is involved** — the links shown are manually curated for this pilot and statically configured. Dynamic learning recommendations are out of scope for this phase.
-
-![Prototype: Learn tab](./prd-assets/prototype-learn-tab.png)
-
----
-
 #### Part 2: AI Chat Interface
 
 **What it is:** A conversational interface within TW that allows teachers to ask natural-language questions and receive AI-synthesised responses grounded in MOE guidance materials. Opened from recommendation cards with first-cut recommendations pre-loaded.
@@ -395,6 +370,16 @@ The "Learn" tab within the CI panel surfaces curated OPAL/Glow learning modules 
 3. Teacher can ask follow-up questions or add their unique context that only they know (e.g., "the student's parents are divorced and the child is acting out more at home")
 4. AI synthesises further guidance, always citing source materials
 5. Suggested follow-up questions guide exploration
+
+> ⚠️ Prototype only — pending designer iteration. [Functional prototype](https://teacherworkspace-alpha.vercel.app/students/3): Profiles → Lam Wei Jie (student #3).
+
+A three-column slide-over panel: **Student context** (pre-loaded triggers on the left) · **Chat** (AI response centred, with urgency-ranked actions and cited resources) · **Learn more** (Resources and Learn tabs on the right).
+
+![Prototype: CI chat panel](./prd-assets/prototype-chat-panel.png)
+
+The **Learn tab** surfaces manually curated OPAL/Glow learning modules relevant to the student situation. No recommendation system is involved — links are statically configured for this pilot.
+
+![Prototype: Learn tab — OPAL/Glow learning recommendations](./prd-assets/prototype-learn-tab.png)
 
 **Key capabilities:**
 
@@ -440,6 +425,12 @@ The "Learn" tab within the CI panel surfaces curated OPAL/Glow learning modules 
 - **Summary:** 2–3 sentence digest of relevant guidance, extracted from source materials
 - **Source citation:** Link/reference to the original MOE document
 - **CTA:** Opens AI Chat for deeper exploration
+
+> ⚠️ Prototype only — pending designer iteration. [Functional prototype](https://teacherworkspace-alpha.vercel.app/students/3): Profiles → Lam Wei Jie (student #3).
+
+The "Recommended action" card surfaces above the student's stats (Attendance, Academics, Wellbeing), showing a concise trigger summary and a "View guidance" CTA that opens the CI chat panel.
+
+![Prototype: Recommendation card on student profile](./prd-assets/prototype-student-profile.png)
 
 **Design requirements:**
 

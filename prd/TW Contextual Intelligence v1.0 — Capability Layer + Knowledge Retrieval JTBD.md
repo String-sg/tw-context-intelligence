@@ -36,6 +36,7 @@
     - [Part 3.3: Analytics & Tracking](#part-33-analytics--tracking)
   - [E4: Testing + Polishing + TRA](#e4-testing--polishing--tra)
     - [Part 4.1: AI Evaluations](#part-41-ai-evaluations)
+    - [Part 4.2: TRA](#part-42-tra)
 
 ---
 
@@ -219,7 +220,7 @@ CI is delivered across 4 epics. Each epic maps to one or more product parts belo
 | **E1: TW RAG + Model Service** | Part 1.1 | Reusable TW platform capability for RAG + LLM. **Knowledge base** — GCS bucket, Vertex AI embeddings + Vector Search, chunking + document refresh pipeline. **AI model + model service API** — RAG orchestration via Vertex AI; Gemini synthesis with strict source grounding; model service API endpoint for TW apps. Context assembly lives in E3. |
 | **E2: MicroFE for CI** | Parts 2.1, 2.2, 2.3 | CI frontend as a micro-frontend pluggable into any TW app. **Recommendation cards** — surfaced on SDT student profile, triggered by student signals. **AI Chat interface** — pre-loaded context, follow-up Q&A, inline citations. **Native resource viewer** — inline document viewer deep-linked from citations. UX design for all components. |
 | **E3: Data integrations** | Parts 3.1, 3.2, 3.3 | **Data connection layer** — SDT connector for student signals (absenteeism, SEN, offence data); teacher role connector (SDT or EduPass TBD); data classification enforcement at connection point. **Context assembly layer** — combines student signals, teacher role, and situational context (which TW page/student) into a structured retrieval query for E1. **Analytics & tracking** — dedicated GA4 property; custom events for cards/chat/citations; server-side guardrail logging. |
-| **E4: Testing + Polishing + TRA** | Part 4.1 | **AI evaluations** — pre-deployment quality gates via MOE AI Evals platform (hallucination, citation coverage, response relevance); post-deployment monitoring via Langfuse. LLM guardrails testing, end-to-end QA, UX polish, TRA sign-off for pilot launch. |
+| **E4: Testing + Polishing + TRA** | Parts 4.1, 4.2 | **AI evaluations** — pre-deployment quality gates via Kaleidoscope (hallucination, citation coverage, response relevance); post-deployment production monitoring via Langfuse. LLM guardrails testing, end-to-end QA, UX polish. **TRA** — technical risk assessment sign-off required before pilot launch. |
 
 > **Knowledge base management portal** (domain owner upload/tag/delete UI, story 6.5) is deferred to post-pilot. Initial knowledge base population is handled directly by the engineering team. See [Out of Scope](#out-of-scope-this-phase).
 
@@ -623,29 +624,56 @@ These cannot be tracked in GA and require server/API-level logging:
 
 ### E4: Testing + Polishing + TRA
 
-LLM guardrails testing, end-to-end QA, UX polish, and TRA sign-off required before pilot launch.
+LLM guardrails testing, end-to-end QA, UX polish, TRA sign-off, and AI evaluations required before pilot launch.
 
 #### Part 4.1: AI Evaluations
 
-**What it is:** Two-stage evaluation approach — pre-deployment quality gates via MOE's AI Evals platform, and post-deployment production monitoring via Langfuse. Ensures output quality is validated before teachers use the system, and cost and behaviour are observable in production.
+**What it is:** Two-stage evaluation approach to ensure output quality is verified before launch and observable in production.
+
+- **Pre-deployment — Kaleidoscope:** automated eval suite run against CI LLM outputs before pilot launch; gates on hallucination, citation coverage, and response relevance
+- **Post-deployment — Langfuse:** instrument CI LLM calls in production for ongoing monitoring of cost (token usage, cost per session) and behaviour (query, response, latency)
 
 **Key capabilities:**
 
-- **MOE AI Evals platform (pre-deployment)** — connect CI LLM outputs to [eval.ai-platform.string.sg](https://eval.ai-platform.string.sg/); run automated eval suite (hallucination, citation coverage, response relevance) before pilot launch
+- **Kaleidoscope (pre-deployment)** — connect CI LLM outputs to the MOE AI Evals platform; run automated eval suite (zero hallucinations, 100% citation coverage, threshold response relevance); must pass before any teacher uses the system
 - **Langfuse (post-deployment)** — instrument CI LLM calls for production monitoring; track LLM cost (token usage, cost per session) and user chat sessions (query, response, latency)
-- **Stakeholder-defined criteria** — business teams define quality requirements (hallucination, citation coverage, relevance) on the evals platform
-- **Automated eval runs** — pre-deployment test suite must pass before pilot launch
+- **Stakeholder-defined criteria** — business teams define quality thresholds (hallucination = 0, citation coverage = 100%, response relevance) on Kaleidoscope before eval runs begin
+- **Automated eval runs** — pre-deployment test suite must pass before pilot launch gate is cleared
 
 **Open questions:**
 
-1. **MOE AI Evals platform onboarding** — confirm eval service access and onboarding process with AI team; define eval criteria (hallucination = 0, citation coverage = 100%, response relevance)
-2. **Eval scope for pilot** — which criteria must pass before pilot launch vs post-pilot iteration?
+1. **Kaleidoscope onboarding** — confirm eval service access and onboarding process with AI team; agree eval criteria thresholds
+2. **Eval scope for pilot** — which criteria are hard gates vs soft targets before pilot launch?
 
 **User stories:**
 
 | # | As a... | I want to... | So that... |
 |---|---------|-------------|-----------|
-| 4.1.1 | System | pass automated AI evaluation checks (zero hallucinations, 100% citation coverage, threshold response relevance) on the MOE AI Evals platform before pilot deployment | output quality meets defined thresholds before any teacher uses the system |
+| 4.1.1 | System | pass automated AI evaluation checks (zero hallucinations, 100% citation coverage, threshold response relevance) on Kaleidoscope before pilot deployment | output quality meets defined thresholds before any teacher uses the system |
 | 4.1.2 | System | emit LLM trace data (query, response, latency, token usage) to Langfuse in production | AI costs and behaviour are observable and monitorable post-deployment |
+
+---
+
+#### Part 4.2: TRA
+
+**What it is:** Technical Risk Assessment — the formal security and compliance sign-off required before CI can go live in production. TRA must be cleared before pilot launch.
+
+**Key capabilities:**
+
+- **TRA submission** — prepare and submit the TRA document covering CI's data flows, storage (GCS), third-party AI services (Vertex AI, Gemini), and access controls
+- **Data classification alignment** — confirm GCS bucket is cleared to Official Closed (Sensitive Normal) in the GCC environment; verify student data handling meets classification requirements
+- **Remediation** — resolve any risks or findings raised during TRA review before pilot launch gate is cleared
+
+**Open questions:**
+
+1. **TRA timeline** — how long does TRA review take? Must be initiated early enough not to block Nov 2026 pilot launch
+2. **AI service classification** — confirm Vertex AI and Gemini usage is within approved boundaries for the data classification level
+
+**User stories:**
+
+| # | As a... | I want to... | So that... |
+|---|---------|-------------|-----------|
+| 4.2.1 | System | have CI's TRA submitted and approved before pilot launch | the system is cleared to handle student data in production in compliance with MOE security requirements |
+| 4.2.2 | System | have GCS storage confirmed cleared to Official Closed (Sensitive Normal) in GCC before document ingestion begins | knowledge base content is stored at the correct data classification level |
 
 

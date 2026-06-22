@@ -2,7 +2,7 @@
 
 ## How CI fits into the educator ecosystem
 
-![The Educator Ecosystem](./assets/educator-ecosystem.svg)
+![The Educator Ecosystem](./prd/prd-assets/educator-ecosystem.svg)
 
 CI sits in the **Intelligence** layer of the educator platform — the Educator Productivity Intelligence Gateway. It routes requests, evaluates data triggers, runs AI Assist, retrieves contextual guidance via RAG, and composes multi-system responses. Guardrails (data classification, Sensitive-High masking, output grounding, audit) are embedded, not external.
 

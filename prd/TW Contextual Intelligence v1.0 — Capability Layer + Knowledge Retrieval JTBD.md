@@ -1,6 +1,6 @@
 # TW Contextual Intelligence v1.0: Capability Layer + Knowledge Retrieval JTBD
 
-**Status:** Draft v3.5 | **Last updated:** 2026-06-22 | **Authors:** Jasmine Tay, PM; Ralph Santos, Engineer
+**Status:** Draft v3.6 | **Last updated:** 2026-06-22 | **Authors:** Jasmine Tay, PM; Ralph Santos, Engineer
 
 ---
 
@@ -26,6 +26,8 @@
   - [E1: TW RAG + Model Service](#e1-tw-rag--model-service)
     - [Part 1: Knowledge Base + RAG + Model Service](#part-1-knowledge-base--rag--model-service)
   - [E2: MicroFE for CI](#e2-microfe-for-ci)
+    - [MicroFE Integration Approach](#microfe-integration-approach)
+    - [Prototype Reference](#prototype-reference)
     - [Part 2: AI Chat Interface](#part-2-ai-chat-interface)
     - [Part 3: Recommendation Cards](#part-3-recommendation-card-surfacing-in-tw-student-page)
     - [Part 5: Native Resource Viewer](#part-5-knowledge-storage--retrieval--native-resource-viewer-in-tw)
@@ -49,6 +51,7 @@
 
 | Version | Date | Author | Summary |
 |---------|------|--------|---------|
+| v3.6 | 2026-06-22 | Jasmine Tay | E2: add MicroFE integration approach options (standalone app vs remote MicroFE vs component library) + prototype screenshots; E1: rephrase infrastructure stories 1.7, 1.8, 1.9, 2.7 as system-actor stories |
 | v3.5 | 2026-06-22 | Jasmine Tay | Align PRD to GitHub issues: GCS (not S3), 5 signals (not 6), AI evals → MOE AI Evals platform (pre-deployment) + Langfuse (post-deployment) |
 | v3.4 | 2026-06-22 | Jasmine Tay | Merge v3.2 (Ralph) + v3.3 (Jasmine); epic structure and timeline aligned to 4-epic structure |
 | v3.3 | 2026-05-13 | Jasmine Tay | Add CI Overview section: CI as platform capability layer with multiple JTBDs; knowledge retrieval = first JTBD; align timeline to strategy doc (Jul 2026 dev start, Nov 2026 pilot) |
@@ -326,19 +329,66 @@ Google's official Node SDKs, called directly. Two packages cover the stack:
 | **Knowledge Base** | | | |
 | 1.5 | PM | provision GCS bucket and confirm classification clearance to Official Closed (Sensitive Normal) in the GCC environment | engineers can connect to storage and ingest guidance materials in a compliant environment |
 | 1.6 | PM | set up cloud storage and onboard steering committee representatives to populate guidance materials via the Management Portal (Part 6) | there is a managed, populated knowledge base ready for ingestion |
-| 1.7 | Engineer | connect to the designated cloud storage bucket to ingest guidance materials | domain owners have a managed source-of-truth for CI content |
-| 1.8 | Engineer | build a chunking and embedding pipeline using Vertex AI | guidance documents are indexed in Vector Search for semantic retrieval |
-| 1.9 | Engineer | set up a document refresh process | the knowledge base stays current when domain owners update source materials |
+| 1.7 | System | ingest guidance materials from the designated GCS bucket | domain owners have a managed source-of-truth and engineers have a retrieval-ready document store |
+| 1.8 | System | chunk and embed ingested documents via Vertex AI | guidance materials are indexed in Vector Search for semantic retrieval |
+| 1.9 | System | detect changes in GCS and re-ingest updated documents on a defined refresh schedule | the knowledge base stays current when domain owners update source materials |
 | **AI Model + Model Service API** | | | |
 | 1.10 | Engineer | set up and validate Vertex AI through GCC for RAG orchestration and Gemini for LLM synthesis | we confirm the AI stack meets our retrieval and synthesis requirements before building on it |
 | 2.6 | PM | align with TW team to define and agree the API contract for serving chat responses and recommendation cards | engineers on both sides have a clear integration spec |
-| 2.7 | Engineer | implement the TW API contract to serve AI chat responses within Teacher's Workspace | CI output is correctly rendered in TW |
+| 2.7 | System | serve grounded, cited AI responses to TW apps via the agreed model service API contract | CI output is correctly rendered wherever a TW app embeds the CI MicroFE |
 | **Technical Stack Selection** | | | |
 | 1.12 | PM + Engineer | evaluate AI stack options (open-source self-host, Vertex AI in GCC, Platform.gov AI), validate GCC compliance and run a retrieval quality spike, and document the selected approach | the team has a clear, evidence-backed technical direction before build begins |
 
 ---
 
 ### E2: MicroFE for CI
+
+#### MicroFE Integration Approach
+
+CI's frontend surfaces (recommendation cards, chat panel, resource viewer) need to live somewhere in TW's architecture. TW is built as a multi-app platform where each app is its own micro-frontend — for example, SDT is one app, with its own MicroFE, mounted into the TW shell.
+
+The key question is whether CI's components should exist as a **standalone app**, an **embedded remote MicroFE**, or a **shared component library** consumed by host apps.
+
+> **Open question — integration approach TBD.** Discuss with TW team and agree before E2 sprint planning.
+
+| Option | Description | Pros | Cons | Verdict |
+|--------|-------------|------|------|---------|
+| **A — CI as a standalone TW app** | CI is registered as its own app in TW's app shell (its own navigation entry, own routes). Teachers navigate *to* CI separately. | Clean ownership boundary; independent deploy cadence; no integration contract with host apps | Breaks contextual surfacing — teachers must leave the SDT student page to reach CI; defeats the "at point of need" value prop | ❌ Not recommended |
+| **B — CI as a remote MicroFE (Module Federation)** | CI exposes a remote module via Webpack Module Federation or Vite equivalent. Host apps (starting with SDT) import and mount CI components within their own pages — e.g. the recommendation card mounts inside the student profile. | Stays contextual within the host app; pluggable into any TW app without re-shipping CI; independent deploy cadence preserved; auth/session inherited from host | Requires TW shell to support Module Federation (or equivalent runtime composition); CI must expose a stable mount interface; host app must pass a defined context (student ID, teacher role, school) | ✅ Recommended for evaluation |
+| **C — CI as a shared component library (npm package)** | CI components are published as a versioned npm package. Each TW app imports and renders CI components at build time. | No Module Federation setup needed; maximum flexibility for host teams | CI loses deployment independence — every CI update requires host apps to re-release; versioning complexity multiplies as CI is adopted by more apps; CI has no control over placement or theming | ⚠️ Fallback if Module Federation is unavailable |
+
+**Key questions to resolve with TW team before E2 build:**
+
+1. Does TW's current app shell support Module Federation (or a comparable runtime composition approach)?
+2. What is the mount/unmount contract — what context does the host app pass to CI on mount (student ID, teacher role, school)?
+3. How does CI inherit session/auth from the host app without re-implementing login?
+4. Does CI need its own client-side routes (e.g. `/ci/...`), or does it live entirely within the host app's routing?
+
+---
+
+#### Prototype Reference
+
+> ⚠️ **Prototype only** — screenshots below are from a functional prototype and are pending designer iteration. Do not treat as final UX spec. Access the [functional prototype](https://teacherworkspace-alpha.vercel.app/students/3): Profiles → Lam Wei Jie (student #3).
+
+**1. Recommendation card on the student profile page**
+
+The "Recommended action" card surfaces on the student profile, triggered by student signals (bullying incident, missed CCA, low mood). The teacher can tap "View guidance" to open the CI chat panel.
+
+![Prototype: Recommendation card on student profile](./prd-assets/prototype-student-profile.png)
+
+**2. CI chat panel — Student context, Chat, and Resources**
+
+A three-column panel (Student context · Chat · Learn more) opens as a slide-over. Pre-loaded context and active triggers are shown on the left; the chat response is centred; and cited guidance resources are listed on the right under the Resources tab.
+
+![Prototype: CI chat panel](./prd-assets/prototype-chat-panel.png)
+
+**3. Learn tab — OPAL course recommendations**
+
+The "Learn" tab within the CI panel surfaces OPAL learning modules contextually relevant to the student situation (e.g. "Understanding SwAN Profiles", "Tier 2 Intervention Playbook").
+
+![Prototype: Learn tab](./prd-assets/prototype-learn-tab.png)
+
+---
 
 #### Part 2: AI Chat Interface
 

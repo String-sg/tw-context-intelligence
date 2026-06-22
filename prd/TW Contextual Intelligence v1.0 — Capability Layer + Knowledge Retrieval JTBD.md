@@ -31,9 +31,10 @@
     - [Part 2.2: Recommendation Cards](#part-22-recommendation-card-surfacing-in-tw-student-page)
     - [Part 2.3: Native Resource Viewer](#part-23-knowledge-storage--retrieval--native-resource-viewer-in-tw)
   - [E3: Data integrations](#e3-data-integrations)
-    - [Part 3.1: Data Integration — Student + Teacher Context](#part-31-data-integration--student--teacher-context)
-    - [Part 3.2: Analytics & Tracking](#part-32-analytics--tracking)
-    - [Part 3.3: Conversation Analytics](#part-33-conversation-analytics)
+    - [Part 3.1: Data Connection Layer](#part-31-data-connection-layer)
+    - [Part 3.2: Context Assembly Layer](#part-32-context-assembly-layer)
+    - [Part 3.3: Analytics & Tracking](#part-33-analytics--tracking)
+    - [Part 3.4: Conversation Analytics](#part-34-conversation-analytics)
   - [E4: Testing + Polishing + TRA](#e4-testing--polishing--tra)
     - [Part 4.1: AI Evaluations](#part-41-ai-evaluations)
 - [Priority & Timeline](#priority--timeline)
@@ -224,7 +225,7 @@ CI is delivered across 4 epics. Each epic maps to one or more product parts belo
 |------|-------|---------|
 | **E1: TW RAG + Model Service** | Part 1.1 | Reusable TW platform capability for RAG + LLM. **Knowledge base** — GCS bucket, Vertex AI embeddings + Vector Search, chunking + document refresh pipeline. **AI model + model service API** — RAG orchestration via Vertex AI; Gemini synthesis with strict source grounding; model service API endpoint for TW apps. Context assembly lives in E3. |
 | **E2: MicroFE for CI** | Parts 2.1, 2.2, 2.3 | CI frontend as a micro-frontend pluggable into any TW app. **Recommendation cards** — surfaced on SDT student profile, triggered by student signals. **AI Chat interface** — pre-loaded context, follow-up Q&A, inline citations. **Native resource viewer** — inline document viewer deep-linked from citations. UX design for all components. |
-| **E3: Data integrations** | Parts 3.1, 3.2, 3.3 | **Data integration** — EduPass/SDT teacher role + student signals (5 pilot signals); data classification enforcement; context assembly layer → structured retrieval query for E1. **Analytics & tracking** — dedicated GA4 property; custom events for cards/chat/citations; server-side guardrail logging. **Conversation analytics** — query logs, usefulness ratings, query volume trends; domain-scoped access for West Zone Sups. |
+| **E3: Data integrations** | Parts 3.1, 3.2, 3.3, 3.4 | **Data connection layer** — SDT connector for student signals (absenteeism, SEN, offence data); teacher role connector (SDT or EduPass TBD); data classification enforcement at connection point. **Context assembly layer** — combines student signals, teacher role, and situational context (which TW page/student) into a structured retrieval query for E1. **Analytics & tracking** — dedicated GA4 property; custom events for cards/chat/citations; server-side guardrail logging. **Conversation analytics** — query logs, usefulness ratings, query volume trends; domain-scoped access for West Zone Sups. |
 | **E4: Testing + Polishing + TRA** | Part 4.1 | **AI evaluations** — pre-deployment quality gates via MOE AI Evals platform (hallucination, citation coverage, response relevance); post-deployment monitoring via Langfuse. LLM guardrails testing, end-to-end QA, UX polish, TRA sign-off for pilot launch. |
 
 > **Knowledge base management portal** (domain owner upload/tag/delete UI, story 6.5) is deferred to post-pilot. Initial knowledge base population is handled directly by the engineering team. See [Out of Scope](#out-of-scope-this-phase).
@@ -245,7 +246,7 @@ CI is delivered across 4 epics. Each epic maps to one or more product parts belo
 
 **Knowledge Base** — guidance content that the AI retrieves from; managed by domain owners
 
-- Guidance materials from Student Intervention and Student Wellbeing domains, stored in a **Google Cloud Storage (GCS) bucket** and managed via the Management Portal (Part 3.3)
+- Guidance materials from Student Intervention and Student Wellbeing domains, stored in a **Google Cloud Storage (GCS) bucket** and managed via the Management Portal (Part 3.4)
 - Chunking and embedding pipeline to convert documents into a searchable vector store, using **Vertex AI** (embeddings + Vector Search)
 - Document refresh cadence: re-ingestion process triggered when domain owners upload or update materials via the portal
 
@@ -502,35 +503,70 @@ The "Recommended action" card surfaces above the student's stats (Attendance, Ac
 
 ### E3: Data integrations
 
-#### Part 3.1: Data Integration — Student + Teacher Context
+#### Part 3.1: Data Connection Layer
 
-**What it covers:** Connect CI to live student and teacher data from SDT and EduPass, enforce data classification per teacher role, and assemble the context that gets passed to E1's model service as a structured retrieval query.
+**What it covers:** Set up the data connectors that feed CI with live student and teacher data. For the pilot, CI receives a scoped set of student signals from SDT and teacher role data from either SDT or EduPass (to be evaluated).
 
 **Key capabilities:**
 
-- **Teacher context** (from EduPass/HR) — teacher role, school; controls CI visibility and scopes guidance per role
-- **Student signals** — sourced from two systems:
-  - **GB** (Scope 1 — Holistic Development): MySEI Intent Score, Social Links, TCI Low Mood
-  - **SDT API** (Scope 2 — SwAN Support): Long-term Absenteeism, offence type, SEN type
-- **Data classification enforcement** — SDT API returns classification tier per teacher; CI is not surfaced if the teacher is not authorised to view a signal
-- **Context assembly layer** — maps student + teacher signals into a structured retrieval query for E1's RAG model service
+- **Student data connector (SDT)** — receives student context signals for the pilot scope:
+  - Long-term Absenteeism (LTA)
+  - Special Educational Needs (SEN type)
+  - Offence data (offence type)
+- **Teacher role connector** — pulls the accessing teacher's role and school; source to be evaluated: SDT (existing integration point) vs EduPass/HR (authoritative role system)
+- **Data classification enforcement** — SDT API returns a classification tier per teacher; signals above the teacher's access tier are excluded before being passed to the assembly layer
 
 **Open questions:**
 
-1. **SDT API fields** — confirm with SDT PM which API fields/metadata indicate the teacher's data access tier, so it can be correctly parsed in context assembly
-2. **EduPass integration approach** — confirm whether teacher role is pulled from EduPass or SDT; clarify the auth method (MIMS roles documentation)
+1. **Teacher role source** — evaluate whether to pull teacher role from SDT (simpler, existing integration) or EduPass/HR (more authoritative but new integration); clarify auth method via MIMS roles documentation
+2. **SDT API field mapping** — confirm with SDT PM which API fields correspond to each pilot signal and which field indicates the teacher's data access tier
 
 **User stories:**
 
 | # | As a... | I want to... | So that... |
 |---|---------|-------------|-----------|
-| 3.1.1 | Teacher | see CI guidance based on my student's real-time signals (attendance, wellbeing, behaviour incidents) | recommendations reflect what's actually happening with my student, not generic advice |
+| 3.1.1 | Teacher | see CI guidance based on my student's real signals (absenteeism, special needs, offence history) | recommendations reflect what's actually happening with my student, not generic advice |
 | 3.1.2 | Teacher | only see CI guidance for student data I'm authorised to access | data classification is enforced and I cannot inadvertently view information above my clearance level |
-| 3.1.3 | Teacher | receive CI recommendations scoped to my role and school context | guidance is relevant to my specific teaching situation and not surfaced out of context |
+| 3.1.3 | Teacher | have my role and school recognised by CI | guidance is scoped to what's relevant for my teaching context and not surfaced out of place |
 
 ---
 
-#### Part 3.2: Analytics & Tracking
+#### Part 3.2: Context Assembly Layer
+
+**What it covers:** Combine student signals, teacher role, and situational context (which student and which page the teacher is on in TW) into a structured retrieval query that is sent to E1's model service API. This is the logic layer that determines *what* CI retrieves and *when* it triggers.
+
+**How it works:**
+
+1. Teacher opens a student's page in TW — the page context (student ID, module) is captured
+2. Assembly layer fetches student signals (from Part 3.1 connector) and teacher role, filtered to signals the teacher is authorised to view
+3. Combines student context + teacher role + page situation into a structured retrieval query
+4. Sends the query to E1's model service API
+5. E1 returns grounded guidance, which E2 renders as recommendation cards and chat responses
+
+**Key capabilities:**
+
+- **Student context** — the triggered signals for the specific student being viewed (e.g. LTA + offence type)
+- **Teacher context** — teacher role and school (from Part 3.1 connector), used to scope guidance domain
+- **Situational context** — which student and which TW page/module the teacher is currently in; determines the trigger point for CI
+- **Query composition** — assembles the above into a structured input to E1's model service (signal types, domain, student summary, teacher role)
+- **Classification filter** — signals above the teacher's access tier are excluded from the query before it is sent to E1
+
+**Open questions:**
+
+1. **Query format contract** — align with E1 on the exact structure of the retrieval query (fields, schema, encoding) before assembly layer is built
+2. **Situational context scope** — which TW pages/modules should trigger CI in the pilot? (Student profile confirmed; are there others?)
+
+**User stories:**
+
+| # | As a... | I want to... | So that... |
+|---|---------|-------------|-----------|
+| 3.2.1 | Teacher | have CI understand I'm viewing a specific student so it retrieves guidance relevant to that student's situation | I don't receive generic guidance unrelated to what I'm dealing with |
+| 3.2.2 | Teacher | have CI trigger automatically when I'm in the right context in TW | I don't need to explicitly ask for help — the right guidance appears at the right moment |
+| 3.2.3 | System | assemble student signals, teacher role, and page context into a structured retrieval query | E1's model service receives well-formed, contextually relevant inputs and returns accurate guidance |
+
+---
+
+#### Part 3.3: Analytics & Tracking
 
 **What it is:** The instrumentation layer that enables measurement of product metrics and guardrail metrics. CI uses a dedicated GA4 property (separate from TW), supplemented with custom events and server-side logging.
 
@@ -563,12 +599,12 @@ These cannot be tracked in GA and require server/API-level logging:
 
 | # | As a... | I want to... | So that... |
 |---|---------|-------------|-----------|
-| 3.2.1 | System | log CI card impressions, interactions, and chat sessions to GA4 | product engagement metrics (card engagement, recommendations CTR, chat sessions per teacher) can be measured accurately |
-| 3.2.2 | System | log response latency, citation coverage, and data classification events server-side | guardrail metrics are captured and traceable independently of frontend analytics |
+| 3.3.1 | System | log CI card impressions, interactions, and chat sessions to GA4 | product engagement metrics (card engagement, recommendations CTR, chat sessions per teacher) can be measured accurately |
+| 3.3.2 | System | log response latency, citation coverage, and data classification events server-side | guardrail metrics are captured and traceable independently of frontend analytics |
 
 ---
 
-#### Part 3.3: Conversation Analytics
+#### Part 3.4: Conversation Analytics
 
 **What it is:** Server-side conversation logging and an analytics view for West Zone Sups and domain owners to monitor teacher query patterns. Provides the data feedback loop from teacher usage back to knowledge base maintenance.
 
@@ -597,7 +633,7 @@ These cannot be tracked in GA and require server/API-level logging:
 
 | # | As a... | I want to... | So that... |
 |---|---------|-------------|-----------|
-| 3.3.1 | System | log every teacher query and AI response server-side within GCC data residency | domain owners and West Zone Sups can review query patterns and identify gaps in the knowledge base |
+| 3.4.1 | System | log every teacher query and AI response server-side within GCC data residency | domain owners and West Zone Sups can review query patterns and identify gaps in the knowledge base |
 
 ---
 
@@ -641,7 +677,7 @@ Chat-first approach — the AI Chat interface is the primary value driver and sh
 |----------|------|-------|-----------|
 | **P0** | E1: TW RAG + Model Service | Part 1.1 | Foundation — everything depends on the retrieval and AI backend |
 | **P0** | E2: MicroFE for CI | Parts 2.1, 2.2, 2.3 | Primary teacher-facing surface; chat first, then cards and resource viewer |
-| **P1** | E3: Data integrations | Parts 3.1, 3.2, 3.3 | Required for pilot — GA4 + guardrail logging must be live before 31 Aug; West Zone Sups need conversation analytics from day 1 |
+| **P1** | E3: Data integrations | Parts 3.1, 3.2, 3.3, 3.4 | Required for pilot — data connectors + context assembly must be live for CI to trigger; GA4 + guardrail logging before 31 Aug; West Zone Sups need conversation analytics from day 1 |
 | **P1** | E4: Testing + Polishing + TRA | Part 4.1 | Required before pilot — AI evals, LLM guardrails, UX polish, and TRA must clear before launch |
 ### Timeline
 
@@ -659,7 +695,7 @@ Chat-first approach — the AI Chat interface is the primary value driver and sh
 - Google Cloud access — Vertex AI project setup, service account provisioning, and Gemini model access
 - **Cloud storage provisioning** — GCS bucket provisioned and confirmed cleared to Official Closed (Sensitive Normal) in GCC environment before document ingestion begins; initiate early as a Phase 1 prerequisite
 - TW API contracts — agreed integration points for embedding chat, cards, and viewer
-- **Conversation log access controls** — define who can access query logs in the portal before Part 3.3 logging is enabled
+- **Conversation log access controls** — define who can access query logs in the portal before Part 3.4 logging is enabled
 
 ---
 

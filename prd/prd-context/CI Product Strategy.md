@@ -58,7 +58,7 @@ We are in our infancy and cannot prioritize every JTBD. To protect our bandwidth
 
 ## 👥 Audience
 
-Singapore educators and teachers operating within the Teacher's Workspace (TW) ecosystem. They are highly active, AI-literate users — 3 in 4 already use AI in their teaching — who expect tools that are secure, accurate, and embedded in their existing workflows rather than bolted on separately.
+Singapore educators and teachers operating within the Teacher's Workspace (TW) ecosystem.
 
 ---
 

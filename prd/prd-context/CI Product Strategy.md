@@ -58,7 +58,7 @@ We are in our infancy and cannot prioritize every JTBD. To protect our bandwidth
 
 ## 👥 Audience
 
-Singapore educators and teachers operating within the Teacher's Workspace (TW) ecosystem.
+Teachers operating within the Teacher's Workspace ecosystem.
 
 ---
 

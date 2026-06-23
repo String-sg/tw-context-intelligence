@@ -21,7 +21,7 @@ As the name suggests, CI matches the proprietary MOE context of the teacher, the
 
 - **High AI Appetite:** According to the [OECD TALIS 2024 Survey](https://www.moe.gov.sg/news/press-releases/20251007-singapore-teachers-embrace-digital-technologies-and-benefit-from-strong-professional-development-oecd-talis-2024-study), 3 in 4 Singapore teachers use AI to teach or support learning — more than double the global average of 36%
 - **Existing Ecosystem:** All MOE teachers have Google Workspace accounts (giving them native access to Gemini) and actively use government-whitelisted utilities like Pair Chat
-- **Top Use Cases:** Topic learning, parent-facing brainstorming, drafting administrative text, and lesson planning
+- **Top Use Cases:** Topic learning, drafting administrative text, and lesson planning
 
 ### Globally
 

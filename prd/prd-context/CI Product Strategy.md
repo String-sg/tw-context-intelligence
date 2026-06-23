@@ -64,8 +64,11 @@ Teachers operating within the Teacher's Workspace ecosystem.
 
 ## 🛠️ How are we going to build it?
 
-- **Shared Infrastructure:** CI is built as a shared platform capability layer — shared RAG and model services power context-aware AI utilities natively across TW apps. Build once, serve many.
-- **Embedded Guardrails:** Compliance is non-negotiable. Data classification, Sensitive-High masking, output grounding, and automated auditing are native to the core infrastructure — not bolted on as an afterthought.
+*Pending technical evaluation — high-level architecture:*
+
+- **Shared Infrastructure:** LLM, RAG services, and knowledge base — built once as a shared platform capability layer, powering AI utilities natively across TW apps
+- **Embeddable FE:** UI components that can be embedded into existing TW app surfaces at the point of need
+- **Guardrails:** Data classification clearance and AI output evaluations — compliance and quality checks native to the core infrastructure, not bolted on as an afterthought
 
 ---
 

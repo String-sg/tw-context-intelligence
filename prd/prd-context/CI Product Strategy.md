@@ -10,8 +10,8 @@ Instead of making teachers go looking for information, CI weaves intelligence di
 
 ## 🏫 The AI & Teaching Landscape
 
-- **High AI Appetite:** According to the OECD TALIS Survey, 3 in 4 Singapore teachers use AI to teach or support learning — more than double the global average of 36%
-- **Existing Ecosystem:** All MOE teachers have Google Workspace accounts (giving them native access to Gemini) and actively use government-whitelisted utilities like Pair Chat
+- **High AI Appetite:** According to the [OECD TALIS 2024 Survey](https://www.moe.gov.sg/news/press-releases/20251007-singapore-teachers-embrace-digital-technologies-and-benefit-from-strong-professional-development-oecd-talis-2024-study), 3 in 4 Singapore teachers use AI to teach or support learning — more than double the global average of 36%
+- **Existing Ecosystem:** All MOE teachers have Google Workspace accounts (giving them native access to Gemini) and actively use government-whitelisted utilities like [Pair Chat](https://pair.gov.sg/)
 - **Top Use Cases:** Topic learning, parent-facing brainstorming, drafting administrative text, and lesson planning
 
 ---
@@ -20,7 +20,7 @@ Instead of making teachers go looking for information, CI weaves intelligence di
 
 Teachers are dealing with severe administrative burnout, but existing AI tools cannot easily alleviate it due to strict structural barriers:
 
-**The Administrative Burden:** Singapore teachers work an average of 47.3 hours a week, with a significant portion consumed by administrative tasks. AI has the potential to reduce this load, but current setups block it.
+**The Administrative Burden:** Singapore teachers work an average of [47.3 hours a week](https://www.moe.gov.sg/news/press-releases/20251007-singapore-teachers-embrace-digital-technologies-and-benefit-from-strong-professional-development-oecd-talis-2024-study), with a significant portion consumed by administrative tasks. AI has the potential to reduce this load, but current setups block it.
 
 **System Lock-In & Security:** Because of strict data security policies:
 - Teachers must use internal MOE systems for core admin and student workflows

@@ -1,4 +1,4 @@
-# CI Product Strategy
+# Contextual Intelligence (CI) Product Strategy
 
 ## 💡 What is CI?
 

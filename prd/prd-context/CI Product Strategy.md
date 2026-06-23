@@ -6,6 +6,13 @@ CI is the secure Intelligence Layer of our platform — the Educator Productivit
 
 Instead of making teachers go looking for information, CI weaves intelligence directly into the core workflows they already use. It operates behind the scenes within Teacher's Workspace to route requests, evaluate data triggers, run AI Assist, retrieve contextual guidance via RAG (Retrieval-Augmented Generation), and compose multi-system responses.
 
+<table>
+<tr>
+<td><img src="../prd-assets/educator-ecosystem.svg"/></td>
+<td><img src="https://raw.githubusercontent.com/jasminetay-moe/product-strategy/main/assets/ci-overview.svg"/></td>
+</tr>
+</table>
+
 ---
 
 ## 🏫 The AI & Teaching Landscape

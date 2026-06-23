@@ -18,7 +18,7 @@ Instead of making teachers go looking for information, CI weaves intelligence di
 
 ## 🔑 What problem is this solving?
 
-Teachers are dealing with severe admin burnout. 74% agreed that AI helps them automate administrative tasks, but lacks access to it due to strict structural barriers:
+Teachers are dealing with severe admin burnout. [74% agreed that AI helps them automate administrative tasks](https://www.moe.gov.sg/news/press-releases/20251007-singapore-teachers-embrace-digital-technologies-and-benefit-from-strong-professional-development-oecd-talis-2024-study), but lacks access to it due to strict structural barriers:
 
 **The Administrative Burden:** Singapore teachers work an average of [47.3 hours a week](https://www.moe.gov.sg/news/press-releases/20251007-singapore-teachers-embrace-digital-technologies-and-benefit-from-strong-professional-development-oecd-talis-2024-study), with a significant portion consumed by administrative tasks. AI has the potential to reduce this load, but current setups block it.
 

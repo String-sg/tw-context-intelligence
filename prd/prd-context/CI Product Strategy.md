@@ -23,9 +23,10 @@ Teachers are dealing with severe admin burnout. [74% agreed that AI helps them a
 **The Administrative Burden:** Singapore teachers work an average of [47.3 hours a week](https://www.moe.gov.sg/news/press-releases/20251007-singapore-teachers-embrace-digital-technologies-and-benefit-from-strong-professional-development-oecd-talis-2024-study), with a significant portion consumed by administrative tasks. AI has the potential to reduce this load, but current setups block it.
 
 **System Lock-In & Security:** Because of strict data security policies:
-- Teachers must use internal MOE systems for core admin and student workflows
-- External AI tools like Pair Chat are limited to Official (Open) / Non-Sensitive data only — student files, operational guidelines, and case notes cannot legally be fed into them
-- This cuts teachers off from using AI for the workflows where it could help most
+- External AI tools like Gemini are limited to Official (Open) / Non-Sensitive data only
+- Internal AI tools like Pair Chat (available to all public servants) are cleared up to Official (Closed) / Sensitive Normal
+- Student data is classified as Sensitive High — which immediately eliminates both Pair Chat and external tools for any student-related admin work
+- This cuts teachers off from using AI precisely where it would help most
 
 **The "Context Transfer" Tax:** When teachers try to use permitted external tools, they must manually strip out, scrub, and re-enter context across internal platforms and external chat boxes — eroding any time savings gained.
 

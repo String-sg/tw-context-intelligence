@@ -25,7 +25,10 @@ As the name suggests, CI matches the proprietary MOE context of the teacher, the
 
 ### Globally
 
-*To be researched.*
+*To be researched. Helpful references:*
+- [Google for Education Blog](https://blog.google/products-and-platforms/products/education/)
+- [Claude for Education](https://claude.com/solutions/education)
+- [ChatGPT for Teachers](https://openai.com/index/chatgpt-for-teachers/)
 
 ---
 

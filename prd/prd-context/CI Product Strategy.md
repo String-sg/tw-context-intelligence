@@ -8,7 +8,7 @@ Instead of making teachers go looking for information, CI weaves intelligence di
 
 <table>
 <tr>
-<td><img src="../prd-assets/educator-ecosystem.svg"/></td>
+<td><img src="https://raw.githubusercontent.com/String-sg/tw-context-intelligence/main/prd/prd-assets/educator-ecosystem.svg"/></td>
 <td><img src="https://raw.githubusercontent.com/jasminetay-moe/product-strategy/main/assets/ci-overview.svg"/></td>
 </tr>
 </table>

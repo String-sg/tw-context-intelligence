@@ -74,7 +74,7 @@ Teachers operating within the Teacher's Workspace ecosystem.
 
 ## 🚀 Where we're starting: Pilot Scope
 
-Our first JTBD in production is **Knowledge Retrieval** — see [PRD](https://github.com/String-sg/tw-context-intelligence/blob/main/prd/TW%20Contextual%20Intelligence%20v1.0%20%E2%80%94%20Capability%20Layer%20+%20Knowledge%20Retrieval%20JTBD.md) — surfacing the right guidance at the moment a teacher needs it, grounded in official MOE materials, delivered in the flow of work without requiring a separate search.
+Our first JTBD is **Knowledge Retrieval** — see [PRD](https://github.com/String-sg/tw-context-intelligence/blob/main/prd/TW%20Contextual%20Intelligence%20v1.0%20%E2%80%94%20Capability%20Layer%20+%20Knowledge%20Retrieval%20JTBD.md) — surfacing the right guidance at the moment a teacher needs it, grounded in official MOE materials, delivered in the flow of work without requiring a separate search.
 
 **Pilot use case: SwAN student intervention support** within the SDT student profile page in TW. When a student's signals (long-term absenteeism, SEN, or offence) are detected, CI surfaces contextually relevant guidance to the teacher at the point of need. Teacher queries are answered by an AI chat interface grounded against the SwAN knowledge base via RAG, with source citations on every response.
 

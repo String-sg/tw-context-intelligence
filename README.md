@@ -10,7 +10,7 @@ CI sits in the **Intelligence** layer of the educator platform — the Educator 
 
 ## CI Jobs-to-be-done (JTBD)
 
-![CI Overview](https://raw.githubusercontent.com/jasminetay-moe/product-strategy/main/assets/ci-overview.svg)
+![CI Overview](./prd/prd-assets/ci-overview.svg)
 
 CI is a platform capability layer within Teacher's Workspace — intelligence woven into the workflows teachers are already in, surfaced at the point of need rather than sought out. Built on shared RAG and model services, it is designed to serve multiple teacher jobs-to-be-done over time as it matures.
 
@@ -26,6 +26,10 @@ Synthesise student or cohort patterns into an actionable brief — giving teache
 Generate first drafts of communications, case notes, or reports — reducing documentation time so teachers can stay focused on students.
 
 ---
+
+## Roadmap
+
+![CI Roadmap 2026–2027](./prd/prd-assets/ci-roadmap-2026-2027.svg)
 
 ## PRDs
 

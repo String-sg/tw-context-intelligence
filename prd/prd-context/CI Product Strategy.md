@@ -9,7 +9,7 @@ As the name suggests, CI matches the proprietary MOE context of the teacher, the
 <table>
 <tr>
 <td><img src="https://raw.githubusercontent.com/String-sg/tw-context-intelligence/main/prd/prd-assets/educator-ecosystem.svg"/></td>
-<td><img src="https://raw.githubusercontent.com/jasminetay-moe/product-strategy/main/assets/ci-overview.svg"/></td>
+<td><img src="../prd-assets/ci-overview.svg"/></td>
 </tr>
 </table>
 

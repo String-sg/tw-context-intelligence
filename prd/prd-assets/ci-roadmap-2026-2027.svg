@@ -1,0 +1,83 @@
+<svg viewBox="0 0 960 205" xmlns="http://www.w3.org/2000/svg" role="img" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">
+  <title>CI Roadmap 2026–2027</title>
+  <desc>Contextual Intelligence &amp; Prof Dev roadmap showing platform infra and use cases across Q4 2026 to Q4 2027</desc>
+
+  <!-- Column backgrounds (alternating) -->
+  <rect x="0" y="0" width="192" height="205" fill="#f4f8ee"/>
+  <rect x="384" y="0" width="192" height="205" fill="#f4f8ee"/>
+  <rect x="768" y="0" width="192" height="205" fill="#f4f8ee"/>
+
+  <!-- Quarter headers -->
+  <rect x="2" y="4" width="188" height="36" rx="5" fill="#7dc143"/>
+  <text x="96" y="27" text-anchor="middle" font-size="13" font-weight="700" fill="white">Q4 '26</text>
+
+  <rect x="194" y="4" width="188" height="36" rx="5" fill="#7dc143"/>
+  <text x="288" y="27" text-anchor="middle" font-size="13" font-weight="700" fill="white">Q1 '27</text>
+
+  <rect x="386" y="4" width="188" height="36" rx="5" fill="#7dc143"/>
+  <text x="480" y="27" text-anchor="middle" font-size="13" font-weight="700" fill="white">Q2 '27</text>
+
+  <rect x="578" y="4" width="188" height="36" rx="5" fill="#7dc143"/>
+  <text x="672" y="27" text-anchor="middle" font-size="13" font-weight="700" fill="white">Q3 '27</text>
+
+  <rect x="770" y="4" width="188" height="36" rx="5" fill="#7dc143"/>
+  <text x="864" y="27" text-anchor="middle" font-size="13" font-weight="700" fill="white">Q4 '27</text>
+
+  <!-- PLATFORM ROW 1 (y=46 h=26) -->
+
+  <rect x="4" y="46" width="184" height="26" rx="3" fill="white" stroke="#b5ccb5" stroke-width="1.2"/>
+  <text x="96" y="63" text-anchor="middle" font-size="9.5" fill="#444">AI Platform Services + Evals</text>
+
+  <rect x="196" y="46" width="374" height="26" rx="3" fill="white" stroke="#b5ccb5" stroke-width="1.2"/>
+  <text x="383" y="63" text-anchor="middle" font-size="9.5" fill="#444">Management portal</text>
+
+  <rect x="772" y="46" width="184" height="26" rx="3" fill="white" stroke="#b5ccb5" stroke-width="1.2"/>
+  <text x="864" y="63" text-anchor="middle" font-size="9.5" fill="#444">Other JTBD exploration</text>
+
+  <!-- PLATFORM ROW 2 (y=76 h=26) -->
+
+  <rect x="388" y="76" width="374" height="26" rx="3" fill="white" stroke="#b5ccb5" stroke-width="1.2"/>
+  <text x="575" y="93" text-anchor="middle" font-size="9.5" fill="#444">Signal ingestion AI synthesis</text>
+
+  <!-- Separator -->
+  <line x1="0" y1="109" x2="960" y2="109" stroke="#ddd" stroke-width="1" stroke-dasharray="4,3"/>
+
+  <!-- USE CASES ROW (y=113 h=58) -->
+
+  <rect x="4" y="113" width="78" height="56" rx="3" fill="white" stroke="#bbb" stroke-width="1"/>
+  <text x="43" y="145" text-anchor="middle" font-size="10" fill="#444">MFE</text>
+
+  <rect x="86" y="113" width="102" height="56" rx="3" fill="white" stroke="#bbb" stroke-width="1"/>
+  <text x="137" y="137" text-anchor="middle" font-size="9" fill="#444">UC1: Student</text>
+  <text x="137" y="151" text-anchor="middle" font-size="9" fill="#444">intervention</text>
+
+  <rect x="196" y="113" width="88" height="56" rx="3" fill="white" stroke="#bbb" stroke-width="1"/>
+  <text x="240" y="137" text-anchor="middle" font-size="9" fill="#444">UC1</text>
+  <text x="240" y="151" text-anchor="middle" font-size="9" fill="#444">expansion</text>
+
+  <rect x="288" y="113" width="88" height="56" rx="3" fill="white" stroke="#bbb" stroke-width="1"/>
+  <text x="332" y="137" text-anchor="middle" font-size="9" fill="#444">UC2: Case</text>
+  <text x="332" y="151" text-anchor="middle" font-size="9" fill="#444">referral</text>
+
+  <rect x="388" y="113" width="88" height="56" rx="3" fill="white" stroke="#bbb" stroke-width="1"/>
+  <text x="432" y="137" text-anchor="middle" font-size="9" fill="#444">UC3: Student</text>
+  <text x="432" y="151" text-anchor="middle" font-size="9" fill="#444">wellbeing</text>
+
+  <rect x="480" y="113" width="88" height="56" rx="3" fill="white" stroke="#bbb" stroke-width="1"/>
+  <text x="524" y="137" text-anchor="middle" font-size="9" fill="#444">UC4: Exam ops</text>
+  <text x="524" y="151" text-anchor="middle" font-size="9" fill="#444">guide</text>
+
+  <rect x="580" y="113" width="184" height="56" rx="3" fill="white" stroke="#bbb" stroke-width="1"/>
+  <text x="672" y="145" text-anchor="middle" font-size="9" fill="#444">UC5: Procurement guide</text>
+
+  <rect x="772" y="113" width="88" height="56" rx="3" fill="white" stroke="#bbb" stroke-width="1"/>
+  <text x="816" y="137" text-anchor="middle" font-size="9" fill="#444">UC6: Finance</text>
+  <text x="816" y="151" text-anchor="middle" font-size="9" fill="#444">guide</text>
+
+  <rect x="864" y="113" width="92" height="56" rx="3" fill="white" stroke="#bbb" stroke-width="1"/>
+  <text x="910" y="131" text-anchor="middle" font-size="8.5" fill="#444">UC7: Digital</text>
+  <text x="910" y="144" text-anchor="middle" font-size="8.5" fill="#444">tool discovery</text>
+  <text x="910" y="157" text-anchor="middle" font-size="8.5" fill="#444">guide</text>
+
+  <text x="480" y="196" text-anchor="middle" font-size="9" fill="#aaa" font-style="italic">Subject to t-shirt sizing &amp; validation</text>
+</svg>

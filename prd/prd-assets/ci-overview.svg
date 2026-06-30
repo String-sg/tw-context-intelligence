@@ -1,0 +1,126 @@
+<svg viewBox="0 0 960 550" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">
+  <defs>
+    <marker id="arr" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#888"/>
+    </marker>
+  </defs>
+
+  <!-- Title bar -->
+  <rect x="0" y="0" width="960" height="44" rx="6" fill="#1e2d5a"/>
+  <text x="480" y="28" text-anchor="middle" font-size="15" font-weight="700" fill="white">Contextual Intelligence in Teacher's Workspace (TW)</text>
+
+  <!-- Left label column background -->
+  <rect x="0" y="44" width="112" height="506" fill="#f4f5fb"/>
+  <line x1="112" y1="44" x2="112" y2="550" stroke="#dde0ee" stroke-width="1"/>
+
+  <!-- ── CONTEXT LAYER (y=54, h=68) ── -->
+  <text x="56" y="84" text-anchor="middle" font-size="10" font-weight="700" fill="#555" letter-spacing="0.5">CONTEXT</text>
+  <text x="56" y="97" text-anchor="middle" font-size="10" font-weight="700" fill="#555" letter-spacing="0.5">LAYER</text>
+
+  <rect x="120" y="54" width="262" height="68" rx="5" fill="#e8eaf6" stroke="#9fa8da" stroke-width="1.5"/>
+  <text x="251" y="84" text-anchor="middle" font-size="12" font-weight="700" fill="#283593">Student data</text>
+  <text x="251" y="102" text-anchor="middle" font-size="11" fill="#444">Academic records, behaviour, wellbeing</text>
+
+  <rect x="392" y="54" width="262" height="68" rx="5" fill="#e8eaf6" stroke="#9fa8da" stroke-width="1.5"/>
+  <text x="523" y="84" text-anchor="middle" font-size="12" font-weight="700" fill="#283593">Teacher role data</text>
+  <text x="523" y="102" text-anchor="middle" font-size="11" fill="#444">Current page, role, school context</text>
+
+  <rect x="664" y="54" width="276" height="68" rx="5" fill="#e8eaf6" stroke="#9fa8da" stroke-width="1.5"/>
+  <text x="802" y="84" text-anchor="middle" font-size="12" font-weight="700" fill="#283593">Knowledge base</text>
+  <text x="802" y="102" text-anchor="middle" font-size="11" fill="#444">Policies, guides, resources</text>
+
+  <!-- Arrow: Context → Platform -->
+  <line x1="535" y1="122" x2="535" y2="136" stroke="#888" stroke-width="1.5" marker-end="url(#arr)"/>
+
+  <!-- ── PLATFORM SERVICE LAYER (y=142, h=68) ── -->
+  <text x="56" y="170" text-anchor="middle" font-size="10" font-weight="700" fill="#555" letter-spacing="0.5">PLATFORM</text>
+  <text x="56" y="183" text-anchor="middle" font-size="10" font-weight="700" fill="#555" letter-spacing="0.5">SERVICES</text>
+
+  <rect x="120" y="142" width="396" height="68" rx="5" fill="#c5cae9" stroke="#5c6bc0" stroke-width="1.5"/>
+  <text x="318" y="172" text-anchor="middle" font-size="12" font-weight="700" fill="#1a237e">LLM service</text>
+  <text x="318" y="190" text-anchor="middle" font-size="11" fill="#333">Language model for reasoning &amp; generation</text>
+
+  <rect x="528" y="142" width="412" height="68" rx="5" fill="#c5cae9" stroke="#5c6bc0" stroke-width="1.5"/>
+  <text x="734" y="172" text-anchor="middle" font-size="12" font-weight="700" fill="#1a237e">RAG service</text>
+  <text x="734" y="190" text-anchor="middle" font-size="11" fill="#333">Retrieval-augmented generation from knowledge base</text>
+
+  <!-- Arrow: Platform → Agent Orchestration -->
+  <line x1="535" y1="210" x2="535" y2="224" stroke="#888" stroke-width="1.5" marker-end="url(#arr)"/>
+
+  <!-- ── AGENT ORCHESTRATION LAYER (y=230, h=60) ── -->
+  <text x="56" y="255" text-anchor="middle" font-size="10" font-weight="700" fill="#bbb" letter-spacing="0.5">AGENT</text>
+  <text x="56" y="268" text-anchor="middle" font-size="10" font-weight="700" fill="#bbb" letter-spacing="0.5">ORCH.</text>
+
+  <rect x="120" y="230" width="820" height="60" rx="5" fill="#e0e0e0" stroke="#bbb" stroke-width="1.5" stroke-dasharray="5,3"/>
+  <text x="535" y="253" text-anchor="middle" font-size="12" font-weight="600" fill="#aaa">Agent Orchestration</text>
+  <text x="535" y="269" text-anchor="middle" font-size="11" fill="#bbb">Route, plan &amp; coordinate across platform services and JTBDs</text>
+  <text x="535" y="283" text-anchor="middle" font-size="10" font-style="italic" fill="#bbb">Build only after sufficient JTBDs are productionised</text>
+
+  <!-- Arrow: Agent Orchestration → JTBD -->
+  <line x1="535" y1="290" x2="535" y2="304" stroke="#888" stroke-width="1.5" marker-end="url(#arr)"/>
+
+  <!-- ── JTBD LAYER (y=310, h=120) ── -->
+  <text x="56" y="370" text-anchor="middle" font-size="10" font-weight="700" fill="#555" letter-spacing="0.5">JTBD</text>
+
+  <!-- Active: Knowledge retrieval & learning — with use case pills -->
+  <rect x="120" y="310" width="197" height="120" rx="5" fill="#e8f0e8" stroke="#4a7c59" stroke-width="1.8"/>
+  <text x="218" y="332" text-anchor="middle" font-size="12" font-weight="700" fill="#1a3a2a">Knowledge</text>
+  <text x="218" y="348" text-anchor="middle" font-size="12" font-weight="700" fill="#1a3a2a">retrieval &amp; learning</text>
+  <line x1="130" y1="356" x2="307" y2="356" stroke="#4a7c59" stroke-width="0.5" opacity="0.4"/>
+
+  <!-- Active pill: Student intervention -->
+  <rect x="130" y="362" width="177" height="17" rx="8" fill="#4a7c59"/>
+  <text x="218" y="374" text-anchor="middle" font-size="9" font-weight="600" fill="white">Student intervention · Pilot</text>
+
+  <!-- Grey pills row 1 -->
+  <rect x="130" y="384" width="84" height="17" rx="8" fill="#c0c0c0"/>
+  <text x="172" y="396" text-anchor="middle" font-size="9" fill="#666">Exam operations</text>
+  <rect x="219" y="384" width="88" height="17" rx="8" fill="#c0c0c0"/>
+  <text x="263" y="396" text-anchor="middle" font-size="9" fill="#666">Growth convos</text>
+
+  <!-- Grey pills row 2 -->
+  <rect x="130" y="406" width="99" height="17" rx="8" fill="#c0c0c0"/>
+  <text x="179" y="418" text-anchor="middle" font-size="9" fill="#666">Finance &amp; proc.</text>
+  <rect x="234" y="406" width="73" height="17" rx="8" fill="#c0c0c0"/>
+  <text x="270" y="418" text-anchor="middle" font-size="9" fill="#666">&amp; beyond</text>
+
+  <!-- Active: Drafting assistance -->
+  <rect x="327" y="310" width="197" height="120" rx="5" fill="#e8f0e8" stroke="#4a7c59" stroke-width="1.8"/>
+  <text x="425" y="332" text-anchor="middle" font-size="12" font-weight="700" fill="#1a3a2a">Drafting</text>
+  <text x="425" y="348" text-anchor="middle" font-size="12" font-weight="700" fill="#1a3a2a">assistance</text>
+  <line x1="337" y1="356" x2="514" y2="356" stroke="#4a7c59" stroke-width="0.5" opacity="0.4"/>
+
+  <!-- Active pill: Parent announcements -->
+  <rect x="337" y="362" width="177" height="26" rx="8" fill="#4a7c59"/>
+  <text x="425" y="373" text-anchor="middle" font-size="9" font-weight="600" fill="white">Parent announcements</text>
+  <text x="425" y="384" text-anchor="middle" font-size="8" fill="rgba(255,255,255,0.8)">(heytahlia)</text>
+
+  <!-- Dashed: Insights summary -->
+  <rect x="534" y="310" width="197" height="120" rx="5" fill="#e0e0e0" stroke="#bbb" stroke-width="1.5" stroke-dasharray="5,3"/>
+  <text x="632" y="366" text-anchor="middle" font-size="12" font-weight="600" fill="#aaa">Insights</text>
+  <text x="632" y="382" text-anchor="middle" font-size="12" font-weight="600" fill="#aaa">summary</text>
+
+  <!-- Dashed: & beyond -->
+  <rect x="741" y="310" width="199" height="120" rx="5" fill="#e0e0e0" stroke="#bbb" stroke-width="1.5" stroke-dasharray="5,3"/>
+  <text x="840" y="374" text-anchor="middle" font-size="12" font-weight="600" fill="#aaa">&amp; beyond</text>
+
+  <!-- Arrow: JTBD → AI Evals -->
+  <line x1="535" y1="430" x2="535" y2="444" stroke="#888" stroke-width="1.5" marker-end="url(#arr)"/>
+
+  <!-- ── AI EVALUATIONS LAYER (y=450, h=90) ── -->
+  <text x="56" y="483" text-anchor="middle" font-size="10" font-weight="700" fill="#555" letter-spacing="0.5">AI</text>
+  <text x="56" y="496" text-anchor="middle" font-size="10" font-weight="700" fill="#555" letter-spacing="0.5">EVALS</text>
+
+  <!-- Pre-deployment: Kaleidoscope -->
+  <rect x="120" y="450" width="410" height="90" rx="5" fill="#fff8e1" stroke="#f57f17" stroke-width="1.5"/>
+  <text x="325" y="472" text-anchor="middle" font-size="12" font-weight="700" fill="#7f3300">Pre-deployment testing · Kaleidoscope</text>
+  <text x="325" y="490" text-anchor="middle" font-size="11" fill="#444">NAIG rubric alignment</text>
+  <text x="325" y="506" text-anchor="middle" font-size="11" fill="#444">Domain rubric alignment</text>
+
+  <!-- Post-deployment: Langfuse -->
+  <rect x="540" y="450" width="410" height="90" rx="5" fill="#e3f2fd" stroke="#1565c0" stroke-width="1.5"/>
+  <text x="745" y="472" text-anchor="middle" font-size="12" font-weight="700" fill="#0d3466">Post-deployment monitoring · Langfuse</text>
+  <text x="745" y="490" text-anchor="middle" font-size="11" fill="#444">Model costs</text>
+  <text x="745" y="506" text-anchor="middle" font-size="11" fill="#444">Conversation logs</text>
+
+</svg>

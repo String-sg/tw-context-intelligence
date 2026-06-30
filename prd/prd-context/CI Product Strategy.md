@@ -6,9 +6,9 @@ CI is the secure Intelligence Layer of our platform — the Educator Productivit
 
 As the name suggests, CI matches the proprietary MOE context of the teacher, their students, and their scenario, to intelligent services (LLM, RAG etc) to assemble a contextually relevant, grounded response — all within the secure TW environment where sensitive data can be safely used. Rather than requiring teachers to re-enter context or switch between tools, CI handles the entire pipeline behind the scenes and surfaces the right answer, draft, or insight at the point of need.
 
-| | |
-|:---:|:---:|
-| ![Educator Ecosystem](../prd-assets/educator-ecosystem.svg) | ![CI Overview](../prd-assets/ci-overview.svg) |
+![Educator Ecosystem](../prd-assets/educator-ecosystem.svg)
+
+![CI Overview](../prd-assets/ci-overview.svg)
 
 ---
 
